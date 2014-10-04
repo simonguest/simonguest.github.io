@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header class="header">
+      <div class="content-wrap">
+        <div class="logo">
+          <h1><a href="http://localhost:8080">simonguest.com</a></h1>
+          <p class="description">The only person allowed to login as 'guest'</p>
+        </div>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article intro">
+          <header>
+            <p class="date"><span>13. August 2011</span></p>
+            <h2><a href="/2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/">Authenticating with Google, Facebook, and others from your jQueryMobile Application</a></h2>
+          </header>
+          <section class="content"><p>In my last post, I showed how to implement authentication using Google, Facebook, etc. for your iOS application – using the <a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe">Windows Azure Toolkit for iOS</a>.&amp;#160; This works well for iPhone applications written in Objective C, but what if you are developing a Web based mobile applications that span multiple platforms?&amp;#160; Given that everything is using Web pages, you would hope that it would be a little easier, but things can get tricky - especially if you are using&nbsp;jQueryMobile.&amp;#160; </p>
+<p>Having implemented this a couple of times now, here is a rough guide of how to integrate AppFabric <span class="caps">ACS</span> (Access Control Service) authentication into a jQueryMobile application. (There is already a ton of documentation of both jQueryMobile and ACS, so I’m assuming that you understand the basics of how these both&nbsp;work).&amp;#160;&amp;#160;&amp;#160; </p>
+<p><strong>Step 1:&amp;#160; Create your own provider selection&nbsp;screen</strong></p>
+<p>When you first start playing around with using <span class="caps">ACS</span> on mobile web browsers, the first thing you&#39;ll notice is that the default login page isn&#39;t that&nbsp;nice.&amp;#160; </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
+<p>While the functionality of logging in will work, users have to pinch zoom to be able to read the buttons, which isn&#39;t a great experience.&amp;#160; It also doesn&#39;t fit in with any jQueryMobile theme that you may have created.&amp;#160; To overcome this, we can create our own provider&nbsp;screen.&amp;#160; </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
+<p>To build something similar to the above, I&#39;ve used a jQueryMobile <a href="http:&#x2F;&#x2F;jquerymobile.com&#x2F;test&#x2F;docs&#x2F;pages&#x2F;dialog-alt.html">Dialog</a> (which has an automatic border as well as a background effect).&amp;#160; The basic code for the screen looks like the following:
+  &lt;pre class=&quot;brush:html&quot;&gt;&amp;lt;!<span class="caps">DOCTYPE</span> html&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Select Login Provider&amp;lt;&#x2F;title&amp;gt;
+&amp;lt;&#x2F;head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;div data-role=&amp;quot;dialog&amp;quot;&amp;gt;
+        &amp;lt;div data-role=&amp;quot;header&amp;quot;&amp;gt;
+            &amp;lt;h1&amp;gt;Select Login Provider&amp;lt;&#x2F;h1&amp;gt;
+        &amp;lt;&#x2F;div&amp;gt;
+        &amp;lt;div data-role=&amp;quot;content&amp;quot;&amp;gt;
+            @{
+                if (ViewBag.JSONProviders != null)
+                    {
+                    var providers = Json.Decode(ViewBag.JSONProviders);
+                    foreach (var provider in providers)
+                    {
+                        &amp;lt;button type=&amp;quot;button&amp;quot; onclick=&amp;quot;javascript:window.location.href=&#39;@provider.LoginUrl&#39;&amp;quot;&amp;gt;@provider.Name&amp;lt;&#x2F;button&amp;gt;
+                    }
+                }
+            }
+        &amp;lt;&#x2F;div&amp;gt;
+    &amp;lt;&#x2F;div&amp;gt;
+&amp;lt;&#x2F;body&amp;gt;&nbsp;&amp;lt;&#x2F;html&amp;gt;&lt;&#x2F;pre&gt;</p>
+<p>As you can see from the above, the form is built by parsing a <span class="caps">JSON</span> object containing a list of identity providers and creating buttons for each provider – setting a name for a button and setting an on click action to the URL.&amp;#160; (The above code uses the Razor-based syntax for&amp;#160; ASP.NET MVC, but the same will work just by using JSON calls in regular&nbsp;Javascript).&amp;#160; </p>
+<p>Two things to note&nbsp;here:</p>
+<p>1.&amp;#160; It&#39;s really important to use <strong>window.location.href</strong> instead of an &amp;lt;a&amp;gt; anchor when linking to the provider – otherwise you&#39;ll break the <span class="caps">AJAX</span> model of your jQueryMobile app and a new browser window will be launched (which looks horrible, especially in full screen web&nbsp;applications).</p>
+<p>2.&amp;#160; You are probably asking yourself where the <span class="caps">JSON</span> objects actually come from.&amp;#160; This brings us to our next&nbsp;point…</p>
+<p><strong>Step 2:&amp;#160; Make a call to the <span class="caps">ACS</span> JSON&nbsp;endpoint</strong></p>
+<p>The buttons in the form are based on identity providers, which you likely setup when you configured <span class="caps">ACS</span>.&amp;#160; These providers can be extracted as JSON objects using a JSON based endpoint that the ACS service&nbsp;providers.&amp;#160; </p>
+<p>Here&#39;s the <span class="caps">URL</span> of the JSON endpoint for ACS&nbsp;v2.</p>
+<p><a href="https:&#x2F;&#x2F;{0}.accesscontrol.windows.net&#x2F;v2&#x2F;metadata&#x2F;IdentityProviders.js?protocol=wsfederation&amp;amp;realm={1}&amp;amp;reply_to={2}&amp;amp;context=&amp;amp;request_id=&amp;amp;version=1.0">https:&#x2F;&#x2F;{0}.accesscontrol.windows.net&#x2F;v2&#x2F;metadata&#x2F;IdentityProviders.js?protocol=wsfederation&amp;amp;realm={1}&amp;amp;reply_to={2}&amp;amp;context=&amp;amp;request_id=&amp;amp;version=1.0</a></p>
+<p>{0} is the namespace of your <span class="caps">ACS</span>&nbsp;service</p>
+<p>{1} is the realm within your <span class="caps">ACS</span>&nbsp;service</p>
+<p>{2} is an optional <span class="caps">URL</span> (which must be HTML encoded) that specifies where to return the browser once authentication has been completed.&amp;#160; Remember, if you are using AJAX navigation, then you&#39;ll want to pass in the correct #-prefixed syntax.&amp;#160; For example a return URL of the&nbsp;following:</p>
+<p><a href="http:&#x2F;&#x2F;localhost&#x2F;MyWebApp#&#x2F;MyWebApp&#x2F;Accounts">http:&#x2F;&#x2F;localhost&#x2F;MyWebApp#&#x2F;MyWebApp&#x2F;Accounts</a></p>
+<p>Will instruct the <span class="caps">ACS</span> service to return to the Accounts page in your jQueryMobile&nbsp;app.</p>
+<p>Again, you can make the call to the <span class="caps">JSON</span> endpoint using Javascript, or if you are using ASP.NET MVC like in Step 1 I would recommend creating a controller action called Providers which passes the return JSON object in a&nbsp;ViewBag.&amp;#160; </p>
+<p><strong>Step 3:&amp;#160; Launch the providers screen from your&nbsp;app</strong></p>
+<p>Finally, once you have your provider screen created, you&#39;ll need to call it when authentication is required.&amp;#160; There are a couple of different ways of doing this – if you are using Javascript only, then create and maintain a variable called claims – which corresponds to the claims bag returned from the service (when the <span class="caps">ACS</span> service returns it does a post back to your application so that you can capture the claims).&amp;#160; Secondly, if you are using ASP.NET MVC then you can create a second action on the Account controller called claims with something similar to the&nbsp;following:</p>
+<p>&lt;pre&nbsp;class=&quot;brush:csharp&quot;&gt;</p>
+<p>public JsonResult&nbsp;Claims()</p>
+<p>{</p>
+<p>&amp;#160;&amp;#160;&amp;#160; return Json(string.Join(&amp;quot;n&amp;quot;, ((IClaimsIdentity)this.User.Identity).Claims.Select(c =&amp;gt; c.ClaimType + &amp;quot;: &amp;quot; +&nbsp;c.Value).ToArray()));</p>
+<p>}&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>This will return the claims bag directly from the User.Identity property from the&nbsp;controller.</p>
+<p>Well, just a short overview, but if you are thinking of implementing Google and Facebook authentication in your jQueryMobile application, hopefully this has been of some&nbsp;help.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>01. August 2011</span></p>
+            <h2><a href="/2011/08/01/using-federated-identity-for-ios-applications/">Using Federated Identity for iOS Applications</a></h2>
+          </header>
+          <section class="content"><p>Last week, Microsoft released v1.2 of the Windows Azure Toolkit for iOS.&amp;#160; As development partner for the toolkit, <a href="http:&#x2F;&#x2F;www.neudesic.com">Neudesic</a> has been working with several customers on implementing <span class="caps">ACS</span> for iPhone and iPad applications.&amp;#160; Due to popular demand, I wanted to share a short overview of how simple it is to get this up and working for your own iOS&nbsp;projects.</p>
+<p><strong>First, some&nbsp;background…</strong></p>
+<p>Many iPhone and iPad applications have a need to authenticate.&amp;#160; Maybe it&#39;s to access sensitive information or record a particular high score against your name.&amp;#160; Implementing an authentication scheme for iOS can however be time consuming and tricky – you often have to create an authentication service, host it, expose the service through <span class="caps">REST</span>, and consume it on the device.&amp;#160; And afterwards you are responsible for backing up the user database and dealing with lost passwords,&nbsp;etc.</p>
+<p>To help overcome this many applications are now turning to external providers.&amp;#160; For example, to identify yourself when playing Zynga Poker, instead of creating a new account, you simply sign into Facebook (when launching the application for the first time) and the game uses these credentials as you play. This type of sign in method is called federated identity. This prevents Zynga from having to maintain a complex and large set of user accounts and passwords, and also prevents the player from having to remember yet another username and&nbsp;password.&amp;#160; </p>
+<p>Adding federated identity to your iPhone or iPad application can be difficult, requiring knowledge of exchange secure tokens with a set of providers, and creating and sending the right OAuth headers in your application.&amp;#160; Removing this difficultly is exactly what we are trying to address in v1.2 of the Windows Azure Toolkit for&nbsp;iOS.&amp;#160; </p>
+<p><strong>Sounds great – how do I use&nbsp;it?</strong></p>
+<p>To implement <span class="caps">ACS</span> in your application, you&#39;ll first need to access the Windows Azure portal by navigating to <a href="http:&#x2F;&#x2F;windows.azure.com&#x2F;">http:&#x2F;&#x2F;windows.azure.com</a> and signing in with your&nbsp;credentials. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image002.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image002_thumb.png &quot;clip_image002&quot;" alt="clip_image002"></a></p>
+<p>Click on the <strong>Service Bus, Access Control &amp;amp; </strong>Caching menu item and select the <strong>Access Control</strong> menu item under the <strong>AppFabric</strong> folder.&amp;#160; Select an active Windows Azure subscription and click on the <strong>New</strong> button in the&nbsp;toolbar.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image004.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image004_thumb.png &quot;clip_image004&quot;" alt="clip_image004"></a></p>
+<p>The new service namespace dialog will open.&amp;#160; Ensure that <strong>Access Control</strong> is selected, and enter a unique namespace and country&#x2F;region for the&nbsp;service.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image006.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image006_thumb.png &quot;clip_image006&quot;" alt="clip_image006"></a></p>
+<p>The <span class="caps">ACS</span> namespace will now be created.&amp;#160; This might take a few minutes.&amp;#160; Wait until the namespace is showing in an <strong>Active</strong>&nbsp;state.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image008.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image008_thumb.png &quot;clip_image008&quot;" alt="clip_image008"></a></p>
+<p>Once this is complete, highlight the newly created service and click on the <strong>Access Control Service</strong> button in the toolbar.&amp;#160; This will launch the Access Control Service&nbsp;portal. </p>
+<p>Within the portal, click on<strong> Identity Providers </strong>and add the identity providers you would like to use for your&nbsp;application.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image010.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image010_thumb.png &quot;clip_image010&quot;" alt="clip_image010"></a></p>
+<p>The default is Windows Live <span class="caps">ID</span>, but you can add other preconfigured providers (such as Google and Yahoo!) as well as external identity systems configured to use&nbsp;WS-Federation.</p>
+<p>Once you have added the required providers, click on the <strong>Relying Parties</strong> section of the&nbsp;portal.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image012.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image012_thumb.png &quot;clip_image012&quot;" alt="clip_image012"></a></p>
+<p>Click on the <strong>Add</strong> button and enter the following information for the relying party&nbsp;application:</p>
+<p><strong>Name</strong> – a given name for your&nbsp;application</p>
+<p><strong>Realm</strong> – a unique <span class="caps">ID</span> for your application.&amp;#160; For this walkthrough, we’ll be using&nbsp;uri:wazmobiletoolkit</p>
+<p><strong>Return <span class="caps">URL</span></strong> – you can leave this&nbsp;blank</p>
+<p><strong>Error <span class="caps">URL</span></strong> – you can leave this&nbsp;blank</p>
+<p><strong>Token Format</strong> – select&nbsp;<span class="caps">SWT</span></p>
+<p><strong>Token Lifetime</strong> – Feel free to change the default from 600&nbsp;seconds. </p>
+<p>Select the identity providers that you would like to use, and then under the <strong>Token Signing Settings</strong> section, click on the <strong>Generate</strong> button to create a new symmetric key that will be used for this&nbsp;application.</p>
+<p>Finally, click on the <strong>Save</strong> button.&amp;#160; This will create the Relying Party&nbsp;Application.</p>
+<p>Next, go into the <strong>Rule Groups</strong> section of the portal and select the default rule group that was created for the&nbsp;application.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image014.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image014_thumb.png &quot;clip_image014&quot;" alt="clip_image014"></a></p>
+<p>Click on the <strong>Generate</strong> link in order to generate a set of default rules for this rule&nbsp;group.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image016.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011
+&#x2F;08&#x2F;clip_image016_thumb.png &quot;clip_image016&quot;" alt="clip_image016"></a></p>
+<p>Select the providers that you wish to use, and click on the <strong>Generate</strong> button.&amp;#160; Once this is complete, you should see a set of&nbsp;rules.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image018.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image018_thumb.png &quot;clip_image018&quot;" alt="clip_image018"></a></p>
+<p>After this step is complete, <span class="caps">ACS</span> has now been configured correctly to be used with your iOS application.&amp;#160; Make a note of your Service Namespace (found at the top of the portal) and&nbsp;Realm.</p>
+<p><strong>Ok, the service is now setup.&amp;#160; How do I use it in my Xcode&nbsp;project?</strong></p>
+<p>To start, launch Xcode (4.02 or higher) and create a new&nbsp;project.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image020.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image020_thumb.png &quot;clip_image020&quot;" alt="clip_image020"></a></p>
+<p>From the project template dialog, select a <strong>View-based application</strong> and click on the <strong>Next</strong> button.&amp;#160; Enter a <strong>Product Name</strong> and <strong>Company Identifier</strong> and click on the <strong>Next</strong> button to continue.&amp;#160; Select a directory to use for the project file and return to the&nbsp;<span class="caps">IDE</span>.</p>
+<p>Next, download the latest version of the Windows Azure Toolkit for iOS library from <a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;watoolkitios-lib">http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;watoolkitios-lib</a>. In the download will be a zip file containing two versions of the library (one for the device, one for the simulator) and some header files for the&nbsp;project.</p>
+<p>Right click on your project and select the <strong>Add Files to…</strong> menu&nbsp;option.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image022.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image022_thumb.png &quot;clip_image022&quot;" alt="clip_image022"></a></p>
+<p>Locate the .a file (for the simulator) and header files and add them to your project.&amp;#160; You may want to create a new group (called lib) to store these&nbsp;in.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image024.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image024_thumb.png &quot;clip_image024&quot;" alt="clip_image024"></a></p>
+<p>Now we need to add a reference to a library required for <span class="caps">XML</span> parsing.&amp;#160; To do this, click on the top most project file, click on the target in the 2<span class="ord">nd</span> column of the IDE, and select <strong>Build Phases</strong> from the tab&nbsp;menu. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image026.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image026_thumb.png &quot;clip_image026&quot;" alt="clip_image026"></a></p>
+<p>In the main window, expand the <strong>Link Binary with Libraries</strong>&nbsp;option.</p>
+<p>Ensure that the libwatoolkitios.a file has been automatically added as a reference, click the + button to add a new library, and select the libxml2.dylib library from the drop down&nbsp;list.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image028.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image028_thumb.png &quot;clip_image028&quot;" alt="clip_image028"></a></p>
+<p>Click on the <strong>Add</strong> button to add a reference to this library for your&nbsp;project.</p>
+<p>Before we start adding any code, we need to add a couple of required linker flags to the project.&amp;#160; To do this, click on the <strong>Build Settings</strong> tab (next to Build&nbsp;Phases).</p>
+<p>In the search box, type “other linker” to filter the&nbsp;settings.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image030.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image030_thumb.png &quot;clip_image030&quot;" alt="clip_image030"></a></p>
+<p>You should see a setting called <strong>Other Linker Flags</strong>.&amp;#160; Double click on the right side of this row to add new&nbsp;flags.</p>
+<p>Click on the + button to add two flags.&amp;#160; The first is <strong>–ObjC</strong> and the second is <strong>–all_load</strong>.&amp;#160; Once complete, your linker flags should look like the following&nbsp;screenshot:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image032.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image032_thumb.png &quot;clip_image032&quot;" alt="clip_image032"></a></p>
+<p>Click on the <strong>Done</strong> button to save these settings.&amp;#160; The project is now configured correctly to reference the Windows Azure Toolkit&nbsp;library.</p>
+<p>To test that the library works, click on the project’s <strong>[ProjectName]AppDelegate.m</strong> file.&amp;#160; Add the following #import statement at the top of the&nbsp;class:</p>
+<h1 id="import-amp-quot-wacloudaccesscontrolclient-h-amp-quot-">import&nbsp;&amp;quot;WACloudAccessControlClient.h&amp;quot;</h1>
+<p>Next, search for a method called <strong>didFinishLaunchingWithOptions </strong>and after the <strong>[self.window makeKeyAndVisible]</strong> line, enter the following code.
+  &lt;pre&nbsp;class=&quot;brush:c&quot;&gt;</p>
+<p>NSLog(@&amp;quot;Intializing the Access Control&nbsp;Client…&amp;quot;);</p>
+<p>WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessControlClientForNamespace:@&amp;quot;iostest-walkthrough&amp;quot;&nbsp;realm:@&amp;quot;uri:wazmobiletoolkit&amp;quot;];</p>
+<p>[acsClient showInViewController:self.viewController allowsClose:<span class="caps">NO</span> withCompletionHandler:^(BOOL authenticated)&nbsp;{</p>
+<p>if&nbsp;(!authenticated)</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;{</p>
+<p>NSLog(@&amp;quot;Error&nbsp;authenticating&amp;quot;);</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;}</p>
+<p>else</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;{</p>
+<p>NSLog(@&amp;quot;Creating the authentication&nbsp;token…&amp;quot;);</p>
+<p>WACloudAccessToken *token = [WACloudAccessControlClient&nbsp;sharedToken];</p>
+<p>&#x2F;<em> Do something with the token here! </em>&#x2F;</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;}</p>
+<p>}];&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>Replace the namespace and realm in the first line with the service namespace and realm for your own&nbsp;service.</p>
+<p>As you can see from the above, the code creates a new instance of the access control client, requests that the client shows itself in the current view controller, and then extracts a&nbsp;token. </p>
+<p>Build and run the application in the iOS&nbsp;Simulator. </p>
+<p>Once the application starts, you should be prompted to select an identity provider from the list that you configured in your <span class="caps">ACS</span>&nbsp;service.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image034.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image034_thumb.png &quot;clip_image034&quot;" alt="clip_image034"></a></p>
+<p>Pick one of the providers, and enter a valid set of&nbsp;credentials.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image036.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image036_thumb.png &quot;clip_image036&quot;" alt="clip_image036"></a></p>
+<p>Click on the <strong>Remember me</strong> checkbox if you want to skip this step when running this application again, and click on the <strong>Sign in</strong>&nbsp;button.</p>
+<p>The first time the application is run, you’ll be prompted to authorize the application to access your provider&nbsp;data.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image038.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image038_thumb.png &quot;clip_image038&quot;" alt="clip_image038"></a></p>
+<p>Click on the <strong>Allow</strong> button to continue.&amp;#160; The login window will now disappear and you’ll be returned to your&nbsp;application.</p>
+<p>In the debug window, you should see the following two&nbsp;logs:</p>
+<p>2011-07-22 10:12:26.284 iostest-walkthrough[25838:207] Intializing the Access Control&nbsp;Client…</p>
+<p>2011-07-22 10:12:36.359 iostest-walkthrough[25838:207] Creating the authentication&nbsp;token…</p>
+<p>If you are seeing this, congratulations!&amp;#160; You&#39;ve successfully setup federated identity for your application.&amp;#160; The final message indicates that the access token was retrieved and can be used for further use.&amp;#160; The <strong>WACloudAccessToken</strong> (derived from <strong>[WACloudAccessControlClient sharedToken]</strong>) contains an NSDictionary of claims and other properties that can be stored within your application.&amp;#160; Using these properties on future calls can be used to identify returning users to your&nbsp;application.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>27. May 2011</span></p>
+            <h2><a href="/2011/05/27/running-visual-studio-2010-on-the-mac/">Running Visual Studio 2010 on the Mac</a></h2>
+          </header>
+          <section class="content"><p>Following a few recent presentations, I&#39;ve had a couple of people ask how I run Visual Studio on the&nbsp;Mac. </p>
+<p>You&#39;ll be sad to hear that I don&#39;t have a special version of Visual Studio for Mac <span class="caps">OSX</span> - instead I am using VMWare Fusion 3.1 to run a copy of Windows 7 in a virtual machine. Fusion has a mode called &quot;Unity&quot; which allows windows from the virtual machine to interact with windows on the host operating system (even to the point where I can put icons for Windows-based applications in the dock on the Mac). There is a little performance hit running applications in this way vs. a full screen virtual machine, but it&#39;s certainly useful for presentations where you are flipping between both&nbsp;environments. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;05&#x2F;VSMac.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;05&#x2F;VSMac-thumb.png" alt=""></a></p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>19. May 2011</span></p>
+            <h2><a href="/2011/05/19/more-slides-from-teched/">More Slides from TechEd</a></h2>
+          </header>
+          <section class="content"><p>Additional thanks to those who attended my session this morning (<span class="caps">DPR303</span> - Developing Enterprise-Grade Mobile Applications). I&#39;ve uploaded the deck to SlideShare - you can find it at the bottom of this&nbsp;post. </p>
+<p>&lt;span style=&quot; display: inline; float: left; margin: 0 10px 10px 0;&quot;&gt;&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;8027410&quot; marginwidth=&quot;0&quot; frameborder=&quot;0&quot; height=&quot;317&quot; scrolling=&quot;no&quot; marginheight=&quot;0&quot;&nbsp;width=&quot;380&quot;&gt;&lt;&#x2F;iframe&gt;&lt;&#x2F;span&gt;</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>19. May 2011</span></p>
+            <h2><a href="/2011/05/18/teched-2011-slides-dpr304/">TechEd 2011 Slides - DPR304</a></h2>
+          </header>
+          <section class="content"><p>Thanks to everyone that came to my session at TechEd 2011 yesterday - it was a great crowd, and the presentation was a lot of fun to put together. My apologies for any confusion with the title (i.e. not making it explicit that it was a developer talk in the title) - this will definitely be something that we address next&nbsp;time. </p>
+<p>You can find the slides from the talk below, and the source code of all demos can be found on <a href="http:&#x2F;&#x2F;github.com&#x2F;simonguest">GitHub</a>. Hope you enjoy, and look forward to any&nbsp;feedback.</p>
+<p><strong><em> Update - corrected Session code in&nbsp;title </em></strong></p>
+<p>&lt;span style=&quot; display: inline; float: left; margin: 0 10px 10px 0;&quot;&gt;&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;8013939&quot; marginwidth=&quot;0&quot; height=&quot;317&quot; frameborder=&quot;0&quot; width=&quot;380&quot; marginheight=&quot;0&quot;&nbsp;scrolling=&quot;no&quot;&gt;&lt;&#x2F;iframe&gt;&lt;&#x2F;span&gt;</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>21. April 2011</span></p>
+            <h2><a href="/2011/04/21/using-apple-push-notifications-from-windows-azure/">Using Apple Push Notifications from Windows Azure</a></h2>
+          </header>
+          <section class="content"><p>In my <a href="http:&#x2F;&#x2F;channel9.msdn.com&#x2F;events&#x2F;MIX&#x2F;MIX11&#x2F;EXT18"><span class="caps">MIX11</span> session</a> last week I demonstrated how to create push notifications to iPhone and iPad devices from Wndows Azure.&amp;nbsp; I’ve put together this blog post to share more detail and the source code for how this&nbsp;works.</p>
+<p>Firstly, if you haven’t already, you will need to register your iPhone&#x2F;iPad application for push notifications.&amp;nbsp; To do this, log into the iOS developer center (you’ll need to be a registered Apple Developer) and in the provisioning portal setup a new App <span class="caps">ID</span>, enabling it for push notifications.&amp;nbsp; Here’s the App ID for my MIX&nbsp;demo:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
+<p>With the development certificate that you downloaded during this process, create a new Azure worker role and import the certificate into a folder called “certs”:&amp;nbsp; In addition, you’ll need to configure the properties of the certificate file such that the build action is set to&nbsp;“Content”.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
+<p>(I’ve deliberately skimmed over the previous points of creating and App <span class="caps">ID</span> and Azure Worker role as they are both well documented by Apple and&nbsp;Microsoft).</p>
+<p>&amp;nbsp;</p>
+<p>To start configuring the worker role for push notifications, first add a reference to the Windows Azure Storage Client (Microsoft.WindowsAzure.StorageClient) library.&amp;nbsp; In the OnRun section of the worker role, access the Azure queue that messages are going to be placed in.&amp;nbsp; 
+&lt;pre class=&quot;brush:c-sharp&quot;&gt;StorageCredentials creds = new StorageCredentialsAccountAndKey(&quot;<span class="caps">YOUR</span> ACCOUNT NAME&quot;, &quot;YOUR ACCOUNT&nbsp;KEY&quot;);</p>
+<p>CloudQueueClient cqc = new CloudQueueClient(&quot;&quot;<span class="caps">YOUR</span> QUEUE URL”,&nbsp;creds);</p>
+<p>var testQueue = cqc.ListQueues().First(q =&amp;gt; q.Name.StartsWith(&quot;<span class="caps">YOUR</span> QUEUE&nbsp;NAME&quot;));&lt;&#x2F;pre&gt;</p>
+<p>Then, still within the OnRun method, create a routine that checks the queue for incoming messages and sets up the connection to the <span class="caps">APN</span> (Apple Push Notification)&nbsp;service.</p>
+<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;while (true)
+            {&nbsp;Thread.Sleep(10000);</p>
+<pre><code>            if (testQueue.RetrieveApproximateMessageCount() != 0)
+            {
+
+                List&amp;lt;cloudqueuemessage&amp;gt; messages = testQueue.GetMessages(testQueue.RetrieveApproximateMessageCount()).ToList();
+                foreach (CloudQueueMessage message in messages)
+                {
+                    Trace.WriteLine(&amp;quot;Retrieved message from Queue: &amp;quot; + message.AsString);
+                    &amp;#x2F;&amp;#x2F; open the APN connection
+                    InitializeAPN();
+                    &amp;#x2F;&amp;#x2F; send message
+                    string session = message.AsString.Substring(0, message.AsString.IndexOf(&amp;#39;:&amp;#39;));
+                    SendAPNMessage(message.AsString, session);
+                    &amp;#x2F;&amp;#x2F; tear down the APN connection
+                    CloseAPN();
+
+                    testQueue.DeleteMessage(message);
+                }
+            }
+        }
+</code></pre><p>&lt;&#x2F;pre&gt;</p>
+<p>&lt;p&gt;You’ll probably want to do something a little more elegant than “while (true)” but this works for the purposes of this post.&amp;nbsp; Also, as I mentioned in the talk, you may or may not want to setup and tear down the connection to the <span class="caps">APN</span> for each message that you send.&amp;nbsp; If you are planning to send a large volume of messages to a large number of devices, Apple may view this as a denial of service attack and refuse your connection.&amp;nbsp; A more prescriptive approach in this scenario would be to instead open the connection in the OnStart method and keep it alive during&nbsp;OnRun.</p>
+<p>Within the worker role, setup the following declarations.&amp;nbsp; Most of these should be straightforward, and you’ll need to replace a number of them with your own details.&amp;nbsp; 
+&lt;pre class=&quot;brush:c-sharp&quot;&gt;private static string <span class="caps">HOST</span> =&nbsp;&quot;gateway.sandbox.push.apple.com&quot;;</p>
+<p>private static int <span class="caps">PORT</span> =&nbsp;2195;</p>
+<p>private static string CERT_PASSWORD = &quot;<span class="caps">YOUR</span>&nbsp;PASSWORD&quot;;</p>
+<p>private static X509Certificate2 CLIENT_CERT = new X509Certificate2(Environment.GetEnvironmentVariable(&quot;RoleRoot&quot;) + @&quot;approotcertsmix11_dev_cert.p12&quot;,&nbsp;CERT_PASSWORD);</p>
+<p>private static X509Certificate2Collection CLIENT_CERT_COLLECTION = new&nbsp;X509Certificate2Collection(CLIENT_CERT);</p>
+<p>private static string DEVICE_TOKEN = &quot;<span class="caps">YOUR</span> DEVICE TOKEN&quot;;&amp;nbsp; &#x2F;&#x2F;Replace this with the Device token we obtain later on in this&nbsp;example</p>
+<p>private TcpClient&nbsp;client;</p>
+<p>private SslStream sslStream;&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>With these declarations in place, we can now start writing the <span class="caps">APN</span> code.&amp;nbsp; First, create an IntializeAPN method, responsible for setting up the connection to the APN.
+&lt;pre class=&quot;brush:c-sharp&quot;&gt;private void&nbsp;InitializeAPN()</p>
+<p>{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; client = new TcpClient(<span class="caps">HOST</span>,&nbsp;PORT);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; sslStream = new SslStream(client.GetStream(),&nbsp;false);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;try</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; sslStream.AuthenticateAsClient(<span class="caps">HOST</span>, CLIENT_CERT_COLLECTION, SslProtocols.Tls,&nbsp;false);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; catch (AuthenticationException&nbsp;ex)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Trace.WriteLine(&quot;Could not open <span class="caps">APN</span> connection: &quot; +&nbsp;ex.ToString());</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; Trace.WriteLine(&quot;<span class="caps">APN</span> connection opened&nbsp;successfully.&quot;);</p>
+<p>}</p>
+<p>&lt;&#x2F;pre&gt;</p>
+<p>Then, create a method called SendAPNMessage which will construct and sent the push notification message in the correct format.&amp;nbsp; 
+&lt;pre class=&quot;brush:c-sharp&quot;&gt;private void SendAPNMessage(string message, string&nbsp;session)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;try</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; MemoryStream memoryStream = new&nbsp;MemoryStream();</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; BinaryWriter binaryWriter = new&nbsp;BinaryWriter(memoryStream);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; construct the&nbsp;message</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)0);&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)0);&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Write((byte)32); </p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; convert to hex and&nbsp;write</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; byte[] deviceToken = new byte[DEVICE_TOKEN.Length &#x2F;&nbsp;2];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; for (int i = 0; i &amp;lt; deviceToken.Length;&nbsp;i++)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; deviceToken[i] = byte.Parse(DEVICE_TOKEN.Substring(i * 2, 2),&nbsp;System.Globalization.NumberStyles.HexNumber);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Write(deviceToken);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; construct payload within <span class="caps">JSON</span> message&nbsp;framework</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; String payload = &quot;{&quot;aps&quot;:{&quot;alert&quot;:&quot;&quot; + message +&nbsp;&quot;&quot;,&quot;session&quot;:&quot;&quot;+session+&quot;&quot;,&quot;badge&quot;:1}}&quot;;</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; write payload&nbsp;data</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)0);&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)payload.Length);&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; byte[] payloadBytes =&nbsp;System.Text.Encoding.<span class="caps">UTF8</span>.GetBytes(payload);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Write(payloadBytes);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Flush();</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; send across the&nbsp;wire</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; byte[] array =&nbsp;memoryStream.ToArray();</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;sslStream.Write(array);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;sslStream.Flush();</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; catch (Exception&nbsp;ex)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;Trace.WriteLine(ex.ToString());</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Trace.WriteLine(&quot;Message successfully&nbsp;sent.&quot;);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; }&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>You’ll notice that my SendAPNMessage method signature contains a “session” value.&amp;nbsp; For the purposes of the demo, I was sending across the session code that had changed as an explicit value in the notification message.&amp;nbsp; Feel free to change or remove this as you&nbsp;need.</p>
+<p>Finally, the close method is called to close the connection.
+&lt;pre class=&quot;brush:c-sharp&quot;&gt;private void&nbsp;CloseAPN()</p>
+<p>{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;client.Close();</p>
+<p>}&lt;&#x2F;pre&gt;</p>
+<p>At this point, you might be wondering how you obtain the DEVICE_TOKEN value for the above.&amp;nbsp; This is not the <span class="caps">UDID</span> of the device, but instead a separate token that is generated by the phone itself.&amp;nbsp; To get this token, and to handle incoming push notifications, let’s turn our attention to the XCode project.&amp;nbsp; For my demo I was receiving push notifications within a <a href="http:&#x2F;&#x2F;www.phonegap.com">PhoneGap</a> application, but this code will work equally in a regular native client&nbsp;application.</p>
+<p>First, we need to instruct the application to register for <span class="caps">APN</span> messages.&amp;nbsp; This is done using the registerForRemoteNotificationTypes method.&amp;nbsp; You’ll need to call this method when the application first starts up (for PhoneGap projects, this can be in the init method of the AppDelegate).
+&lt;pre class=&quot;brush:c&quot;&gt;NSLog(@&quot;Registering for&nbsp;APN&quot;);</p>
+<p>[[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |&nbsp;UIRemoteNotificationTypeSound)];</p>
+<p>&lt;&#x2F;pre&gt;</p>
+<p>This method has three callbacks that it can take advantage of.&amp;nbsp; One to indicate that registration was successful (we also get the Device <span class="caps">ID</span> from here), one to indicate that something went wrong (e.g. if we are running in the simulator, which doesn’t support push notifications), and one for when we actually receive a&nbsp;message).</p>
+<p>The first two are easy to handle:
+&lt;pre class=&quot;brush:c&quot;&gt;- (void)application:(UIApplication <em>)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData </em>)deviceToken&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString *str = [NSString stringWithFormat:@&quot;Device&nbsp;Token=%@&quot;,deviceToken];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;NSLog(@&quot;%@&quot;,str);</p>
+<p>}</p>
+<ul>
+<li>(void)application:(UIApplication <em>)app didFailToRegisterForRemoteNotificationsWithError:(NSError </em>)err&nbsp;{</li>
+</ul>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString *str = [NSString stringWithFormat: @&quot;Error: %@&quot;,&nbsp;err];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; NSLog(@&quot;%@&quot;,str);&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+}&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>Note how the first method (didRegisterForRemoteNotificationsWithDeviceToken) is where we actually extract the DEVICE_TOKEN string required in the worker role.&amp;nbsp; You’ll have to run this once, and copy and paste appropriately.&amp;nbsp; Of course, in a production environment, we would likely pass this value to the service via a separate&nbsp;call.&amp;nbsp; </p>
+<p>The third callback gets called when the device actually receives a message.
+&lt;pre class=&quot;brush:c&quot;&gt;- (void)application:(UIApplication <em>)application didReceiveRemoteNotification:(NSDictionary </em>)userInfo&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp; for (id key in userInfo)&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSLog(@&quot;key: %@, value: %@&quot;, key, [userInfo&nbsp;objectForKey:key]);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString *payload = [NSString stringWithFormat:@&quot;%@&quot;,[userInfo&nbsp;objectForKey:key]];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; work out the session code from the <span class="caps">JSON</span>&nbsp;payload</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSRegularExpression*&nbsp;regex;</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSTextCheckingResult*&nbsp;result;</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSError* error =&nbsp;nil;</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString<em> regexStr = @&quot;session = ([^&#39;]</em>);&quot;;</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString* value =&nbsp;nil;</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; regex = [NSRegularExpression regularExpressionWithPattern:regexStr options:NSRegularExpressionCaseInsensitive&nbsp;error:&amp;amp;error];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; result = [regex firstMatchInString:payload options:0 range:NSMakeRange(0,&nbsp;payload.length)];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; if(result &amp;amp;&amp;amp; [result numberOfRanges] ==&nbsp;2)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSRange r = [result&nbsp;rangeAtIndex:1];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; value = [payload&nbsp;substringWithRange:r];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;if(value)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSLog(@&quot;Found session value in payload:&nbsp;%@&quot;,value);</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString* jsString = <a href="http:&#x2F;&#x2F;URLHERE.cloudapp.net&#x2F;Session&#x2F;Lookup?session=%@&amp;quot;">NSString stringWithFormat:@&quot;handleOpenURL(&quot;[http:&#x2F;&#x2F;<span class="caps">URLHERE</span>.cloudapp.net&#x2F;Session&#x2F;Lookup?session=%@&quot;);&quot;,value];</a>;&amp;quot;,value];)</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; [webView&nbsp;stringByEvaluatingJavaScriptFromString:jsString];</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; }&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
+<p>&amp;nbsp;&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>As you can see above, this method parses the payload of the message, tries to work out the session code, and if one is found, creates a new javascript call to a method called handleOpenURL which instructs PhoneGap to call the method of the same name.&amp;nbsp; Of course, you are going to want to configure this for your own scenario, but hopefully this gives you a sense of how to pass a value as part of the message, and then take an action on that&nbsp;accordingly.&amp;nbsp; </p>
+<p>Well, that wraps up this post.&amp;nbsp; I hope you enjoyed the talk at <span class="caps">MIX</span>, and that this code is useful if you have services in Windows Azure that have a need to push notification messages to iPhone and iPad&nbsp;devices. </p>
+<p>&lt;pre&gt;&lt;&#x2F;pre&gt;</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>18. April 2011</span></p>
+            <h2><a href="/2011/04/18/developing-iphone-and-ipad-apps-that-leverage-windows-azure/">Developing iPhone and iPad apps that leverage Windows Azure</a></h2>
+          </header>
+          <section class="content"><p>Thanks to all that came to my session at <span class="caps">MIX11</span> last week – it was a lot of fun to put together despite a couple of demo glitches!&amp;#160; You can now <a href="http:&#x2F;&#x2F;channel9.msdn.com&#x2F;events&#x2F;MIX&#x2F;MIX11&#x2F;EXT18">view the recording</a> of this online, as well as browse and download the slides&nbsp;below.&amp;#160; </p>
+<p>I’ll be sharing the source code for the demos in the next couple of posts. 
+  &lt;div style=&quot;width: 425px&quot; id=&quot;<strong>ss_7666104&quot;&gt;<strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;ext18-guest &quot;Ext18 guest&quot;">Ext18 guest</a></strong>&lt;object id=&quot;</strong>sse7666104&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;param name=&quot;movie&quot; value=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=ext18guest-110418123055-phpapp01&amp;amp;stripped_title=ext18-guest&amp;amp;userName=simonguest&quot; &#x2F;&gt;&lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot; &#x2F;&gt;&lt;param name=&quot;allowScriptAccess&quot; value=&quot;always&quot; &#x2F;&gt;&lt;embed name=&quot;__sse7666104&quot; src=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=ext18guest-110418123055-phpapp01&amp;amp;stripped_title=ext18-guest&amp;amp;userName=simonguest&quot; type=&quot;application&#x2F;x-shockwave-flash&quot; allowscriptaccess=&quot;always&quot; allowfullscreen=&quot;true&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;&#x2F;embed&gt;&lt;&#x2F;object&gt;    &lt;div style=&quot;padding-bottom: 12px; padding-left: 0px; padding-right: 0px; padding-top: 5px&quot;&gt;View more <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;">presentations</a> from <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a>.&lt;&#x2F;div&gt;&nbsp;&lt;&#x2F;div&gt;</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>09. April 2011</span></p>
+            <h2><a href="/2011/04/08/iphone-and-ipad-security/">iPhone and iPad Security</a></h2>
+          </header>
+          <section class="content"><p>Thanks to everyone that attended my April WebCast on iPhone and iPad&nbsp;Security.&amp;#160; </p>
+<p><em>“Your organization is starting to rely on iPhone and iPad devices to do business.&amp;#160; But how secure are these devices, especially in an enterprise setting?&amp;#160; How do you apply policy to the device?&amp;#160; What security considerations should you be thinking about in your own applications?&amp;#160; And what happens when people in your organization &amp;quot;jailbreak&amp;quot; a&nbsp;device?”</em></p>
+<p>This was a fun presentation to put together, covering many aspects of security from policy, data protection, network, and application&nbsp;security.</p>
+<p>You can view the recording <a href="http:&#x2F;&#x2F;www.neudesic.com&#x2F;insight&#x2F;Presentation&#x2F;Pages&#x2F;PW20110407.aspx">here</a>, or browse through the slides on slideshare below.&amp;#160; 
+  &lt;div style=&quot;width: 425px&quot; id=&quot;<strong>ss_7567963&quot;&gt;<strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;iphone-and-ipad-security &quot;iPhone and iPad Security&quot;">iPhone and iPad Security</a></strong>&lt;object id=&quot;</strong>sse7567963&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;param name=&quot;movie&quot; value=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=webcast-iphoneipadsecurity-110409000033-phpapp02&amp;amp;stripped_title=iphone-and-ipad-security&amp;amp;userName=simonguest&quot; &#x2F;&gt;&lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot; &#x2F;&gt;&lt;param name=&quot;allowScriptAccess&quot; value=&quot;always&quot; &#x2F;&gt;&lt;embed name=&quot;__sse7567963&quot; src=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=webcast-iphoneipadsecurity-110409000033-phpapp02&amp;amp;stripped_title=iphone-and-ipad-security&amp;amp;userName=simonguest&quot; type=&quot;application&#x2F;x-shockwave-flash&quot; allowscriptaccess=&quot;always&quot; allowfullscreen=&quot;true&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;&#x2F;embed&gt;&lt;&#x2F;object&gt;    &lt;div style=&quot;padding-bottom: 12px; padding-left: 0px; padding-right: 0px; padding-top: 5px&quot;&gt;View more <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;">presentations</a> from <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a>.&lt;&#x2F;div&gt;&nbsp;&lt;&#x2F;div&gt;</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>29. December 2010</span></p>
+            <h2><a href="/2010/12/29/getting-authentication-working-with-wcf-and-wp7/">Getting Authentication Working with WCF and WP7</a></h2>
+          </header>
+          <section class="content"><p>Although Windows Phone 7 (<span class="caps">WP7</span>) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little&nbsp;quirky.&amp;#160; </p>
+<p>After working on a project over the holidays putting together a <span class="caps">WP7</span> client to connect to a Web service requiring authentication, this is what I&nbsp;found:</p>
+<p>1.&amp;#160; <span class="caps">NTLM</span>&#x2F;Kerberos is a no&nbsp;go…</p>
+<p>As of today, the <span class="caps">WCF</span> client on WP7 does not support NTLM or Kerberos authentication.&amp;#160; If you are accessing Web services from a device, you’ll want to make sure that the your server&amp;#160; is setup to handle Basic authentication (preferably over&nbsp;SSL).</p>
+<p>2.&amp;#160; And even Basic authentication needs a helping&nbsp;hand…</p>
+<p>Even with Basic authentication enabled on the server, I was noticing that the client was still not sending the right <span class="caps">HTTP</span> headers – even when setting the <strong>ClientCredentials</strong> property on the client and playing with the config file.&amp;#160; No matter what I tried, I couldn’t get it to&nbsp;work.</p>
+<p>To overcome this however, you can force the Basic authentication details to be written as part of the request header.&amp;#160; To do this, first create a method that generates a <span class="caps">UTF8</span> encoded string for your domain, username, and password:
+  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>public static string GetCredentials(string domain, string username, string&nbsp;password)</p>
+<p>{&amp;#160;&amp;#160;&amp;#160;&amp;#160; </p>
+<pre><code>return Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format(@&amp;amp;quot;{0}{1}:{2}&amp;amp;quot;,domain,username,password)));&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; 
+</code></pre><p>}&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>Then, you’ll need to create a new property with your&nbsp;credentials:</p>
+<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>HttpRequestMessageProperty request = new HttpRequestMessageProperty();
+request.Headers[System.Net.HttpRequestHeader.Authorization] = &amp;quot;Basic &amp;quot; + GetCredentials;&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>Finally, add the header to your outgoing&nbsp;request:</p>
+<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>OperationContextScope clientScope = new OperationContextScope(client.InnerChannel);
+OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessageProperty.Name, request);&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>(in the above client is your service&nbsp;reference)</p>
+<p>And voila!&amp;#160; You should now have Basic authentication headers as part of your client requests, and you can access username&#x2F;password protected Web services from your <span class="caps">WP7</span>&nbsp;device!</p>
+<p>One final tip - during all of this you will likely need to use a tool like Fiddler to trace your requests and responses from the device.&amp;#160; If you are having troubles getting Fiddler working with the <span class="caps">WP7</span> emulator, <a href="http:&#x2F;&#x2F;phone7.wordpress.com&#x2F;2010&#x2F;10&#x2F;17&#x2F;fiddler-and-wp7-emulator-working&#x2F;">here</a> is a great post that outlines what to&nbsp;do.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>18. October 2010</span></p>
+            <h2><a href="/2010/10/18/test-driven-development-tdd-and-windows-phone-7/">Test Driven Development (TDD) and Windows Phone 7</a></h2>
+          </header>
+          <section class="content"><p>Kylen, my 6 year old son, is really into world flags. At home we have a sheet of around 200 flags from across the globe, and he’s pretty close at reciting all of them (and certainly much better than Mom and&nbsp;Dad!).</p>
+<p>Spending a couple of hours over labor day last month, I set myself a task of building a “Flag Matching” application for Windows Phone 7 (<span class="caps">WP7</span>). My goal was twofold: Build a simple application that he can use (and that I can offer on the marketplace), and at the same time, look into some of the TDD best practices for developing a WP7&nbsp;application.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a>The application itself is simple enough. As shown above, the player gets presented with a picture of a flag, and four possible countries (of which only one is correct). A game consists of 20 flags, and the application maintains a high score&nbsp;table.</p>
+<p>During development of the application, this is what I&nbsp;found:</p>
+<p><strong>1. Setting up <span class="caps">TDD</span> for Windows Phone&nbsp;7</strong></p>
+<p>As a new developer for Windows Phone 7, one of the first things you’ll quickly discover is that there is no option for a test project within the <span class="caps">IDE</span>. After creating a WP7 solution, I searched for the “WP7 Test Project” template, but to no&nbsp;avail…</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a>A quick search on the Web will offer up a few alternatives and chances are, you’ll quickly reach Jeff Wilcox’s session on <a href="http:&#x2F;&#x2F;live.visitmix.com&#x2F;MIX10&#x2F;Sessions&#x2F;CL59">Unit Testing Silverlight <span class="amp">&amp;</span> Windows Phone Applications</a> from <span class="caps">MIX10</span>. This is a really good session, however the recommended approach (using a Silverlight-based unit test framework) can be somewhat&nbsp;limited.</p>
+<p>In my opinion, although it works well for small numbers of tests, not having unit tests outside the emulator makes it difficult for large test suites, using any continuous integration, and integrating with the&nbsp;<span class="caps">IDE</span>.</p>
+<p>If unit tests in the emulator don’t work for you either, here’s a&nbsp;workaround:</p>
+<p>In your solution, create a new project of type <strong>Windows Phone Class Library</strong>.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a>Name it appropriately (I called mine <strong>FlagMatch.Test</strong>) and include a reference to the original Windows Phone project (<strong>FlagMatch</strong>). Add the <a href="http:&#x2F;&#x2F;nunit.org&#x2F;">NUnit</a> unit test framework library as a reference (I’m using v2.0.50727) and write your tests as you normally would (of course, specific to the NUnit syntax).
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;[TestFixture]
+public class FlagModelTests
+{
+    [Test]
+    public void TestFourRandomFlags_AllUnique()
+    {
+        Assert.AreEqual(4, Flag.FourRandom.GroupBy(f =&gt; f.Name).Select(f =&gt; f).Count());
+    }&nbsp;}&lt;&#x2F;pre&gt;  </p>
+<p>Once you have a set of tests, you can then integrate these within Visual Studio. I’ve had reasonable luck with <a href="http:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;visualnunit&#x2F;">Visual NUnit</a>, a free <span class="caps">IDE</span> plug in that works well with many versions of Visual&nbsp;Studio.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a>Alternatively, if you use <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;resharper&#x2F;">ReSharper</a>, you’ll find that their <span class="caps">IDE</span> integration works great&nbsp;also.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a>My preference is to use ReSharper as it works well with with another JetBrains product called <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;dotcover&#x2F;">dotCover</a> – for which you can use to analyze test code coverage in your Windows Phone&nbsp;application.</p>
+<p>Although you’ll find the majority of your unit tests will work great, you may well come across some strange errors. Most of these will be related to operations on the phone that cannot be replicated outside the emulator. For example, accessing isolated storage or referring to embedded resources&#x2F;images as part of the project works well within the emulator, but not so much from a class&nbsp;library.</p>
+<p>To get around this, you’ll need to create some mock objects to handle these operations. In my test project, I have a <strong>MockStorageProvider </strong>that I use in place of calls to isolated storage:
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;[Test]
+public void TestResumeButton_NotVisibleOnStartup()
+{
+    MainViewModel viewModel = new MainViewModel(new MockStorageProvider());
+    Assert.AreEqual(Visibility.Collapsed, viewModel.ResumeGameButtonVisibility);&nbsp;}&lt;&#x2F;pre&gt;  </p>
+<p>As you can see, I pass the mock object to the view model (more on this in the next section) as an optional constructor parameter. All storage operations then use this MockStorageProvider instead of writing to isolated storage (which would have generated an exception during the tests). This also has the advantage that I can add additional tests within the mock object to ensure that the storage provider is being called correctly from the&nbsp;application.</p>
+<p><strong>2. Using <span class="caps">MVVM</span> with&nbsp;WP7</strong></p>
+<p>For anyone with experience of testing Silverlight projects, you’ll know that although <span class="caps">XAML</span> provides a code separation layer, testing parts of the UI (e.g. actions when a button is pressed) can still be difficult. This can be overcome by using a pattern called <a href="http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Model_View_ViewModel"><span class="caps">MVVM</span></a> (Model View ViewModel). I’m not going to go into the details of <span class="caps">MVVM</span> here (there are plenty of other resources that do a great job) other than to say it can be used for WP7 applications with a little tweaking. The core reason is that WP7 is based largely on the SL3 codebase, which does not contain a complete commanding event&nbsp;model.</p>
+<p>There are a couple of approaches in order to get <span class="caps">MVVM</span> working on WP7. The first would be to reuse one of the existing samples&#x2F;libraries available today. Your mileage may vary (as I found some were designed for pre-RTM versions), although I’ve heard good reviews about Laurent Bugnion’s <a href="http:&#x2F;&#x2F;galasoft.ch&#x2F;mvvm&#x2F;getstarted&#x2F;">MVVMLite</a>&nbsp;project.</p>
+<p>If instead you’d like to learn how implement this yourself, here is how I achieved&nbsp;it:</p>
+<p>First, you should create a view model base. Assuming you are going to have multiple view models (I ended up with one per page), it’s a good idea.
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class ViewModelBase : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler&nbsp;PropertyChanged;</p>
+<pre><code>public void NotifyPropertyChanged(String propertyName)
+{
+    if (PropertyChanged != null)
+    {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
+<p>Next, create your view model, inheriting from ViewModelBase.
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class MainViewModel : ViewModelBase
+{
+    public string NewGameButtonTitle
+    {
+        get { return AppResources.NewGameButtonTitle; }&nbsp;}</p>
+<pre><code>public NewGameCommand NewGameButton
+{
+    get
+    {
+        return new NewGameCommand();
+    }
+}
+</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
+<p>For the purposes of this sample code, let’s imagine that we have a single page with a “New Game” button. As you can see above, the view model contains two properties – one for the title of the button, the second for the command that this button will be bound&nbsp;to.</p>
+<p>In order to implement the commands, you’ll need a couple of things. The first is a command service:
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public static class CommandService
+{
+    private static readonly DependencyProperty&nbsp;_commandProperty;</p>
+<pre><code>static CommandService()
+{
+    _commandProperty = DependencyProperty.RegisterAttached(&amp;quot;Command&amp;quot;, typeof(ICommand), typeof(CommandService),
+    new PropertyMetadata(OnCommandChanged));
+}
+
+public static ICommand GetCommand(DependencyObject dependencyObject)
+{
+    return (ICommand)dependencyObject.GetValue(_commandProperty);
+}
+
+public static void SetCommand(DependencyObject dependencyObject, ICommand value)
+{
+    dependencyObject.SetValue(_commandProperty, value);
+}
+
+private static void OnCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpceArgs)
+{
+    if (dependencyObject is Button)
+    {
+        string parameter = dependencyObject.GetValue(_commandProperty).ToString();
+        Button button = (Button)dependencyObject;
+        ICommand command = (ICommand)dpceArgs.NewValue;
+        button.Click += delegate(object sender, RoutedEventArgs arg) { command.Execute(parameter); };
+    }
+}
+</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
+<p>There are a good number of examples of this around (just search for <span class="caps">MVVM</span>) – this one I found in a great post from the <a href="http:&#x2F;&#x2F;codingsolutions.blogspot.com&#x2F;2010&#x2F;03&#x2F;steps-to-run-windows-phone-7-unit-test.html">Coding Solutions</a>&nbsp;blog.</p>
+<p>After this, you’ll need to create event handlers. Here’s a simple handler for when the new button is pressed.
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class CommandEvents
+{
+    public static EventHandler NewGameButtonPressed;&nbsp;}&lt;&#x2F;pre&gt;  </p>
+<p>Your command itself simply implements the ICommand interface:
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class NewGameCommand : ICommand
+{
+    public NewGameCommand()
+    {&nbsp;}</p>
+<pre><code>public bool CanExecute(object parameter)
+{
+    return true;
+}
+
+public event EventHandler CanExecuteChanged;
+
+public void Execute(object parameter)
+{
+    if (this.CanExecute(null))
+    {
+        if (CommandEvents.NewGameButtonPressed != null)
+        {
+            CommandEvents.NewGameButtonPressed(this, new EventArgs());
+        }
+    }
+}
+</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
+<p>With all these in place, you can now bind the command to the actual button in your <span class="caps">XAML</span> file. On your XAML page, you’ll need to add the following namespace:
+  &lt;pre style=&quot;clear:&nbsp;both&quot;&gt;xmlns:Commands=&quot;clr-namespace:FlagMatch.Commands&quot;&lt;&#x2F;pre&gt;  </p>
+<p>And on the button itself, simply bind to the command using the following:
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;button name=&quot;button1&quot; margin=&quot;134,505,0,0&quot; verticalalignment=&quot;Top&quot; commands:commandservice.command=&quot;{Binding Path=NewGameButton}&quot; content=&quot;{Binding NewGameButtonTitle}&quot; height=&quot;72&quot; horizontalalignment=&quot;Left&quot;&nbsp;width=&quot;227&quot;&lt;&#x2F;pre&gt;  </p>
+<p>Notice how the content of the button is bound to the <strong>NewGameButtonTitle</strong> in the view model, and the command is bound to the <strong>NewGameButton</strong> command. More importantly, notice also how there are no traditional event handlers needed&nbsp;here.</p>
+<p>The final piece of the puzzle is to register the view model and the button event handler in the <span class="caps">XAML</span> code behind. To do this, in the code behind, we create an instance of the view model:
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;private readonly MainViewModel _mainViewModel = new&nbsp;MainViewModel();&lt;&#x2F;pre&gt;  </p>
+<p>Then in the constructor, bind the view model to the datacontext and register the button event handler.
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;LayoutRoot.DataContext =&nbsp;_mainViewModel;</p>
+<p>CommandEvents.NewGameButtonPressed += new&nbsp;EventHandler(StartGame);&lt;&#x2F;pre&gt;  </p>
+<p>The StartGame method simply performs a navigate action for us. This is something that just can’t be moved into the view model.
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;private void StartGame(object sender, EventArgs e)
+{
+    NavigationService.Navigate(new Uri(&quot;&#x2F;GamePage.xaml&quot;, UriKind.Relative));&nbsp;}&lt;&#x2F;pre&gt;  </p>
+<p>Other than that, there is no additional <span class="caps">UI</span> logic required in code behind – which means for a slightly more complex implementation, but one that provides great test&nbsp;coverage.</p>
+<p>A final point worth noting is designer support. As you start building out controls using the <span class="caps">MVVM</span> paradigm, you’ll likely find that the designer ends up being difficult to&nbsp;use.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a>Because we are binding content directly to the view model, the designer doesn’t know where to pick up values to be shown at design time. Fortunately, there is a way around this. Simply add a reference to the view model in your App.xaml file:
+  &lt;pre style=&quot;clear: both&quot;&gt;&lt;local:mainviewmodel x:key=&quot;MainViewModel&quot;&nbsp;xmlns:local=&quot;clr-namespace:FlagMatch.ViewModels&quot;&gt;&lt;&#x2F;local:mainviewmodel&gt;&lt;&#x2F;pre&gt;  </p>
+<p>Rebuild the project, and you’ll see that the designer picks up the default values from a instance of the view model&nbsp;class:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a><strong>3. Localization and&nbsp;<span class="caps">MVVM</span></strong></p>
+<p>Finally, I wanted to make sure that my <span class="caps">MVVM</span> model could be used for multiple&nbsp;languages.</p>
+<p>You may have noticed that in the previous code sample, the title of the button is returned as <strong>AppResources.NewGameButtonTitle</strong> (instead of returning “New Game”).
+  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public string NewGameButtonTitle
+{
+    get { return AppResources.NewGameButtonTitle; }&nbsp;}&lt;&#x2F;pre&gt;  </p>
+<p>This is to make localization easy (well… easier!). Under my <strong>Locales</strong> namespace there are two&nbsp;files:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a><strong>AppResources.resx</strong> is a resource file that contains default (in my case English) string values. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “New&nbsp;Game”.</p>
+<p>As you may have guessed, <strong>AppResources.es-<span class="caps">ES</span>.resx</strong> is the Spanish version of this resource file. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “Nuevo&nbsp;Juego”</p>
+<p>In order to enable the Spanish localized version, we need to do a few&nbsp;things:</p>
+<p>Firstly, create separate resource files for all your languages, using the <strong>AppResources.[lang].resx </strong>format as stated&nbsp;above.</p>
+<p>Next, in the .resx file, ensure that the access modifier is set to&nbsp;public.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a>(Otherwise, you’ll find that it just doesn’t offer the localized&nbsp;version).</p>
+<p>Them edit your .csproj file outside Visual Studio (using Notepad or similar). Add the supported country code in the <strong>SupportedCultures </strong>tag.
+  &lt;pre style=&quot;clear:&nbsp;both&quot;&gt;&lt;supportedcultures&gt;es-<span class="caps">ES</span>&lt;&#x2F;supportedcultures&gt;&lt;&#x2F;pre&gt;  </p>
+<p>Save the file and reload the project in Visual&nbsp;Studio.</p>
+<p>Once this is done, deploy the application to the emulator, and set the language of the emulator appropriately (Settings &#x2F; Region and Language &#x2F; Display Language). The emulator will&nbsp;restart.</p>
+<p>Finally, test your application. You should find that the new language strings are now&nbsp;used:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a>(My Spanish isn’t that good, so apologies for any mistakes&nbsp;above!).</p>
+<p>One word of caution: The testing process on the Windows Phone Marketplace is strict when it comes to supporting multiple languages. If you submit an application that supports multiple languages, you really need to make sure that <em>all</em> strings are localized (and you provide localized screenshots and product descriptions) in order to pass the testing&nbsp;certification.</p>
+<p><strong><em> Update: I&#39;ve recently moved the source code for the project - you can now find it on&nbsp;http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;flagmatch </em></strong></p>
+
+          </section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/page/2/">« Newer</a><a href="/page/4/">Next page »</a>
+        </div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

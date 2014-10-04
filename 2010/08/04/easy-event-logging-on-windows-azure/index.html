@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Easy Event Logging on Windows Azure - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Easy Event Logging on Windows Azure</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.&amp;#160;&amp;#160; Effective logging can be difficult to setup.&amp;#160; Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs,&nbsp;etc.&amp;#160; </p>
+<p>Instead, I wanted an easy way to log custom events and exceptions in my application.&amp;#160; This is how to do&nbsp;it:</p>
+<p>1. Create a class that inherits from System.Diagnostics.TraceListener.&amp;#160; 
+  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>public class AzureTraceListener :&nbsp;TraceListener   </p>
+<p>{    </p>
+<p>public static List&amp;lt;String&amp;gt; Events = new&nbsp;List&amp;lt;String&amp;gt;(); </p>
+<p>&amp;#160;&amp;#160;&amp;#160; public override void Write(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;} </p>
+<p>&amp;#160;&amp;#160;&amp;#160; public override void WriteLine(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;}  </p>
+<p>} 
+&lt;&#x2F;pre&gt;
+2.&amp;#160; In your web role, add a reference to your custom trace listener.&amp;#160; This is done by adding the following two lines in your OnStart()&nbsp;method.</p>
+<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>AzureTraceListener atl = new AzureTraceListener();<br>Trace.Listeners.Add(atl);</p>
+<p>&amp;#160;
+&lt;&#x2F;pre&gt;
+3.&amp;#160; In your application, log your events using the Trace.Write(string)&nbsp;method.</p>
+<p>4.&amp;#160; To display your events, create a new page called Traceviewer.aspx with the following block of&nbsp;<span class="caps">HTML</span>:</p>
+<p>&lt;pre&nbsp;class=&quot;brush:html&quot;&gt;</p>
+<p>&amp;lt;h1&amp;gt;Trace Log&amp;lt;&#x2F;h1&amp;gt;<br>&amp;lt;% foreach (String eventitem in WebRole1.AzureTraceListener.Events)<br>&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Response.Write(&amp;quot;&amp;lt;h4&amp;gt;&amp;quot;+eventitem+&amp;quot;&amp;lt;&#x2F;h4&amp;gt;&amp;quot;);<br>&amp;#160;&amp;#160; } 
+%&amp;gt;&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>That’s it.&amp;#160; Deploy your application and simply call Traceviewer.aspx to look at all of your generated&nbsp;events.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

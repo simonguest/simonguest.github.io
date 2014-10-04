@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>JavaOne Tutorial Apache Tomcat on Windows Azure - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>JavaOne Tutorial Apache Tomcat on Windows Azure</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>&lt;html xmlns=&quot;&quot;&gt;As I mentioned in <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;2010&#x2F;09&#x2F;08&#x2F;speaking-at-javaone-2010&#x2F;">my previous post</a>, I’ll be participating in a <a href="http:&#x2F;&#x2F;www.eventreg.com&#x2F;cc250&#x2F;sessionDetail.jsp?SID=313962">panel</a> at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1&nbsp;request.</p>
+<p>Here is an overview of what I will be&nbsp;showing:</p>
+<p><strong>Step 1 – What you’ll need to get&nbsp;started</strong></p>
+<p>As you might imagine, you are going to first need a Windows Azure account.  I would recommend going to <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;windowsazure&#x2F;offers">www.microsoft.com&#x2F;windowsazure&#x2F;offers</a> and signing up for the introductory special, which will allow you to test your application for free.  The introductory offer gives you the first 25 hours at no cost, which should be more than enough time to get up and&nbsp;running.</p>
+<p><strong>I**</strong>f you are at JavaOne however, **I have a limited quantity (100) of tokens that give you 30 days worth of access with no need to submit any registration or credit card information.  See me at the end of the panel session or throughout the conference, and in exchange for a business card, I’ll be happy to give you one at no&nbsp;cost!</p>
+<p>After you have your account, you’ll want to download and install the <a href="http:&#x2F;&#x2F;go.microsoft.com&#x2F;fwlink&#x2F;?LinkID=130232">Windows Azure <span class="caps">SDK</span></a>.  After installation, set your <span class="caps">PATH</span> environment to include the location of the SDK binaries (typically <em>C:Program FilesWindows Azure SDKv1.1bin</em>).  This is important to ensure that the <span class="caps">SDK</span> is accessible from the command&nbsp;line.</p>
+<p>Finally, you’ll need to install the <a href="http:&#x2F;&#x2F;code.msdn.microsoft.com&#x2F;winazuretomcat">Windows Azure Tomcat Solution Accelerator</a>.  Feel free to install this in any directory you’d like – I’m using <em>c:devjavaone2010tomcatazure</em> for the purposes of this&nbsp;tutorial.</p>
+<p>&lt;p$1$2$3$4$5$6&gt;</p>
+<p><strong>Step 2 – Building and running your&nbsp;site</strong></p>
+<p>With all of the pre-requisites downloaded and installed, it’s time to build and test your site.  To do this, open a command prompt, and navigate to the directory that you chose for the solution accelerator.  From this directory, run <strong>buildme.cmd</strong>.  You’ll be prompted to provide the installation path of your Tomcat installation and a <span class="caps">JRE</span> on your&nbsp;machine.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
+<p>After a successful build, run the <strong>runme.cmd</strong> file. This will run Tomcat using the Windows Azure Desktop Execution Tool – also known as the local development&nbsp;fabric.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a></p>
+<p>This is a great way to test that your application is going to work when deployed to production.  Navigate to the <span class="caps">URL</span> provided at the end  (replace the tcp with http) to ensure that the Tomcat instance is working correctly on your local&nbsp;machine.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a></p>
+<p>You can open the development fabric tool (found running in your system tray) if you want to stop and&#x2F;or investigate the&nbsp;service.</p>
+<p>&lt;p$1$2$3$4$5$6&gt;</p>
+<p><strong>Step 3 – Packaging and deploying your&nbsp;site</strong></p>
+<p>Once you are satisfied that everything looks good, it’s time to package the application ready for deployment to the cloud.  To do this, run the <strong>packme.cmd </strong>script.  This will invoke the Windows Azure Packaging Tool, and pull together everything needed into one package file for&nbsp;deployment.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a></p>
+<p>When this has completed, you should see a <strong>Tomcat.cspkg </strong>file and a <strong>ServiceConfiguration.cscfg </strong>file in the directory.  The .cspkg file is quite large as it contains your application, the Tomcat instance, and <span class="caps">JRE</span> binaries.  Despite the size, this format makes it convenient if you prefer to use a different version of Tomcat or a different JRE in the&nbsp;future.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a></p>
+<p>To deploy to the cloud, log on to the portal (<a href="http:&#x2F;&#x2F;windows.azure.com">http:&#x2F;&#x2F;windows.azure.com</a>) and create a new hosted service.  Walk through the wizard to specify the name, description, <span class="caps">URL</span>, and location where you want the service to be deployed.  Next, hit the “Deploy” button and specify the location of the previous package and configuration&nbsp;file.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a></p>
+<p>You have two options when it comes to deploying – either a file from your local storage (i.e. your local disk) or a file from an Azure storage account (blob storage).  If you have issues with the local storage (many http connections timeout before the package can be uploaded in time), I would recommend using <a href="http:&#x2F;&#x2F;azurestorageexplorer.codeplex.com&#x2F;">Neudesic’s Azure Storage Explorer</a> to upload your files to a blob storage&nbsp;container.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a></p>
+<p>Hit <em>Deploy</em>, and your package will be uploaded to Windows Azure – this will likely take a few minutes because of the size of the&nbsp;deployment.</p>
+<p>Once this has been completed, hit the <em>Run</em> button to bring your site to&nbsp;life.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a></p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a></p>
+<p>Once you have a site up and running, feel free to explore some of the ways that you can either scale your application to multiple nodes or explore some of the <a href="http:&#x2F;&#x2F;www.windowsazure4j.org">other features</a> on Windows Azure available to Java&nbsp;developers.</p>
+<p>&lt;p$1$2$3$4$5$6&gt;</p>
+<p>There are many ways that this could be improved by integrating with existing build environments (I think Maven integration would be fascinating), but hopefully this short tutorial gives you a starting point for getting a simple Tomcat site up and running on Windows&nbsp;Azure.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

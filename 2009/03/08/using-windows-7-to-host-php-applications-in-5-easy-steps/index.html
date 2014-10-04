@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Using Windows 7 to host PHP applications in 5 easy steps! - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Using Windows 7 to host PHP applications in 5 easy steps!</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>A few people have asked me recently whether it’s possible to setup Windows 7 as a <span class="caps">PHP</span> server (for development purposes).  The answer is absolutely yes, and it’s a breeze to setup.  Follow these five simple steps to get PHP up and running in&nbsp;minutes:</p>
+<ol>
+<li>In the <strong>Programs and Features </strong>control panel, click on the <strong>Turn Windows features on or off</strong>&nbsp;link:</li>
+</ol>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
+<ol>
+<li>In the list of Windows Features, expand<strong> Internet Information Services</strong>, <strong>World Wide Web Services</strong>, and the <strong>Application Deployment Features</strong>.  If it’s not already, select the <strong><span class="caps">CGI</span></strong> checkbox and click <span class="caps">OK</span>.  (The most reliable way of hosting PHP applications on Windows 7 is to use the built in FastCGI interface for IIS – checking this box installs it together with any&nbsp;pre-requisites.)</li>
+</ol>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_thumb_3.png &quot;image&quot;" alt="image"></a></p>
+<ol>
+<li><p>Download the <strong>non-thread-safe</strong> <strong>(<span class="caps">NTS</span>) </strong>version of <span class="caps">PHP</span> from <a href="http:&#x2F;&#x2F;www.php.net&#x2F;downloads.php">http:&#x2F;&#x2F;www.php.net&#x2F;downloads.php</a>.  The current version (as of time of writing is 5.2.9).  (The thread safe (<span class="caps">TS</span>) version will also work, but generally NTS is faster, and thread safety is not an issue under FastCGI).  Expand the zip to an installation directory of your choice – e.g.&nbsp;c:devphp</p>
+</li>
+<li><p>Copy the <strong>php.ini-recommended </strong>file to <strong>php.ini </strong>in the <span class="caps">PHP</span> directory.  Edit the php.ini file and add correctly configure <strong>extension_dir</strong>, pointing to the <span class="caps">PHP</span> extensions directory (normally the .ext folder of the PHP installation – e.g c:devphpext).  You can also configure other php.ini options and modules here if&nbsp;required.</p>
+</li>
+<li><p>Run <strong>Internet Information Services Manager</strong> by typing <strong>inetmgr</strong> in the Start menu.  You can either set the global settings of the server, or (recommended) add a new web site to run the <span class="caps">PHP</span> applications.  Once you’ve done this, double click on the <strong>Handler Mappings </strong>for the site and add a new module mapping with the following&nbsp;settings:</p>
+</li>
+</ol>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_thumb_4.png &quot;image&quot;" alt="image"></a></p>
+<p><strong>Request path </strong>should be set to <em>.php.  <strong>Module</strong> should be FastCgiModule.  <strong>Executable</strong> should be {php_install_dir}php-cgi.exe.  <em>*Name</em></em> can be anything – I use “<span class="caps">PHP</span> via Fast&nbsp;CGI”.</p>
+<p>That’s it! Simply start&#x2F;restart <span class="caps">IIS</span> and you are ready to go.  The easiest way to test that everything is working is to create a simple info.php file with a single line:
+&lt;div&nbsp;class=&quot;code&quot;&gt;</p>
+<p>&amp;lt;?php phpinfo();&nbsp;?&amp;gt;</p>
+<p>&lt;&#x2F;div&gt;
+When you access this page from a browser (e.g. <a href="http:&#x2F;&#x2F;localhost:8081&#x2F;info.php">http:&#x2F;&#x2F;localhost:8081&#x2F;info.php</a>), you should see the <span class="caps">PHP</span> info&nbsp;screen:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;UsingPHPonWindows7_BFFB&#x2F;image_thumb_5.png &quot;image&quot;" alt="image"></a></p>
+<p>Validate that the server <span class="caps">API</span> is using CGI&#x2F;FastCGI and that the loaded configuration file is the one in your installation&nbsp;directory.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

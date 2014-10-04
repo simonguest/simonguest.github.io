@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header class="header">
+      <div class="content-wrap">
+        <div class="logo">
+          <h1><a href="http://localhost:8080">simonguest.com</a></h1>
+          <p class="description">The only person allowed to login as 'guest'</p>
+        </div>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article intro">
+          <header>
+            <p class="date"><span>05. May 2014</span></p>
+            <h2><a href="/2014/05/05/gids-2014/">GIDS 2014</a></h2>
+          </header>
+          <section class="content"><p>A couple of weeks ago, I had the privilege of speaking at <a href="http:&#x2F;&#x2F;www.developermarch.com&#x2F;developersummit&#x2F;about.html"><span class="caps">GIDS</span></a> (the Great Indian Developer Summit) 2014 in Bangalore. <span class="caps">GIDS</span> is a multi-day event, with each day dedicated to a particular theme or topic. I spoke on the Wednesday (the Web&#x2F;Mobile day) and had three sessions covering mobile app development using iBeacons, tips and tricks using AngularJS, and automated Web testing using&nbsp;JavaScript.</p>
+<p>Thanks to everyone who came to each of the sessions. I really enjoyed the feedback and audience participation, and look forward to similar sessions in the future. I&#39;ve included links to the three decks below on Slideshare, and have posted all of the source code <a href="http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;gids">here</a>.</p>
+<p>&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;33831437&quot; style=&quot;border: 1px solid #<span class="caps">CCC</span>; border-width: 1px 1px 0; margin-bottom: 5px; max-width: 100%;&quot; width=&quot;427&quot; height=&quot;356&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; frameborder=&quot;0&quot;&gt;&nbsp;&lt;&#x2F;iframe&gt;</p>
+<p>&lt;div style=&quot;margin-bottom: 5px;&quot;&gt;<strong> <a href="https:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;indoor-location-in-mobile-applications-using-i-beacons &quot;Indoor location in mobile applications using iBeacons&quot;">Indoor location in mobile applications using iBeacons</a> </strong> from <strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a></strong>&lt;&#x2F;div&gt;</p>
+<p>&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;33831520&quot; style=&quot;border: 1px solid #<span class="caps">CCC</span>; border-width: 1px 1px 0; margin-bottom: 5px; max-width: 100%;&quot; width=&quot;427&quot; height=&quot;356&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; frameborder=&quot;0&quot;&gt;&nbsp;&lt;&#x2F;iframe&gt;</p>
+<p>&lt;div style=&quot;margin-bottom: 5px;&quot;&gt;<strong> <a href="https:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;advanced-tips-tricks-for-using-angular-js &quot;Advanced Tips &amp;amp; Tricks for using Angular JS&quot;">Advanced Tips &amp;amp; Tricks for using Angular <span class="caps">JS</span></a> </strong> from <strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a></strong>&lt;&#x2F;div&gt;</p>
+<p>&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;33831582&quot; style=&quot;border: 1px solid #<span class="caps">CCC</span>; border-width: 1px 1px 0; margin-bottom: 5px; max-width: 100%;&quot; width=&quot;427&quot; height=&quot;356&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; frameborder=&quot;0&quot;&gt;&nbsp;&lt;&#x2F;iframe&gt;</p>
+<p>&lt;div style=&quot;margin-bottom: 5px;&quot;&gt;<strong> <a href="https:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;automated-web-testing-using-javascript &quot;Automated Web Testing using JavaScript&quot;">Automated Web Testing using JavaScript</a> </strong> from <strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a></strong>&lt;&#x2F;div&gt;</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>28. March 2014</span></p>
+            <h2><a href="/2014/03/28/bluetooth-issues-on-mavericks/">Bluetooth Issues on Mavericks</a></h2>
+          </header>
+          <section class="content"><p>I&#39;ve been having some issues recently with the Bluetooth stack on my Mac acting strangely - causing Bluetooth devices to drop at random times and on occasions, the default mouse and keyboard will stop working even though the machine is running fine. One of the symptoms of this has been the bluetooth preferences pane showing “do not localize” when things become&nbsp;corrupt.</p>
+<p>I think (well, I hope) I&#39;ve solved it by performing an <span class="caps">SMC</span> and NVRAM reset on the Mac. In case other are seeing similar symptoms, I wanted to share how you do these&nbsp;resets:</p>
+<p><strong><span class="caps">SMC</span> Reset:</strong> Power down the Mac. Hold down Shift-Control-Option and the power button for a few seconds. Not much will happen. Release all of the keys, and power on&nbsp;normally.</p>
+<p><strong><span class="caps">NVRAM</span> Reset:</strong> Power down the Mac. Hold Command, P and R down and power on the Mac. The Mac will boot for a few seconds and then reboot. Release all of the keys at this point, and boot&nbsp;normally.</p>
+<p>After doing these resets, the Bluetooth stack seems a lot more&nbsp;stable.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>27. March 2014</span></p>
+            <h2><a href="/2014/03/27/automated-web-testing-using-javascript/">Automated Web Testing using JavaScript</a></h2>
+          </header>
+          <section class="content"><p>The process of creating automated tests for Web applications has been around for many years. Vendors such as <span class="caps">HP</span>, Parasoft, QFS, and even Microsoft have test software that can be used to create and run automated tests. Over the past couple of years however, we’ve seen an industry-trend towards open source Web testing solutions based on JavaScript. Such solutions have the advantage of being easily modified, free to download, very modular, supported by a vibrant community, and (given the popularity of client-side JavaScript) tests can often be written using the same language as the Web&nbsp;application. </p>
+<p>For this blog post, I wanted to share some of our observations at Neudesic, and some of the tools that we’ve had success with during recent&nbsp;projects.</p>
+<p><strong>Unit Tests or&nbsp;Assertions?</strong></p>
+<p>Before considering any unit test, one of the questions we try to ask is whether the same functionality can be provided by an assertion. An assertion is, in its simplest form, code in your application that asserts that some condition is true – and if it’s false, stops the application and&#x2F;or reports an error&nbsp;message.</p>
+<p>The easiest way to perform an assertion in JavaScript is with the <strong>console.assert</strong> function. This is supported on the latest version of most major browsers (Chrome, Safari, and <span class="caps">IE</span> 10 upwards). A simple use of console.assert might look as&nbsp;follows:</p>
+<p>&lt;pre&gt;var myMethod = function(x){
+  console.assert(x, &#39;X should not be undefined&#39;);
+  &#x2F;<em> rest of method goes here </em>&#x2F;
+};&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>As shown above, this is the simplest form of an assertion, yet quite effective. More importantly, it also negates the need to have a redundant unit test that checks whether the value of x is null, resulting in fewer tests that simply do assertion checking. There are many developers who use assertions during development and then strip out the assertions for production. While this has some merit, a more productive approach can be to create your own assertion function. This might look something like the&nbsp;following:</p>
+<p>&lt;pre&gt;var myMethod = function(x){
+  assert(x, &#39;X should not be undefined&#39;);
+  &#x2F;<em> rest of method goes here </em>&#x2F;
+};&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>As shown above, instead of calling console.assert we call a custom function. This has the advantage that in development mode we can inject an assert function that writes to the console or adds a breakpoint in code, whereas in production mode we might choose to display a more friendly error message to the user and potentially log the crash via an analytics&nbsp;service.</p>
+<p><strong>QUnit</strong></p>
+<p>Assertions are useful for performing simple checks on methods, but there will likely come a time where you need to perform more rigorous tests of logic, using a unit test. <a href="http:&#x2F;&#x2F;qunitjs.com">QUnit</a> is a popular JavaScript framework for unit testing, whose origins come from jQuery and jQuery <span class="caps">UI</span>. QUnit works by defining a set of tests that are run within the QUnit test runner (which itself is just a Web page). Unit tests are simple, and follow a format similar to the&nbsp;following:</p>
+<p>&lt;pre&gt;test(&#39;a basic test example&#39;, function() {
+  var value = &#39;hello&#39;;
+  equal(value, ‘hello&#39;, &#39;We expect value to be hello&#39;);
+})&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>If you are new to unit testing in JavaScript, and starting out by writing simple single page tests, QUnit is a good way to get&nbsp;started.</p>
+<p><strong>Jasmine and&nbsp;Karma</strong></p>
+<p>While QUnit provides a good introduction to unit testing, it is easy to quickly reach a limit, especially if your application has a lot of tests nested in a hierarchy. In addition, QUnit does not typically provide any <span class="caps">CI</span> (Continuous Integration) functionality out of the box. As you increase your familiarity with unit testing using JavaScript, it is well worth checking out <a href="http:&#x2F;&#x2F;jasmine.github.io">Jasmine</a> and <a href="http:&#x2F;&#x2F;karma-runner.github.io">Karma</a>.</p>
+<p>Jasmine is a <span class="caps">BDD</span>-style framework for writing tests. While similar to the QUnit construct, the syntax tends to be cleaner and more widely adopted in the JavaScript&nbsp;community:</p>
+<p>&lt;pre&gt;describe(&#39;a basic test example&#39;, function() {
+  it(&#39;tests that true is always the truth&#39;, function() {
+  expect(true).toBe(true);
+  });
+});&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>As can be shown in the example above, the describe, it, and expect keywords work with unit tests, but also apply to <span class="caps">BDD</span> style tests also – making Jasmine a good candidate for writing tests of both types. Jasmine is just a language syntax and by design doesn’t offer any test runner implementation. Fortunately, there are a number of test runners available that can run Jasmine tests. One such framework gaining adoption is Karma, a test framework developed by the AngularJS team at&nbsp;Google.</p>
+<p>Karma, which used to be called Testacular (insert your joke here about why the name changed!), is a flexible test framework that can be used to call unit tests written in Jasmine and other frameworks. Karma is very lightweight, which means it works well in <span class="caps">CI</span> (Continuous Integration) settings, even to the point where it’s possible to have Karma invoke a series of tests after each file save on your development machine. While there are many different test runners capable of executing unit tests, I believe Karma adoption will continue to grow, and this should be something that you should look at for your own testing&nbsp;needs.</p>
+<p><strong>Selenium</strong></p>
+<p>Unit testing is useful for testing discreet logic in your application, but falls short of telling you whether the application is working correctly for the user in their environment – i.e. through their browser. To do this we need to turn to integration testing – testing the end to end operation of your Web application. <a href="http:&#x2F;&#x2F;seleniumhq.org">Selenium</a> is an open source project that has been in development for the past 10 years, originally developed by <a href="http:&#x2F;&#x2F;thoughtworks.com">ThoughtWorks</a> as a replacement for Mercurial (hence the name, as Selenium is often used to cure Mercury&nbsp;poisoning!).</p>
+<p>Today, Selenium has three major components: Selenium <span class="caps">IDE</span>, Selenium WebDriver, and Selenium&nbsp;Grid.</p>
+<p><strong>Selenium <span class="caps">IDE</span></strong> is a browser extension for Firefox that enables you to record a series of actions and test assertions via a “recording function” in the browser. By default, the test gets written to a <span class="caps">HTML</span>-based test suite, and can be replayed at any time. While Selenium IDE is a useful tool for investigating the underlying operations of the testing platform, it is not well suited for use in production – the tests don’t support inheritance, which makes management of the tests difficult, especially when things change in your application. Moreover, the tests have to be run through the Firefox browser, which makes true automation&nbsp;difficult.</p>
+<p><strong>Selenium WebDriver</strong> (which used to be Selenium <span class="caps">RC</span>) is a server-side version of the Selenium testing platform that does support scripted tests. WebDriver (based on the emerging WebDriver spec, hence the name), runs as a Java service and accepts incoming TCP socket connections from test clients. Upon receiving a connection, the service invokes a browser, runs the tests, and reports status back to the client via the socket. Any test platform that implements the <a href="https:&#x2F;&#x2F;dvcs.w3.org&#x2F;hg&#x2F;webdriver&#x2F;raw-file&#x2F;default&#x2F;webdriver-spec.html">WebDriver specification</a> can issue tests to a Selenium&nbsp;server.</p>
+<p><strong>Selenium Grid</strong> is a service where multiple Selenium servers can be clustered to handle a high volume of tests. It is often used by service providers (such as SauceLabs) who are offering testing services to multiple&nbsp;clients.</p>
+<p>For many projects, Selenium WebDriver makes the most sense. In order to use WebDriver with Jasmine however, you still need to have a test runner (remember that Jasmine doesn’t provide any test platform). Karma is not a fit here as it is best suited for unit tests, not end-to-end tests (as it happens, the documentation actually discourages the use of Karma for integration testing). To solve this, we turn to another testing framework from Google, <a href="http:&#x2F;&#x2F;github.com&#x2F;angular&#x2F;protractor">Protractor</a>:</p>
+<p><strong>Protractor</strong> is an end-to-end test framework, typically used to test <a href="http:&#x2F;&#x2F;angularjs.org">AngularJS</a> applications – although any Web application can be tested as protractor contains methods to call the underlying WebDriver implementation. It is built upon a library called <a href="https:&#x2F;&#x2F;code.google.com&#x2F;p&#x2F;selenium&#x2F;wiki&#x2F;WebDriverJs">WebDriverJS</a>, a JavaScript-implementation of the WebDriver client, which makes it wire compatible with Selenium WebDriver. Protractor is simple to install, and supports Jasmine as it’s primary test language. A test using protractor might look as&nbsp;follows:</p>
+<p>&lt;pre&gt;describe(&#39;test hello world home page&#39;, function() {
+  it(&#39;should greet the named user&#39;, function() {
+    browser.get(&#39;http:&#x2F;&#x2F;www.angularjs.org&#39;);
+    element(by.model(&#39;yourName&#39;)).sendKeys(&#39;Simon&#39;);
+    var greeting = element(by.binding(&#39;yourName&#39;));
+    expect(greeting.getText()).toEqual(&#39;Hello Simon!&#39;);
+  });
+});&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>As you can see above, this simple test will open a Web page, look for a data binding called ‘yourName’, send a name to it, and then assert that the greeting replied is correct. You should note that the model and binding above are specific to AngularJS, and (if you are not using AngularJS) can be replaced with similar lookups based on <span class="caps">HTML</span> ID, CSS, or XPATH query. Using the protractor test runner, this test can be sent to an instance of Selenium, which in turn will invoke a new browser, run the test, and report back the results to the&nbsp;client.</p>
+<p><strong>IDEs for Creating Protractor Tests. </strong>While creating tests is a manual process today, there are several open source projects with a goal of being able to generate protractor-based tests from a more visual interface. One such tool is <a href="http:&#x2F;&#x2F;sebuilder.github.io&#x2F;se-builder&#x2F;">Selenium Builder</a>, which while still in Alpha, looks very&nbsp;promising.</p>
+<p><strong>Using Page Objects.</strong> While Jasmine and Protractor offer a very quick way of creating and running tests, you often need to be careful to manage the tests that you create. If you make a simple change in the <span class="caps">UI</span>, you want to avoid a situation where you need to change many tests. One way of overcoming this is to use <a href="https:&#x2F;&#x2F;github.com&#x2F;angular&#x2F;protractor&#x2F;blob&#x2F;master&#x2F;docs&#x2F;getting-started.md#organizing-real-tests-page-objects">Page Objects</a> when using Protractor. A Page Object is, by definition, a JavaScript class that defines methods on a&nbsp;page.</p>
+<p>These methods might be AddCustomer, DeleteCustomer, ModifyCustomer, etc. The tests then call these page objects to perform the function. For example, AddCustomer(valid), AddCustomer(invalid), AddCustomer(invalid2), etc. This approach offers many advantages, especially if the page changes. If a change to page occurs, only the page object has to be changed once, which makes maintenance and re-use throughout the tests more&nbsp;predictable.</p>
+<p><strong>PhantomJS.</strong> Finally, as we discussed previously, Selenium works by invoking a new browser process in order to run tests. While this is useful on your development machine, there are times where you may want to invoke tests that do not have access to a fully installed browser – for example, if you are doing server-side tests on a Linux or a <a href="http:&#x2F;&#x2F;docker.io">Docker</a> instance without a <span class="caps">UI</span> installed. To accomplish this, <a href="http:&#x2F;&#x2F;phantomjs.org">PhantomJS</a> can be used. PhantomJS is a headless version of WebKit written in Qt, and can act as a browser without any of the <span class="caps">UI</span> overhead associated with actually launching a&nbsp;browser.</p>
+<p>PhantomJS can be invoked in one of two ways – either plugged directly into Selenium as an alternative browser process – or, because PhantomJS implements <a href="https:&#x2F;&#x2F;github.com&#x2F;detro&#x2F;ghostdriver">GhostDriver</a> (wire level compatibility with WebDriver), it can be called directly from Protractor. PhantomJS is still in early development stages (and at the time of writing being ported to Qt5), but looks to offer a lot of potential for developers who are looking to do integration testing in a headless&nbsp;environment.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>27. January 2014</span></p>
+            <h2><a href="/2014/01/27/file-new-presentation/">File &gt; New &gt; Presentation</a></h2>
+          </header>
+          <section class="content"><p>About a year ago, I set out on a journey to write a book on presentation skills, aimed primarily towards software developers and other technical professionals. My reasoning is that too many presentations in our industry still fail to connect with their audience, don’t tell a story, and end up as a set of mind-numbing slides of bullet points that put people to&nbsp;sleep.</p>
+<p>The book, aptly titled ‘File &gt; New &gt; Presentation’, was released last November, and reviews have started to appear in the New Year - a few on <a href="http:&#x2F;&#x2F;www.amazon.com&#x2F;File-New-Presentation-Developers-Professionals-ebook&#x2F;dp&#x2F;B00GEH9FHM">Amazon</a>, and <a href="http:&#x2F;&#x2F;www.joshholmes.com&#x2F;blog&#x2F;2014&#x2F;01&#x2F;26&#x2F;file-new-presentation-a-review&#x2F;">this one</a> by Josh Holmes, who presented about the subject at CodeMash earlier this&nbsp;month.</p>
+<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2014&#x2F;01&#x2F;FNP.png &quot;FNP.png&quot;" alt="Book Cover"></p>
+<p>If you are a developer (or other technical professional), looking to improve your presentation skills, I hope you’ll check out the book. You can find it on <a href="http:&#x2F;&#x2F;www.amazon.com&#x2F;File-New-Presentation-Developers-Professionals-ebook&#x2F;dp&#x2F;B00GEH9FHM">Amazon</a> in both Kindle and paperback&nbsp;format.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>12. December 2013</span></p>
+            <h2><a href="/2013/12/12/ibeacon-demo-at-gartner-aadi/">iBeacon Demo at Gartner AADI</a></h2>
+          </header>
+          <section class="content"><p>Last week, I joined my colleagues from Neudesic at the Gartner <span class="caps">AADI</span> (Application Architecture Development &amp;amp; Integration) Summit in Las Vegas. One of the neat things that we were showing was a demo of iBeacon technology, in order to help locate and pinpoint individuals within indoor environments where GPS is not an&nbsp;option. </p>
+<p>To achieve this, we placed a selection of iBeacons around the expo floor (for the iBeacons we used RedBear’s <span class="caps">BLE</span> Mini boards, flashed with their iBeacon&nbsp;firmware).</p>
+<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;12&#x2F;readbear_blemini.png &quot;readbear_blemini.png&quot;" alt="Red Bear BLE Mini"></p>
+<p>Using Bluetooth <span class="caps">LE</span> (a.k.a. Bluetooth Smart), each beacon transmits a unique ID (made up of a major and minor value) on a particular “frequency&quot; (known as a proximity UUID). iBeacon supported mobile applications are then able to “tune in” to this proximity UUID, and based on the power signal for each beacon, determine which area of the floor a user is located closest&nbsp;to.</p>
+<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;12&#x2F;gartneraadi_screenshot.png &quot;gartneraadi_screenshot.png&quot;" alt="Gartner AADI screenshot"></p>
+<p>Using this information we created a mobile app that reports on all of the beacons within range on the expo floor. As you can see in the above screenshot, we have 5 iBeacons in range, listed in order of proximity, with an estimated distance calculated by the power signal. As you can likely gather from the data, we were located in the Neudesic booth at the time this screenshot was taken, with the theater, and a selection of other booths in&nbsp;range.</p>
+<p>For the show, we developed two versions of the application - one for iOS and one for Android. Both are native mobile applications written using <a href="http:&#x2F;&#x2F;xamarin.com">Xamarin</a>, using CLLocationManager for iOS, and Radius Network’s <a href="https:&#x2F;&#x2F;github.com&#x2F;RadiusNetworks&#x2F;android-ibeacon-service">binding</a> for supporting iBeacon on Android. The Radius implementation is especially interesting in that the beacon detection runs as a background service, polling for new iBeacons and raising intents to the <span class="caps">UI</span> as necessary (even though Bluetooth LE is a lot more responsible with power vs. regular Bluetooth, we still need to be careful not to kill the battery when using this&nbsp;however).</p>
+<p>While this is neat to show just as a mobile application, we wanted to take it one step further and demonstrate how this could be applied in the real world with <a href="http:&#x2F;&#x2F;www.neuronesb.com">Neuron</a>, an <span class="caps">ESB</span> product from Neudesic. For our expo demo, Neuron provided a backbone infrastructure to allow the mobile app to resolve a name for a beacon ID (think of his like DNS for iBeacons!) and also give a scalable way for users to “check in” to an iBeacon the same way that they would check in via Foursquare or&nbsp;Facebook.</p>
+<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;12&#x2F;gartneraadi_neuron.png &quot;gartneraadi_neuron.png&quot;" alt="Neuron process flow"></p>
+<p>As shown above, we developed a process flow using Neuron to accept incoming messages from the mobile application, and then provided logic to determine whether the device was trying to acquire a name for a beacon, or whether the user had walked in to the area of a beacon and wanted to “check in”. The benefit for using Neuron in this situation vs. just propping up a single web service is that our application can now scale to hundreds of thousands of concurrent mobile clients without needing to make any major adjustments on the&nbsp;server-side.</p>
+<p>If you were able to stop by the booth at the Gartner summit, I hope you enjoyed the demo and the conversation. If you weren’t able to attend, but would like to know more about how Neudesic is working with various organizations on iBeacon technology and&#x2F;or Neuron, feel free to drop me a&nbsp;line.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>06. August 2013</span></p>
+            <h2><a href="/2013/08/06/building-a-webrtc-client-for-android/">Building a WebRTC Client for Android</a></h2>
+          </header>
+          <section class="content"><p><strong>*</strong> Update:  As a few readers have pointed out, the libjingle source has now been merged into the main WebRTC branch (https:&#x2F;&#x2F;code.google.com&#x2F;p&#x2F;webrtc&#x2F;source&#x2F;browse&#x2F;trunk&#x2F;talk). As a result, some of the instructions here will need to be adjusted.  I&#39;m going to leave the post as is, but bear this in mind if you are following each of the steps.  Thanks.  <strong>*</strong></p>
+<p>If you&#39;ve been following any of the recent developments with WebRTC, you&#39;ll know that the majority of samples and example code available today target the Web browser (typically Chrome or Firefox).  While this is useful to get up to speed, <span class="caps">IMO</span> one of the most powerful applications of WebRTC will be for mobile devices.  Despite this, getting WebRTC running on mobile can be somewhat&nbsp;challenging.</p>
+<p>While Chrome Beta for Android supports WebRTC, any true mobile client will always need some kind of native application (in order to receive incoming calls in the background).  In this post, I&#39;ll be showing how to walk through the minefield of compiling WebRTC for Android in order to build your own demo app that you can expand&nbsp;upon.</p>
+<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;08&#x2F;NewImage.png &quot;NewImage.png&quot;" alt="NewImage"></p>
+<p><strong>Configuring your Build&nbsp;Environment</strong></p>
+<p>In order to build Android WebRTC, you are going to need a machine running Linux.  For the purposes of this article, I would recommend some kind of virtual image (VMWare or VirtualBox) running Ubuntu Server 12.04.2 <span class="caps">LTS</span>.  When you build your VM image, ensure that you use the 64bit version of Ubuntu, and that you allocate a minimum of 2Gb RAM to the image (any less and you may well see the compiler running out of&nbsp;memory).</p>
+<p>After you get your Linux <span class="caps">VM</span> up, the first thing is to install the required build tools.  First, the git and subversion&nbsp;clients:</p>
+<p><code>sudo apt-get install git git-svn subversion</code></p>
+<p>Then, you&#39;ll need the Chromium depot tools - these tools are required to build the WebRTC bits, much of which derives from various parts of the Chromium project.  To install:
+<code>cd ~
+git clone https:&amp;#x2F;&amp;#x2F;chromium.googlesource.com&amp;#x2F;chromium&amp;#x2F;tools&amp;#x2F;depot_tools.git</code></p>
+<p>After the tools have been brought down, you&#39;ll also need to add them to your&nbsp;path:</p>
+<p><code>echo export PATH=&amp;quot;$PATH&amp;quot;:</code>pwd<code>&amp;#x2F;depot_tools &amp;amp;gt;&amp;amp;gt; ~&amp;#x2F;.bashrc</code></p>
+<p>Once this is done, log out and log back in to the server.  From the command line&nbsp;run:</p>
+<p><code>gclient</code></p>
+<p>If all is working, you should see a list of available client commands.  If you see &quot;command not found&quot;, edit the ~&#x2F;.bashrc file and double check your path is set&nbsp;correctly.</p>
+<p>The final part of configuring your build environment involves installing some required libraries and compilers.  To perform this, use the following&nbsp;command:</p>
+<p><code>sudo apt-get install g++ pkg-config gtk+-2.0 libnss3-dev</code></p>
+<p>Once this is complete your machine should be in a position to start pulling down the WebRTC&nbsp;code.</p>
+<p><strong>Obtaining libjingle Source&nbsp;Code</strong></p>
+<p>In order to build the Android WebRTC client, we are going to pull down and compile the &quot;libjingle&quot; project.  Libjingle is a set of components to interoperate with Google Talk, but also contains (at the time of writing) the most complete and functional Android&nbsp;client.</p>
+<p>To pull down the source, follow these instructions:
+<code>cd ~
+mkdir libjingle
+cd libjingle
+gclient config http:&amp;#x2F;&amp;#x2F;libjingle.googlecode.com&amp;#x2F;svn&amp;#x2F;trunk</code></p>
+<p>After you&#39;ve run the config command you should notice a new file called .gclient in the ~&#x2F;libjingle directory.  Edit this file (using <span class="caps">VIM</span> or nano) and append the following to the end of the&nbsp;file:</p>
+<p><code>target_os=[&amp;#39;android&amp;#39;,&amp;#39;unix&amp;#39;]</code></p>
+<p>This will instruct gclient to pull down the required third party libraries and other tools for an Android build of&nbsp;libjingle.</p>
+<p>With this file modified, run the following command from the ~&#x2F;linjingle&nbsp;directory:</p>
+<p><code>gclient sync --nohooks</code></p>
+<p>This will start a large sync of the liblibjingle source code, which will likely take some time.  A great opportunity for a coffee or break at this&nbsp;point!</p>
+<p><strong>Installing the Oracle&nbsp;<span class="caps">JDK</span></strong></p>
+<p>Before we can compile libjingle, we&#39;ll need to install the Oracle <span class="caps">JDK</span>.  Although the majority of the library is native (and uses the Android NDK) this is required to build the JAR and APK file at the end of the&nbsp;build.</p>
+<p>To install, go to the Oracle <span class="caps">JDK</span> downloads page (<a href="http:&#x2F;&#x2F;www.oracle.com&#x2F;technetwork&#x2F;java&#x2F;javase&#x2F;downloads&#x2F;index.html">http:&#x2F;&#x2F;www.oracle.com&#x2F;technetwork&#x2F;java&#x2F;javase&#x2F;downloads&#x2F;index.html</a>) and download the latest <span class="caps">JDK</span> 1.6.  Note that JDK 7 will not work and you will get errors later on.  For the purpose of this tutorial I have been using Java SE Development Kit&nbsp;6u45.</p>
+<p>As you are running server, you may need to download the <span class="caps">JDK</span> on another machine (where you will need to accept the license agreement) and then copy the .bin file to your Linux server (using either curl, wget, or VMWare shared&nbsp;folders).</p>
+<p>Assuming the .bin file is in your home (~) directory, to install the <span class="caps">JDK</span>, perform the&nbsp;following:</p>
+<p><code>cd &amp;#x2F;usr&amp;#x2F;lib&amp;#x2F;jvm &amp;amp;amp;&amp;amp;amp; sudo &amp;#x2F;bin&amp;#x2F;sh ~&amp;#x2F;jdk-6u45-linux-x64.bin -noregister</code></p>
+<p>This will extract the <span class="caps">JDK</span> to the &#x2F;usr&#x2F;lib&#x2F;jvm directory.  After this is complete, we need to set the defaults to use the Oracle VM as opposed to the OpenJDK VM (which is installed by default).
+<code>sudo update-alternatives --install &amp;#x2F;usr&amp;#x2F;bin&amp;#x2F;javac javac &amp;#x2F;usr&amp;#x2F;lib&amp;#x2F;jvm&amp;#x2F;jdk1.6.0_45&amp;#x2F;bin&amp;#x2F;javac 50000
+sudo update-alternatives --install &amp;#x2F;usr&amp;#x2F;bin&amp;#x2F;java java &amp;#x2F;usr&amp;#x2F;lib&amp;#x2F;jvm&amp;#x2F;jdk1.6.0_45&amp;#x2F;bin&amp;#x2F;java 50000
+sudo update-alternatives --config javac
+sudo update-alternatives --config java</code></p>
+<p>Finally, to overcome a small bug in the libjingle gwp compile scripts, we need to create a symbolic link:
+<code>cd &amp;#x2F;usr&amp;#x2F;lib
+ln -s jdk1.6.0_45 java-6-sun</code></p>
+<p>After you&#39;ve done this, run the following&nbsp;command:</p>
+<p><code>java -version</code></p>
+<p>If you see &quot;Java HotSpot build 1.6.0_45&quot; instead of &quot;OpenJDK&quot;, the correct version of Java is install and you should be in good&nbsp;shape.</p>
+<p><strong>Preparing for&nbsp;Compilation</strong></p>
+<p>Before we compile, there are a few things that are required.  Firstly, we need to install some 32 bit compatibility libraries so that aapt and other Android compilation tools will function correctly.  To install, run the following&nbsp;command:</p>
+<p><code>sudo apt-get install ia32-libs</code></p>
+<p>Next, edit&nbsp;~&#x2F;libjingle&#x2F;trunk&#x2F;third_party&#x2F;webrtc&#x2F;build&#x2F;common.gypi</p>
+<p>Navigate to the line that&nbsp;contains:</p>
+<p><code>enable_tracing==0</code></p>
+<p>and replace&nbsp;with:</p>
+<p><code>enable_tracing==1</code></p>
+<p>This will prevent the Android client from crashing (when it realizes it doesn&#39;t have a default trace file) and will make debugging the Android application a whole lot&nbsp;easier!</p>
+<p>Finally, perform the following commands to complete preparation:
+<code>cd ~&amp;#x2F;libjingle&amp;#x2F;trunk
+.&amp;#x2F;build&amp;#x2F;install-build-deps-android.sh
+. .&amp;#x2F;build&amp;#x2F;android&amp;#x2F;envsetup.sh</code></p>
+<p>This will correctly setup the android dependencies.  Note the leading period on the envsetup script - this is very important as we need the variables to be set for the rest of the&nbsp;session.</p>
+<p>Assuming these commands ran without errors, now&nbsp;run:</p>
+<p><code>gclient runhooks</code></p>
+<p>This command will generate the required ninja gwp compilation scripts.  After this,&nbsp;run:</p>
+<p><code>android_gyp</code></p>
+<p>You may get an error indicating that content.gyp could not be found - it is fine to ignore this for&nbsp;now.</p>
+<p><strong>Compiling!</strong></p>
+<p>If you&#39;ve reached this stage, congratulations!  We can now try to compile!  To do this, run the following command from the ~&#x2F;libjingle&#x2F;trunk&nbsp;directory:</p>
+<p><code>ninja -C out&amp;#x2F;Debug -j 10 AppRTCDemo</code></p>
+<p>This command is instructing the ninja compile tool to generate a debug version of the build, using a maximum of 10 concurrent build&nbsp;threads.</p>
+<p>Depending on your machine, compilation will likely take about 10-15 minutes (time for that other coffee!).  Assuming everything went well, you should see some output in the ~&#x2F;libjingle&#x2F;trunk&#x2F;out&#x2F;Debug&nbsp;folder:</p>
+<p><code>AppRTCDemo-debug.apk</code></p>
+<p>This is the main demo&nbsp;<span class="caps">APK</span>.</p>
+<p><code>libjingle_peerconnection.jar</code></p>
+<p>This is the <span class="caps">JAR</span> for&nbsp;libjingle.</p>
+<p><code>libjingle_peerconnection_so.so</code></p>
+<p>This is the <span class="caps">ARM</span>-based native&nbsp;library.</p>
+<p><strong>Running the <span class="caps">APK</span> on your&nbsp;device</strong></p>
+<p>To run the <span class="caps">APK</span> on your device, copy the file to a machine with ADB installed (and your device connected) and run the following&nbsp;command:</p>
+<p><code>adb -d install AppRTCDemo-debug.apk</code></p>
+<p>If all goes well, you should see a new application called &quot;AppRTC&quot;.  To test the application, launch a new browser on your desktop (not on the phone!) and navigate to http:&#x2F;&#x2F;apprtc.appspot.com.  Enable access to your camera and microphone and note the room number of the conference&nbsp;window.</p>
+<p>Now, launch the AppRTC application on your device and enter the room number as part of the <span class="caps">URL</span> (ensure that there are no spaces).  If all goes well you should have an established connection with video and audio between the browser and the mobile&nbsp;device!</p>
+<p>If you run into issues (and this is quite complex, so it&#39;s usual) check <span class="caps">ADB</span> logcat for any errors and exceptions that are being produced by the AppRTC application.  Although functionally, this code is working, at the time of writing the TURN server being hosted on Google&#39;s Compute Cloud is having some issues - so I had to dive into the code and configure the application to use an alternative - but that&#39;s probably a good excuse for another post sometime in the&nbsp;future!</p>
+<p>Either way, I hope this was useful and good&nbsp;luck!</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>05. July 2013</span></p>
+            <h2><a href="/2013/07/05/designing-a-web-api-for-mobile-apps/">Designing a Web API for Mobile Apps</a></h2>
+          </header>
+          <section class="content"><p>At Neudesic, almost every mobile project that we&#39;ve been involved in has had some dependency on a Web <span class="caps">API</span>.  This has included APIs that we&#39;ve had to create from scratch, as well as ones that already exist that the app has to&nbsp;consume.</p>
+<p>As you can imagine, over the past few years, we&#39;ve seen a fair share of good and bad <span class="caps">API</span> design.  In this blog post, I wanted to share some of my observations, thoughts, and questions that I ask of a well designed Web API, especially one that will be called from a mobile&nbsp;app.</p>
+<p><strong>1.  Are the basics being&nbsp;met?</strong></p>
+<p>First, the basics.  Without question, every Web <span class="caps">API</span> should be stateless.  There should be no session state, cookies, or server-side values used to hold any state of any kind.  Adding state adds complexity, and limits the ability for the API to scale, which for a mobile application that could reach millions of users is something that we want to&nbsp;avoid.</p>
+<p>Also, endpoints of the <span class="caps">API</span> should be exposed through SSL by default.  SSL is easy to setup, performant, and should be enabled for any API that we either consume or create.  As you may have observed, using SSL as default seems to be a direction in which many other APIs are&nbsp;heading.</p>
+<p><strong>2.  How do we authenticate with the&nbsp;<span class="caps">API</span>?</strong></p>
+<p>Authentication is critical to a Web <span class="caps">API</span>, and (in my opinion) is one of the common pitfalls.  As a rule, user credentials should never be passed as part an API call.  Take the following example:
+<code>GET &amp;#x2F;accounts?username=simon&amp;amp;amp;password=simon</code></p>
+<p>Doing this is bad for three&nbsp;reasons:</p>
+<p>Firstly, although the <span class="caps">URL</span> gets encapsulated as part of the HTTPS session, it is likely still visible in any logs on the Web server.  This often also applies to user credentials passed as HTTP&nbsp;headers.</p>
+<p>Secondly, it makes debugging with users and other developers awkward (because you often need to ask for their username and password).  This is especially bad if the credentials are corporate accounts used for other&nbsp;systems.</p>
+<p>Finally, and most importantly, these types of credentials typically have a long shelf life.  If the call is ever compromised, there&#39;s a good chance that it can be replayed back to the service up until the password is changed, which could be many months (if ever at&nbsp;all).</p>
+<p>To overcome this, some APIs use an application key or some other token derived from a <span class="caps">HMAC</span> algorithm.  This may work for some scenarios, but unfortunately if the key is exposed, it can be difficult to revoke.  This is especially true if the key has been embedded in a mobile app running on thousands of&nbsp;devices.</p>
+<p>Fortunately, to overcome both of these issues, there is OAuth 2.0.  OAuth 2.0 works by having the user pass a set of credentials (typically a username and password) to an authentication service.  Assuming the credentials are valid, the user&#x2F;application&#x2F;consumer receives back an access token.  This access token is then passed as a <span class="caps">HTTP</span> Authorization Header to the Web API to verify the authenticity of the request.  Moreover, this access token has an expiry (I find an hour to be a good time frame) so that if someone were to get hold of the token, their usage of the API is limited to this timeframe.  (You can read up much more about OAuth 2.0 <a href="http:&#x2F;&#x2F;oauth.net&#x2F;2&#x2F;">here</a>)</p>
+<p>There&#39;s no doubt that implementing OAuth 2.0 involves more work, including setting up an authentication <span class="caps">API</span> and handing the lifetime of the token, but the end result is an API that is more secure and will also reflect the security model used by many others (e.g. Facebook, Google) - which means that you can even use these third parties as identity providers if you so&nbsp;choose.</p>
+<p><strong>3.  Is the <span class="caps">API</span> really using&nbsp;REST?</strong></p>
+<p>I&#39;ve seen many examples of people thinking that they have a <span class="caps">REST</span> API when really they don&#39;t.  Correct use of REST is about nouns, not verbs.  Let&#39;s take this URL for&nbsp;example:</p>
+<p><code>GET &amp;#x2F;GetAccountBalance?account_id=1234</code></p>
+<p>Although the above <span class="caps">URL</span> is accessed over HTTP, it&#39;s really not a REST&nbsp;API.</p>
+<p>Using <span class="caps">REST</span> to it&#39;s true intention means combining HTTP VERBS together with nouns or entities in the URL that represent the data you are exposing.  Instead of the previous URL, a correct REST syntax would be the&nbsp;following:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234</code></p>
+<p>To create a new account we would use a <span class="caps">HTTP</span> PUT (together with a payload with the new account&nbsp;information)</p>
+<p><code>PUT &amp;#x2F;accounts</code></p>
+<p>To delete an account, we would&nbsp;use:</p>
+<p><code>DELETE &amp;#x2F;accounts&amp;#x2F;1234</code></p>
+<p>This noun-based approach can also work with hierarchical data.  For&nbsp;example:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;transactions&amp;#x2F;50</code></p>
+<p>Will return the a transaction (with id of 50) for Account&nbsp;1234.</p>
+<p>Overall, a good understanding of <span class="caps">REST</span>, together with a focus on exposing nouns instead of functional methods will go a long way to create a more more usable and accepted&nbsp;API.</p>
+<p><strong>4. How should we consume this&nbsp;<span class="caps">API</span>?</strong></p>
+<p>If you are dealing with an <span class="caps">API</span> that exposes a lot of entities, in addition to exposing generic REST endpoints, there are typically six things also worth considering:  Sorting, Searching, Filtering, Pagination, Helpers, and Partial&nbsp;Responses.</p>
+<p>Sorting.  Should the <span class="caps">API</span> return a sorted list of data to the consumer&#x2F;application?  If so, a sort parameter on the noun can be&nbsp;useful:</p>
+<p><code>GET &amp;#x2F;accounts?sort=id</code></p>
+<p><code>GET &amp;#x2F;accounts?sort=-id</code></p>
+<p>As shown above, a leading hyphen to indicate ascending or descending sort order can be a great timesaver (and often negates another query string parameter for sort&nbsp;order).</p>
+<p>Searching.  Similar to sorting, providing a way for consumers to search entities can be useful.  The use of the &quot;q&quot; parameter for search is somewhat&nbsp;standard:</p>
+<p><code>GET &amp;#x2F;api&amp;#x2F;accounts?q=acme</code></p>
+<p>Filtering.  Another useful pivot for any <span class="caps">REST</span> based API is the ability to filter on a particular&nbsp;noun.</p>
+<p><code>GET &amp;#x2F;accounts?filter=balance%3E500</code></p>
+<p>(You can choose to use the <span class="caps">URL</span> encoded character for &amp;gt; as shown above, or I&#39;ve seen many other APIs use gt, lt query&nbsp;parameters).</p>
+<p>Pagination.  A type of filtering, especially useful for large&nbsp;datasets.</p>
+<p><code>GET &amp;#x2F;accounts?limit=50&amp;amp;amp;offset=25</code></p>
+<p>This above call will get the next 50 accounts, starting at the 25<span class="ord">th</span>&nbsp;entry.</p>
+<p>Helpers.  With many APIs there are a number of common requests.  Maybe it&#39;s the list of top ten customers, or the best sales people of the month. Putting these common requests as &quot;helpers&quot; into the <span class="caps">API</span> can be very useful for consumers, and can also help reduce the &quot;chattiness&quot; of the API by reducing the number of repeat&nbsp;requests.</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;top-ten</code></p>
+<p>Partial responses.  Finally, many consumers of the <span class="caps">API</span> (especially mobile applications) will want only a summary set of data.  This can be useful to build a list of items (in a master&#x2F;detail view), without having to send the entire details for each&nbsp;item.</p>
+<p><code>GET &amp;#x2F;accounts?fields=id,name,balance</code></p>
+<p>Of course all of the above parameters can be combined as&nbsp;required.</p>
+<p><code>GET &amp;#x2F;accounts?fields=id,name&amp;amp;amp;sort=id&amp;amp;amp;limit=100&amp;amp;amp;offset=50</code></p>
+<p><strong>5.   What will the <span class="caps">API</span>&nbsp;return?</strong></p>
+<p>For the majority of APIs, especially those that will be consumed from a mobile application over a potentially slow connection, returning <span class="caps">JSON</span> is always good practice.  Compared to XML, data returned in JSON format will likely be more lightweight, and will require less parsing and processor overhead on the&nbsp;device.</p>
+<p>With that said, there are cases where other formats might be required - for example, a legacy system that is already expecting data in <span class="caps">XML</span>.  In which case, you might want to consider allowing the consumer to specify what type of data to return either through the HTTP Accept header or through a URL action (useful if you anticipate doing a lot of&nbsp;debugging).</p>
+<p><code>GET &amp;#x2F;accounts?format=xml</code></p>
+<p>There has also been a lot of talk recently about <span class="caps">HATEOAS</span> (Hypermedia As The Engine Of Application State), a term coined by Roy Fielding.  While there are many articles and presentations that explain Roy&#39;s initial intentions, for the purpose of this blog post (and my own sanity), HATEOAS in a Web API referring to the use of links that instruct the consumer where to go for related&nbsp;information.</p>
+<p>For example, let&#39;s imagine we made the following <span class="caps">API</span>&nbsp;call:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234</code></p>
+<p>We might receive the following&nbsp;response:</p>
+<p><code>{ &amp;quot;account_id&amp;quot; : &amp;quot;1234&amp;quot;, &amp;quot;balance&amp;quot; : &amp;quot;100.90&amp;quot; }</code></p>
+<p>With a &quot;<span class="caps">HATEOAS</span>-compliant&quot; Web API, we may also receive embedded links.  For&nbsp;example:</p>
+<p><code>{ &amp;quot;account_id&amp;quot; : &amp;quot;1234&amp;quot;, &amp;quot;balance&amp;quot; : &amp;quot;100.90&amp;quot;, { &amp;quot;_links&amp;quot; : { &amp;quot;transactions&amp;quot; : { &amp;quot;href&amp;quot; : &amp;quot;&amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;transactions&amp;quot; } } } }</code></p>
+<p>As you can see above, the <span class="caps">API</span> returns the data for the account, but also returns a link to the API call that will return all of the transactions for that account.  Think of these links as helping the consumer navigate to other related API calls.  (Incidentally there are a number of JSON formats for doing this, although I would recommend <a href="http:&#x2F;&#x2F;stateless.co&#x2F;hal_specification.html"><span class="caps">JSON</span>&nbsp;HAL</a></p>
+<p><strong>6.  Are the methods of the <span class="caps">API</span>&nbsp;consistent? </strong></p>
+<p>While it&#39;s difficult to recommend what you should name your methods and other parts of your <span class="caps">API</span>, the key to success is often consistency.  For example, if you have the endpoints for your accounts&nbsp;here:</p>
+<p><code>GET &amp;#x2F;accounts</code></p>
+<p>For your invoices, it would be silly to have them&nbsp;here:</p>
+<p><code>GET &amp;#x2F;order_entry&amp;#x2F;ledger&amp;#x2F;invoices_full</code></p>
+<p>In an ideal world (and even one without <span class="caps">HATEOAS</span>!), a user should be able to guess what the API should be based on previous usage.  Keeping the paths and names consistent are key to making this&nbsp;happen.</p>
+<p>Related to this, choosing the right case for APIs can be very important.  Having these two&nbsp;apis:</p>
+<p><code>GET &amp;#x2F;accounts</code></p>
+<p><code>GET &amp;#x2F;Invoices</code></p>
+<p>will likely lead to issues because of the case mismatch on the entity name.  My recommendation is to use lowercase throughout (then there is no ambiguity) and to use snake case to conjoin words.  For&nbsp;example:</p>
+<p><code>GET &amp;#x2F;customer_details</code></p>
+<p>Spinal case (using hyphens) is also acceptable, but if you are doing a lot of descending sorting, you may want to be&nbsp;careful.</p>
+<p>Finally, in terms of consistency, it&#39;s always nice to be consistent with&nbsp;pluralization:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;invoice</code></p>
+<p>Assuming there are more than one invoice per account, this could also run people into trouble.  I would recommend deferring everything to plural to ensure&nbsp;consistency.</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;invoices</code></p>
+<p><strong>7.  How is the <span class="caps">API</span>&nbsp;versioned?</strong></p>
+<p>Versioning is important, especially if there are breaking changes in production environments.  There are a couple of ways to achieve&nbsp;this:</p>
+<p>For large volume APIs where version consistency is critical, I would recommend placing the version information as part of the <span class="caps">API</span>&nbsp;call.</p>
+<p><code>GET &amp;#x2F;v1.0.0&amp;#x2F;accounts</code></p>
+<p>Versioning by using the <span class="caps">URL</span> makes it very explicit as to the version that the consumer is&nbsp;using.</p>
+<p>For less critical systems, or for APIs where breaking changes are going to be rare, I would recommend that consumers pass an optional version number as part of the <span class="caps">HTTP</span> header.  If the version number is passed as part of the post, the consumer gets a specific versioned response, otherwise they&#39;ll be receiving the latest&nbsp;version.</p>
+<p>In addition to version numbers, I always like to see specific environments affiliated with the <span class="caps">URL</span>.  This is most easily done as part of the host subdomain, as it will likely correspond with the physical or virtual machine that the API is hosted&nbsp;from:</p>
+<p><code>GET https:&amp;#x2F;&amp;#x2F;dev.example.org&amp;#x2F;accounts</code></p>
+<p><code>GET https:&amp;#x2F;&amp;#x2F;uat.example.org&amp;#x2F;accounts</code></p>
+<p><code>GET https:&amp;#x2F;&amp;#x2F;prod.example.org&amp;#x2F;accounts</code></p>
+<p>The above makes it very clear whether I&#39;m hitting the development, <span class="caps">UAT</span>, or production version of the APIs when I make my&nbsp;calls.</p>
+<p><strong>8.  How is the <span class="caps">API</span>&nbsp;documented?</strong></p>
+<p>If you have a well designed <span class="caps">API</span>, you do not need to spend hours of time documenting the API in a Word document.  If anything you are going to end up with a Word document that will become quickly out of date.  In terms of documentation, there are two things that I find&nbsp;invaluable:</p>
+<p>Firstly, mandatory and optional methods and parameters should be documented.  It&#39;s important that consumers understand what they can and cannot pass to the <span class="caps">API</span>.  What&#39;s nice is that this documentation can typically be auto generated from the method signatures or comment blocks (which will keep your documentation in sync with your&nbsp;code).</p>
+<p>Secondly, sample code to show how to call the <span class="caps">API</span>.  A few sample calls for each method can be a life saver and much more valuable than reams of documents.  In these samples, show how the request should be formatted and what the response looks&nbsp;like.</p>
+<p><strong>9.  What does the <span class="caps">API</span> return when things go&nbsp;wrong?</strong></p>
+<p>Returning useful error messages to consumers of your <span class="caps">API</span> is really important.  You should think about two types of error messages - ones that can be expressed with HTTP result codes, and ones that&nbsp;cannot.</p>
+<p>For the ones that can be expressed through a result code, simply return the result code with an optional body of information (in <span class="caps">JSON</span> format).  For example, if the access token has expired, return a 401 HTTP error code, and maybe some JSON payload to help debugging.  Also, if any part of the system is down (e.g. the database connection can&#39;t be established), I would recommend returning a 500 for clarity.  With any HTTP result code, remember to pass the right one.  A good rule of thumb is that result codes in the 400&#39;s typically indicate an error with the client, whereas codes in the 500&#39;s means that something has gone wrong on the&nbsp;server.</p>
+<p>For errors that can&#39;t be expressed through a <span class="caps">HTTP</span> result code, you should be returning a JSON payload that contains a minimum of two pieces of data - a unique error code for the issue, and a message aimed for the consumer&#x2F;developer of the application to help them debug.  For example, if the consumer tried to create a new account without including all of the mandatory fields, this would be a useful error to&nbsp;return:</p>
+<p><code>{ &amp;quot;error&amp;quot; : 16, &amp;quot;debug&amp;quot; : &amp;quot;The mandatory field for balance was missing in the request&amp;quot; }</code></p>
+<p>Some recommend returning a user message also, which can be useful.  Others use the error code to create their own message to pass to the&nbsp;user.</p>
+<p><strong>10.  Finally, what else should we be thinking about for using the <span class="caps">API</span> in&nbsp;production?</strong></p>
+<p>There are many considerations for using APIs in production - here are just a&nbsp;few:</p>
+<p>How are you going to make money from your <span class="caps">API</span>?  Are you thinking about a transaction cost per call, freemium, capped model, or something else?  Many of these systems are going to require some kind of API metering - which isn&#39;t necessarily hard, but is definitely something else to&nbsp;consider.</p>
+<p>Are you going to rate limit your <span class="caps">API</span>?  How are you going to prevent a rogue customer, application, or process, who wishes to call your API hundreds of thousands of times?  Fortunately, there are answers to this - including RFC6585 which specifically deals with rate limiting - but again, something that you should be&nbsp;considering.</p>
+<p>Should your <span class="caps">API</span> provide cached results? Is this something that can improve the performance for your consumers, and also prevent unnecessary calls to back end databases and other&nbsp;systems?</p>
+<p>How is your <span class="caps">API</span> going to work over a low bandwidth connection?  Your API might work great on your FIOS line here in the US, but do consumers get the same experience when calling the API from a J2ME application from a cell phone in the middle of Africa?  There are many ways to simulate throttled connections and this should be something that is definitely worth testing&nbsp;for.</p>
+<p>Finally, and arguably most importantly, how can you get everything to go through your <span class="caps">API</span>?  Instead of thinking of an API as a companion to your existing Web-based applications, what would it take to push everything through this API - treating the API as a single source of truth?  It might sound scary, and undoubtedly it&#39;s additional work to have everything using the API - but a single API that every application uses has the potential to offer a lot of re-use and sharing as you develop your API over&nbsp;time.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>03. July 2013</span></p>
+            <h2><a href="/2013/07/03/persistent-logging-in-android/">Persistent Logging in Android</a></h2>
+          </header>
+          <section class="content"><p>No code is perfect, but the nasty types of bugs are the ones that happen randomly and infrequently.  On a couple of recent Android projects we&#39;ve been experiencing such bugs, and as you can guess they can be difficult to track them&nbsp;down.</p>
+<p>While Android&#39;s logcat can help, using the tool often means that you need the device connected through <span class="caps">ADB</span> and a USB cable in order to track the events.  While this is useful in development, this doesn&#39;t work so well when debugging applications that are running on devices in the&nbsp;field.</p>
+<p>Rather than setting up your own logging application or service, it&#39;s possible to setup logcat to persistently log to a file on the device or <span class="caps">SD</span> card.  To do this, simply open an ADB Shell and run logcat as a background process with the -f&nbsp;option:</p>
+<p>`</p>
+<p>adb&nbsp;shell</p>
+<h1 id="logcat-f-x2f-mnt-x2f-sdcard-x2f-extsd-x2f-logcat-txt-amp-amp-">logcat -f &#x2F;mnt&#x2F;sdcard&#x2F;extsd&#x2F;logcat.txt&nbsp;&amp;amp;</h1>
+<p>`</p>
+<p>As you can see in the above statement, this will create a new logcat process to persistently log every event to a file called logcat.txt on the <span class="caps">SD</span> card.  To kill logcat, simply find the PID through the ps tool, and kill the&nbsp;process.</p>
+<p>In case you are worried about the size of the log files, logcat also has the ability to do log&nbsp;recycling:</p>
+<p>`</p>
+<p>adb&nbsp;shell</p>
+<h1 id="logcat-r-1024-n-10-f-x2f-mnt-x2f-sdcard-x2f-extsd-x2f-logcat-txt-amp-amp-">logcat -r 1024 -n 10 -f &#x2F;mnt&#x2F;sdcard&#x2F;extsd&#x2F;logcat.txt&nbsp;&amp;amp;</h1>
+<p>`</p>
+<p>This command will create up to 10 logcat.txt files on the <span class="caps">SD</span> card (named logcat.txt.1, logcat.txt.2, logcat.txt.3, etc.) up to 1Mb in size.  Once the end of the 10<span class="ord">th</span> file is reached, it will overwrite the&nbsp;first.</p>
+<p>Finally, this is all great - but if the user reboots the device, the logcat process will be terminated.  To overcome this, simply edit the &#x2F;init.rc file and add the&nbsp;following:</p>
+<p>`</p>
+<p>service logcat -r 1024 -n 10 -f&nbsp;&#x2F;mnt&#x2F;sdcard&#x2F;extsd&#x2F;logcat.txt</p>
+<pre><code>oneshot
+</code></pre><p>`</p>
+<p>Hope this helps, and happy&nbsp;logging!</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>19. April 2013</span></p>
+            <h2><a href="/2013/04/19/transferring-data-via-bluetooth-on-android-android-btxfr/">Transferring Data via Bluetooth on Android (android-btxfr)</a></h2>
+          </header>
+          <section class="content"><p>Recently, I&#39;ve been working on some code to transfer images and other data between Android devices using Bluetooth.  While I could have used the Basic Imaging Profile (<span class="caps">BIP</span>) of the Bluetooth 4.0 specification, this particular application has specific requirements that would have been difficult to implement using BIP.  To overcome this, I ended up building an application that instead relies on the Serial Port Profile (SPP), exchanging data using the RFCOMM&nbsp;protocol.  </p>
+<p>The <span class="caps">SPP</span> implementation on Android is nice, but only offers the fundamentals of an InputStream and OutputStream.  While this provides the basics of sending and receiving bytes, it doesn&#39;t handle data integrity, progress updates, threading, or any of the other requirements often needed when sending data between two&nbsp;devices.</p>
+<p>The result from my recent work is an Android library called <a href="http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;android-btxfr">android-btxfr</a>, which I&#39;m happy to share through my Github repository.  android-btxfr is lightweight library designed to send and receive any type of data between Android (<span class="caps">API</span> 15 and higher).  It can be used to exchange text, files, photos, videos, sounds, and literally any other type of binary data.  The library supports anything that can be put into a byte stream and includes digest checking to ensure data&nbsp;integrity.</p>
+<p>The library exposes two thread types (ClientThread and ServerThread) depending on whether you are sending or receiving&nbsp;data.</p>
+<p>Receiving data is easy. Simply run the server thread, passing the paired bluetooth device and handler. The handler will be then called with the following&nbsp;messages:</p>
+<p><strong>DATA_PROGRESS_UPDATE</strong> - Data is being received by the other device. The message contains the progress of the data being received.
+<strong>DATA_RECEIVED</strong> - Data has been fully received from the other device. The message will contain the actual payload (a byte stream of the image, video,&nbsp;etc.)</p>
+<p>There are other message types to handle failure&nbsp;conditions.</p>
+<p>The client thread works in a similar fashion. To send data, invoke the client thread, passing the paired bluetooth device and handler. The handler will be called with the following&nbsp;messages:</p>
+<p><strong>READY_FOR_DATA</strong> - Indicates that the connection has been established, and data can be sent.
+<strong>SENDING_DATA</strong> - Indicates that data is being sent to the other device.
+<strong>DATA_SENT_OK</strong> - Indicates that the recipient received the&nbsp;payload.</p>
+<p>Again, there are other message types to handle&nbsp;failures.</p>
+<p>To show all of this in action, I&#39;ve put together a sample application, which can be found <a href="http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;btphototransfer-sample">here</a>.  This app uses the android-btxfr library to send captured photos between&nbsp;devices. </p>
+<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage7.png &quot;NewImage.png&quot;" alt="NewImage"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage9.png &quot;NewImage.png&quot;" alt="NewImage"></p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>16. April 2013</span></p>
+            <h2><a href="/2013/04/16/enabling-x86-android-emulation/">Enabling x86 Android Emulation</a></h2>
+          </header>
+          <section class="content"><p>&lt;div&gt;If you&#39;ve undertaken any Android development, you&#39;ll have likely found that the Android emulator can be painfully slow – to the point where the majority of developers I know use a physical device to do any development at all.  The primary reason behind this is that the default emulator is emulating an <span class="caps">ARM</span> based chipset on x86 hardware, and the translation between these two architectures is of course costly.  What many of these developers may not realize (and I didn&#39;t until very recently) is that Intel have released a x86 Android emulator.  The x86 emulator has a few caveats (and of course cannot run any ARM-only libraries, such as the Google Play APIs), but overall can be used to speed up the performance of testing apps in the emulator by leaps and bounds.&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;This is how to get it working:&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;1.  In the Android SDK Manager, ensure you have API Level 15 or higher installed.  Under the API of your choice, install the Intel x86 Atom System Image:&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage3.png &quot;NewImage.png&quot;" alt="NewImage">&lt;&#x2F;div&gt;
+&lt;div&gt;2.  Under the Extras folder, install the Intel x86 Emulator Accelerator (<span class="caps">HAXM</span>) module:&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage4.png &quot;NewImage.png&quot;" alt="NewImage">&lt;&#x2F;div&gt;
+&lt;div&gt;3.  After you add the <span class="caps">HAXM</span> support through the SDK manager, you still need to install the HAXM package.  To do this, navigate to the Extras&#x2F;Intel&#x2F;Hardware_Accelerated_Execution_Manager folder under your installed Android SDK path.  Run the .dmg in this folder to install the support.  As part of the installation, you&#39;ll be asked how much RAM to allocate&#x2F;partition.  On my 16Gb MBP, I have chosen a 2Gb allocation.&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;4.  This is <strong>really important</strong> (for Mac <span class="caps">OS</span> X Mountain Lion users).  Go to <a href="http:&#x2F;&#x2F;software.intel.com&#x2F;en-us&#x2F;articles&#x2F;intel-hardware-accelerated-execution-manager">this knowledge library page</a> on Intel&#39;s <span class="caps">HAXM</span> site and install the 1.0.4 hotfix.  If you do not install this hotfix, you will likely get a kernel panic when you try to start the AVD.&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;5.  Create a new AVD, or edit an existing AVD.  Ensure that the CPU&#x2F;ABI is set to Intel Atom (x86).&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage5.png &quot;NewImage.png&quot;" alt="NewImage">&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;span&gt;You can also increase the <span class="caps">RAM</span> up to the limit that you set during the HAXM installation.  Also, you should ensure that the &quot;Use Host GPU&quot; check box is enabled as this will allow the emulator to use OpenGL ES on the host for increased performance.&lt;&#x2F;span&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;span&gt;With that you should be set!  If you are editing an existing AVD, I recommend checking the &quot;Wipe user data&quot; checkbox before starting the image.  (Otherwise you might find that the emulator will hang during start up).  &lt;&#x2F;span&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage6.png &quot;NewImage.png&quot;" alt="NewImage">&lt;&#x2F;div&gt;
+&lt;div&gt;&lt;&#x2F;div&gt;
+&lt;div&gt;If everything is working <span class="caps">OK</span>, you should receive a message that HAXM has been enabled, and your AVD should boot in several seconds (as opposed to several minutes) and be lightning quick to&nbsp;use!&lt;&#x2F;div&gt;</p>
+
+          </section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/archive.html">« Archives</a><a href="/page/2/">Next page »</a>
+        </div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

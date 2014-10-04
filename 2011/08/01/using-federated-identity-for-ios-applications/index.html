@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Using Federated Identity for iOS Applications - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Using Federated Identity for iOS Applications</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Last week, Microsoft released v1.2 of the Windows Azure Toolkit for iOS.&amp;#160; As development partner for the toolkit, <a href="http:&#x2F;&#x2F;www.neudesic.com">Neudesic</a> has been working with several customers on implementing <span class="caps">ACS</span> for iPhone and iPad applications.&amp;#160; Due to popular demand, I wanted to share a short overview of how simple it is to get this up and working for your own iOS&nbsp;projects.</p>
+<p><strong>First, some&nbsp;background…</strong></p>
+<p>Many iPhone and iPad applications have a need to authenticate.&amp;#160; Maybe it&#39;s to access sensitive information or record a particular high score against your name.&amp;#160; Implementing an authentication scheme for iOS can however be time consuming and tricky – you often have to create an authentication service, host it, expose the service through <span class="caps">REST</span>, and consume it on the device.&amp;#160; And afterwards you are responsible for backing up the user database and dealing with lost passwords,&nbsp;etc.</p>
+<p>To help overcome this many applications are now turning to external providers.&amp;#160; For example, to identify yourself when playing Zynga Poker, instead of creating a new account, you simply sign into Facebook (when launching the application for the first time) and the game uses these credentials as you play. This type of sign in method is called federated identity. This prevents Zynga from having to maintain a complex and large set of user accounts and passwords, and also prevents the player from having to remember yet another username and&nbsp;password.&amp;#160; </p>
+<p>Adding federated identity to your iPhone or iPad application can be difficult, requiring knowledge of exchange secure tokens with a set of providers, and creating and sending the right OAuth headers in your application.&amp;#160; Removing this difficultly is exactly what we are trying to address in v1.2 of the Windows Azure Toolkit for&nbsp;iOS.&amp;#160; </p>
+<p><strong>Sounds great – how do I use&nbsp;it?</strong></p>
+<p>To implement <span class="caps">ACS</span> in your application, you&#39;ll first need to access the Windows Azure portal by navigating to <a href="http:&#x2F;&#x2F;windows.azure.com&#x2F;">http:&#x2F;&#x2F;windows.azure.com</a> and signing in with your&nbsp;credentials. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image002.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image002_thumb.png &quot;clip_image002&quot;" alt="clip_image002"></a></p>
+<p>Click on the <strong>Service Bus, Access Control &amp;amp; </strong>Caching menu item and select the <strong>Access Control</strong> menu item under the <strong>AppFabric</strong> folder.&amp;#160; Select an active Windows Azure subscription and click on the <strong>New</strong> button in the&nbsp;toolbar.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image004.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image004_thumb.png &quot;clip_image004&quot;" alt="clip_image004"></a></p>
+<p>The new service namespace dialog will open.&amp;#160; Ensure that <strong>Access Control</strong> is selected, and enter a unique namespace and country&#x2F;region for the&nbsp;service.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image006.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image006_thumb.png &quot;clip_image006&quot;" alt="clip_image006"></a></p>
+<p>The <span class="caps">ACS</span> namespace will now be created.&amp;#160; This might take a few minutes.&amp;#160; Wait until the namespace is showing in an <strong>Active</strong>&nbsp;state.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image008.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image008_thumb.png &quot;clip_image008&quot;" alt="clip_image008"></a></p>
+<p>Once this is complete, highlight the newly created service and click on the <strong>Access Control Service</strong> button in the toolbar.&amp;#160; This will launch the Access Control Service&nbsp;portal. </p>
+<p>Within the portal, click on<strong> Identity Providers </strong>and add the identity providers you would like to use for your&nbsp;application.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image010.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image010_thumb.png &quot;clip_image010&quot;" alt="clip_image010"></a></p>
+<p>The default is Windows Live <span class="caps">ID</span>, but you can add other preconfigured providers (such as Google and Yahoo!) as well as external identity systems configured to use&nbsp;WS-Federation.</p>
+<p>Once you have added the required providers, click on the <strong>Relying Parties</strong> section of the&nbsp;portal.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image012.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image012_thumb.png &quot;clip_image012&quot;" alt="clip_image012"></a></p>
+<p>Click on the <strong>Add</strong> button and enter the following information for the relying party&nbsp;application:</p>
+<p><strong>Name</strong> – a given name for your&nbsp;application</p>
+<p><strong>Realm</strong> – a unique <span class="caps">ID</span> for your application.&amp;#160; For this walkthrough, we’ll be using&nbsp;uri:wazmobiletoolkit</p>
+<p><strong>Return <span class="caps">URL</span></strong> – you can leave this&nbsp;blank</p>
+<p><strong>Error <span class="caps">URL</span></strong> – you can leave this&nbsp;blank</p>
+<p><strong>Token Format</strong> – select&nbsp;<span class="caps">SWT</span></p>
+<p><strong>Token Lifetime</strong> – Feel free to change the default from 600&nbsp;seconds. </p>
+<p>Select the identity providers that you would like to use, and then under the <strong>Token Signing Settings</strong> section, click on the <strong>Generate</strong> button to create a new symmetric key that will be used for this&nbsp;application.</p>
+<p>Finally, click on the <strong>Save</strong> button.&amp;#160; This will create the Relying Party&nbsp;Application.</p>
+<p>Next, go into the <strong>Rule Groups</strong> section of the portal and select the default rule group that was created for the&nbsp;application.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image014.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image014_thumb.png &quot;clip_image014&quot;" alt="clip_image014"></a></p>
+<p>Click on the <strong>Generate</strong> link in order to generate a set of default rules for this rule&nbsp;group.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image016.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011
+&#x2F;08&#x2F;clip_image016_thumb.png &quot;clip_image016&quot;" alt="clip_image016"></a></p>
+<p>Select the providers that you wish to use, and click on the <strong>Generate</strong> button.&amp;#160; Once this is complete, you should see a set of&nbsp;rules.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image018.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image018_thumb.png &quot;clip_image018&quot;" alt="clip_image018"></a></p>
+<p>After this step is complete, <span class="caps">ACS</span> has now been configured correctly to be used with your iOS application.&amp;#160; Make a note of your Service Namespace (found at the top of the portal) and&nbsp;Realm.</p>
+<p><strong>Ok, the service is now setup.&amp;#160; How do I use it in my Xcode&nbsp;project?</strong></p>
+<p>To start, launch Xcode (4.02 or higher) and create a new&nbsp;project.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image020.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image020_thumb.png &quot;clip_image020&quot;" alt="clip_image020"></a></p>
+<p>From the project template dialog, select a <strong>View-based application</strong> and click on the <strong>Next</strong> button.&amp;#160; Enter a <strong>Product Name</strong> and <strong>Company Identifier</strong> and click on the <strong>Next</strong> button to continue.&amp;#160; Select a directory to use for the project file and return to the&nbsp;<span class="caps">IDE</span>.</p>
+<p>Next, download the latest version of the Windows Azure Toolkit for iOS library from <a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;watoolkitios-lib">http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;watoolkitios-lib</a>. In the download will be a zip file containing two versions of the library (one for the device, one for the simulator) and some header files for the&nbsp;project.</p>
+<p>Right click on your project and select the <strong>Add Files to…</strong> menu&nbsp;option.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image022.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image022_thumb.png &quot;clip_image022&quot;" alt="clip_image022"></a></p>
+<p>Locate the .a file (for the simulator) and header files and add them to your project.&amp;#160; You may want to create a new group (called lib) to store these&nbsp;in.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image024.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image024_thumb.png &quot;clip_image024&quot;" alt="clip_image024"></a></p>
+<p>Now we need to add a reference to a library required for <span class="caps">XML</span> parsing.&amp;#160; To do this, click on the top most project file, click on the target in the 2<span class="ord">nd</span> column of the IDE, and select <strong>Build Phases</strong> from the tab&nbsp;menu. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image026.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image026_thumb.png &quot;clip_image026&quot;" alt="clip_image026"></a></p>
+<p>In the main window, expand the <strong>Link Binary with Libraries</strong>&nbsp;option.</p>
+<p>Ensure that the libwatoolkitios.a file has been automatically added as a reference, click the + button to add a new library, and select the libxml2.dylib library from the drop down&nbsp;list.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image028.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image028_thumb.png &quot;clip_image028&quot;" alt="clip_image028"></a></p>
+<p>Click on the <strong>Add</strong> button to add a reference to this library for your&nbsp;project.</p>
+<p>Before we start adding any code, we need to add a couple of required linker flags to the project.&amp;#160; To do this, click on the <strong>Build Settings</strong> tab (next to Build&nbsp;Phases).</p>
+<p>In the search box, type “other linker” to filter the&nbsp;settings.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image030.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image030_thumb.png &quot;clip_image030&quot;" alt="clip_image030"></a></p>
+<p>You should see a setting called <strong>Other Linker Flags</strong>.&amp;#160; Double click on the right side of this row to add new&nbsp;flags.</p>
+<p>Click on the + button to add two flags.&amp;#160; The first is <strong>–ObjC</strong> and the second is <strong>–all_load</strong>.&amp;#160; Once complete, your linker flags should look like the following&nbsp;screenshot:</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image032.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image032_thumb.png &quot;clip_image032&quot;" alt="clip_image032"></a></p>
+<p>Click on the <strong>Done</strong> button to save these settings.&amp;#160; The project is now configured correctly to reference the Windows Azure Toolkit&nbsp;library.</p>
+<p>To test that the library works, click on the project’s <strong>[ProjectName]AppDelegate.m</strong> file.&amp;#160; Add the following #import statement at the top of the&nbsp;class:</p>
+<h1 id="import-amp-quot-wacloudaccesscontrolclient-h-amp-quot-">import&nbsp;&amp;quot;WACloudAccessControlClient.h&amp;quot;</h1>
+<p>Next, search for a method called <strong>didFinishLaunchingWithOptions </strong>and after the <strong>[self.window makeKeyAndVisible]</strong> line, enter the following code.
+  &lt;pre&nbsp;class=&quot;brush:c&quot;&gt;</p>
+<p>NSLog(@&amp;quot;Intializing the Access Control&nbsp;Client…&amp;quot;);</p>
+<p>WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessControlClientForNamespace:@&amp;quot;iostest-walkthrough&amp;quot;&nbsp;realm:@&amp;quot;uri:wazmobiletoolkit&amp;quot;];</p>
+<p>[acsClient showInViewController:self.viewController allowsClose:<span class="caps">NO</span> withCompletionHandler:^(BOOL authenticated)&nbsp;{</p>
+<p>if&nbsp;(!authenticated)</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;{</p>
+<p>NSLog(@&amp;quot;Error&nbsp;authenticating&amp;quot;);</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;}</p>
+<p>else</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;{</p>
+<p>NSLog(@&amp;quot;Creating the authentication&nbsp;token…&amp;quot;);</p>
+<p>WACloudAccessToken *token = [WACloudAccessControlClient&nbsp;sharedToken];</p>
+<p>&#x2F;<em> Do something with the token here! </em>&#x2F;</p>
+<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;}</p>
+<p>}];&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>Replace the namespace and realm in the first line with the service namespace and realm for your own&nbsp;service.</p>
+<p>As you can see from the above, the code creates a new instance of the access control client, requests that the client shows itself in the current view controller, and then extracts a&nbsp;token. </p>
+<p>Build and run the application in the iOS&nbsp;Simulator. </p>
+<p>Once the application starts, you should be prompted to select an identity provider from the list that you configured in your <span class="caps">ACS</span>&nbsp;service.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image034.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image034_thumb.png &quot;clip_image034&quot;" alt="clip_image034"></a></p>
+<p>Pick one of the providers, and enter a valid set of&nbsp;credentials.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image036.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image036_thumb.png &quot;clip_image036&quot;" alt="clip_image036"></a></p>
+<p>Click on the <strong>Remember me</strong> checkbox if you want to skip this step when running this application again, and click on the <strong>Sign in</strong>&nbsp;button.</p>
+<p>The first time the application is run, you’ll be prompted to authorize the application to access your provider&nbsp;data.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image038.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image038_thumb.png &quot;clip_image038&quot;" alt="clip_image038"></a></p>
+<p>Click on the <strong>Allow</strong> button to continue.&amp;#160; The login window will now disappear and you’ll be returned to your&nbsp;application.</p>
+<p>In the debug window, you should see the following two&nbsp;logs:</p>
+<p>2011-07-22 10:12:26.284 iostest-walkthrough[25838:207] Intializing the Access Control&nbsp;Client…</p>
+<p>2011-07-22 10:12:36.359 iostest-walkthrough[25838:207] Creating the authentication&nbsp;token…</p>
+<p>If you are seeing this, congratulations!&amp;#160; You&#39;ve successfully setup federated identity for your application.&amp;#160; The final message indicates that the access token was retrieved and can be used for further use.&amp;#160; The <strong>WACloudAccessToken</strong> (derived from <strong>[WACloudAccessControlClient sharedToken]</strong>) contains an NSDictionary of claims and other properties that can be stored within your application.&amp;#160; Using these properties on future calls can be used to identify returning users to your&nbsp;application.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

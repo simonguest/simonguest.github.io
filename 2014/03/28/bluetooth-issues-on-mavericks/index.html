@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Bluetooth Issues on Mavericks - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Bluetooth Issues on Mavericks</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>I&#39;ve been having some issues recently with the Bluetooth stack on my Mac acting strangely - causing Bluetooth devices to drop at random times and on occasions, the default mouse and keyboard will stop working even though the machine is running fine. One of the symptoms of this has been the bluetooth preferences pane showing “do not localize” when things become&nbsp;corrupt.</p>
+<p>I think (well, I hope) I&#39;ve solved it by performing an <span class="caps">SMC</span> and NVRAM reset on the Mac. In case other are seeing similar symptoms, I wanted to share how you do these&nbsp;resets:</p>
+<p><strong><span class="caps">SMC</span> Reset:</strong> Power down the Mac. Hold down Shift-Control-Option and the power button for a few seconds. Not much will happen. Release all of the keys, and power on&nbsp;normally.</p>
+<p><strong><span class="caps">NVRAM</span> Reset:</strong> Power down the Mac. Hold Command, P and R down and power on the Mac. The Mac will boot for a few seconds and then reboot. Release all of the keys at this point, and boot&nbsp;normally.</p>
+<p>After doing these resets, the Bluetooth stack seems a lot more&nbsp;stable.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

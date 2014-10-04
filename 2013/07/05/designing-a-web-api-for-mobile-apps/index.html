@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Designing a Web API for Mobile Apps - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Designing a Web API for Mobile Apps</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>At Neudesic, almost every mobile project that we&#39;ve been involved in has had some dependency on a Web <span class="caps">API</span>.  This has included APIs that we&#39;ve had to create from scratch, as well as ones that already exist that the app has to&nbsp;consume.</p>
+<p>As you can imagine, over the past few years, we&#39;ve seen a fair share of good and bad <span class="caps">API</span> design.  In this blog post, I wanted to share some of my observations, thoughts, and questions that I ask of a well designed Web API, especially one that will be called from a mobile&nbsp;app.</p>
+<p><strong>1.  Are the basics being&nbsp;met?</strong></p>
+<p>First, the basics.  Without question, every Web <span class="caps">API</span> should be stateless.  There should be no session state, cookies, or server-side values used to hold any state of any kind.  Adding state adds complexity, and limits the ability for the API to scale, which for a mobile application that could reach millions of users is something that we want to&nbsp;avoid.</p>
+<p>Also, endpoints of the <span class="caps">API</span> should be exposed through SSL by default.  SSL is easy to setup, performant, and should be enabled for any API that we either consume or create.  As you may have observed, using SSL as default seems to be a direction in which many other APIs are&nbsp;heading.</p>
+<p><strong>2.  How do we authenticate with the&nbsp;<span class="caps">API</span>?</strong></p>
+<p>Authentication is critical to a Web <span class="caps">API</span>, and (in my opinion) is one of the common pitfalls.  As a rule, user credentials should never be passed as part an API call.  Take the following example:
+<code>GET &amp;#x2F;accounts?username=simon&amp;amp;amp;password=simon</code></p>
+<p>Doing this is bad for three&nbsp;reasons:</p>
+<p>Firstly, although the <span class="caps">URL</span> gets encapsulated as part of the HTTPS session, it is likely still visible in any logs on the Web server.  This often also applies to user credentials passed as HTTP&nbsp;headers.</p>
+<p>Secondly, it makes debugging with users and other developers awkward (because you often need to ask for their username and password).  This is especially bad if the credentials are corporate accounts used for other&nbsp;systems.</p>
+<p>Finally, and most importantly, these types of credentials typically have a long shelf life.  If the call is ever compromised, there&#39;s a good chance that it can be replayed back to the service up until the password is changed, which could be many months (if ever at&nbsp;all).</p>
+<p>To overcome this, some APIs use an application key or some other token derived from a <span class="caps">HMAC</span> algorithm.  This may work for some scenarios, but unfortunately if the key is exposed, it can be difficult to revoke.  This is especially true if the key has been embedded in a mobile app running on thousands of&nbsp;devices.</p>
+<p>Fortunately, to overcome both of these issues, there is OAuth 2.0.  OAuth 2.0 works by having the user pass a set of credentials (typically a username and password) to an authentication service.  Assuming the credentials are valid, the user&#x2F;application&#x2F;consumer receives back an access token.  This access token is then passed as a <span class="caps">HTTP</span> Authorization Header to the Web API to verify the authenticity of the request.  Moreover, this access token has an expiry (I find an hour to be a good time frame) so that if someone were to get hold of the token, their usage of the API is limited to this timeframe.  (You can read up much more about OAuth 2.0 <a href="http:&#x2F;&#x2F;oauth.net&#x2F;2&#x2F;">here</a>)</p>
+<p>There&#39;s no doubt that implementing OAuth 2.0 involves more work, including setting up an authentication <span class="caps">API</span> and handing the lifetime of the token, but the end result is an API that is more secure and will also reflect the security model used by many others (e.g. Facebook, Google) - which means that you can even use these third parties as identity providers if you so&nbsp;choose.</p>
+<p><strong>3.  Is the <span class="caps">API</span> really using&nbsp;REST?</strong></p>
+<p>I&#39;ve seen many examples of people thinking that they have a <span class="caps">REST</span> API when really they don&#39;t.  Correct use of REST is about nouns, not verbs.  Let&#39;s take this URL for&nbsp;example:</p>
+<p><code>GET &amp;#x2F;GetAccountBalance?account_id=1234</code></p>
+<p>Although the above <span class="caps">URL</span> is accessed over HTTP, it&#39;s really not a REST&nbsp;API.</p>
+<p>Using <span class="caps">REST</span> to it&#39;s true intention means combining HTTP VERBS together with nouns or entities in the URL that represent the data you are exposing.  Instead of the previous URL, a correct REST syntax would be the&nbsp;following:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234</code></p>
+<p>To create a new account we would use a <span class="caps">HTTP</span> PUT (together with a payload with the new account&nbsp;information)</p>
+<p><code>PUT &amp;#x2F;accounts</code></p>
+<p>To delete an account, we would&nbsp;use:</p>
+<p><code>DELETE &amp;#x2F;accounts&amp;#x2F;1234</code></p>
+<p>This noun-based approach can also work with hierarchical data.  For&nbsp;example:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;transactions&amp;#x2F;50</code></p>
+<p>Will return the a transaction (with id of 50) for Account&nbsp;1234.</p>
+<p>Overall, a good understanding of <span class="caps">REST</span>, together with a focus on exposing nouns instead of functional methods will go a long way to create a more more usable and accepted&nbsp;API.</p>
+<p><strong>4. How should we consume this&nbsp;<span class="caps">API</span>?</strong></p>
+<p>If you are dealing with an <span class="caps">API</span> that exposes a lot of entities, in addition to exposing generic REST endpoints, there are typically six things also worth considering:  Sorting, Searching, Filtering, Pagination, Helpers, and Partial&nbsp;Responses.</p>
+<p>Sorting.  Should the <span class="caps">API</span> return a sorted list of data to the consumer&#x2F;application?  If so, a sort parameter on the noun can be&nbsp;useful:</p>
+<p><code>GET &amp;#x2F;accounts?sort=id</code></p>
+<p><code>GET &amp;#x2F;accounts?sort=-id</code></p>
+<p>As shown above, a leading hyphen to indicate ascending or descending sort order can be a great timesaver (and often negates another query string parameter for sort&nbsp;order).</p>
+<p>Searching.  Similar to sorting, providing a way for consumers to search entities can be useful.  The use of the &quot;q&quot; parameter for search is somewhat&nbsp;standard:</p>
+<p><code>GET &amp;#x2F;api&amp;#x2F;accounts?q=acme</code></p>
+<p>Filtering.  Another useful pivot for any <span class="caps">REST</span> based API is the ability to filter on a particular&nbsp;noun.</p>
+<p><code>GET &amp;#x2F;accounts?filter=balance%3E500</code></p>
+<p>(You can choose to use the <span class="caps">URL</span> encoded character for &amp;gt; as shown above, or I&#39;ve seen many other APIs use gt, lt query&nbsp;parameters).</p>
+<p>Pagination.  A type of filtering, especially useful for large&nbsp;datasets.</p>
+<p><code>GET &amp;#x2F;accounts?limit=50&amp;amp;amp;offset=25</code></p>
+<p>This above call will get the next 50 accounts, starting at the 25<span class="ord">th</span>&nbsp;entry.</p>
+<p>Helpers.  With many APIs there are a number of common requests.  Maybe it&#39;s the list of top ten customers, or the best sales people of the month. Putting these common requests as &quot;helpers&quot; into the <span class="caps">API</span> can be very useful for consumers, and can also help reduce the &quot;chattiness&quot; of the API by reducing the number of repeat&nbsp;requests.</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;top-ten</code></p>
+<p>Partial responses.  Finally, many consumers of the <span class="caps">API</span> (especially mobile applications) will want only a summary set of data.  This can be useful to build a list of items (in a master&#x2F;detail view), without having to send the entire details for each&nbsp;item.</p>
+<p><code>GET &amp;#x2F;accounts?fields=id,name,balance</code></p>
+<p>Of course all of the above parameters can be combined as&nbsp;required.</p>
+<p><code>GET &amp;#x2F;accounts?fields=id,name&amp;amp;amp;sort=id&amp;amp;amp;limit=100&amp;amp;amp;offset=50</code></p>
+<p><strong>5.   What will the <span class="caps">API</span>&nbsp;return?</strong></p>
+<p>For the majority of APIs, especially those that will be consumed from a mobile application over a potentially slow connection, returning <span class="caps">JSON</span> is always good practice.  Compared to XML, data returned in JSON format will likely be more lightweight, and will require less parsing and processor overhead on the&nbsp;device.</p>
+<p>With that said, there are cases where other formats might be required - for example, a legacy system that is already expecting data in <span class="caps">XML</span>.  In which case, you might want to consider allowing the consumer to specify what type of data to return either through the HTTP Accept header or through a URL action (useful if you anticipate doing a lot of&nbsp;debugging).</p>
+<p><code>GET &amp;#x2F;accounts?format=xml</code></p>
+<p>There has also been a lot of talk recently about <span class="caps">HATEOAS</span> (Hypermedia As The Engine Of Application State), a term coined by Roy Fielding.  While there are many articles and presentations that explain Roy&#39;s initial intentions, for the purpose of this blog post (and my own sanity), HATEOAS in a Web API referring to the use of links that instruct the consumer where to go for related&nbsp;information.</p>
+<p>For example, let&#39;s imagine we made the following <span class="caps">API</span>&nbsp;call:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234</code></p>
+<p>We might receive the following&nbsp;response:</p>
+<p><code>{ &amp;quot;account_id&amp;quot; : &amp;quot;1234&amp;quot;, &amp;quot;balance&amp;quot; : &amp;quot;100.90&amp;quot; }</code></p>
+<p>With a &quot;<span class="caps">HATEOAS</span>-compliant&quot; Web API, we may also receive embedded links.  For&nbsp;example:</p>
+<p><code>{ &amp;quot;account_id&amp;quot; : &amp;quot;1234&amp;quot;, &amp;quot;balance&amp;quot; : &amp;quot;100.90&amp;quot;, { &amp;quot;_links&amp;quot; : { &amp;quot;transactions&amp;quot; : { &amp;quot;href&amp;quot; : &amp;quot;&amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;transactions&amp;quot; } } } }</code></p>
+<p>As you can see above, the <span class="caps">API</span> returns the data for the account, but also returns a link to the API call that will return all of the transactions for that account.  Think of these links as helping the consumer navigate to other related API calls.  (Incidentally there are a number of JSON formats for doing this, although I would recommend <a href="http:&#x2F;&#x2F;stateless.co&#x2F;hal_specification.html"><span class="caps">JSON</span>&nbsp;HAL</a></p>
+<p><strong>6.  Are the methods of the <span class="caps">API</span>&nbsp;consistent? </strong></p>
+<p>While it&#39;s difficult to recommend what you should name your methods and other parts of your <span class="caps">API</span>, the key to success is often consistency.  For example, if you have the endpoints for your accounts&nbsp;here:</p>
+<p><code>GET &amp;#x2F;accounts</code></p>
+<p>For your invoices, it would be silly to have them&nbsp;here:</p>
+<p><code>GET &amp;#x2F;order_entry&amp;#x2F;ledger&amp;#x2F;invoices_full</code></p>
+<p>In an ideal world (and even one without <span class="caps">HATEOAS</span>!), a user should be able to guess what the API should be based on previous usage.  Keeping the paths and names consistent are key to making this&nbsp;happen.</p>
+<p>Related to this, choosing the right case for APIs can be very important.  Having these two&nbsp;apis:</p>
+<p><code>GET &amp;#x2F;accounts</code></p>
+<p><code>GET &amp;#x2F;Invoices</code></p>
+<p>will likely lead to issues because of the case mismatch on the entity name.  My recommendation is to use lowercase throughout (then there is no ambiguity) and to use snake case to conjoin words.  For&nbsp;example:</p>
+<p><code>GET &amp;#x2F;customer_details</code></p>
+<p>Spinal case (using hyphens) is also acceptable, but if you are doing a lot of descending sorting, you may want to be&nbsp;careful.</p>
+<p>Finally, in terms of consistency, it&#39;s always nice to be consistent with&nbsp;pluralization:</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;invoice</code></p>
+<p>Assuming there are more than one invoice per account, this could also run people into trouble.  I would recommend deferring everything to plural to ensure&nbsp;consistency.</p>
+<p><code>GET &amp;#x2F;accounts&amp;#x2F;1234&amp;#x2F;invoices</code></p>
+<p><strong>7.  How is the <span class="caps">API</span>&nbsp;versioned?</strong></p>
+<p>Versioning is important, especially if there are breaking changes in production environments.  There are a couple of ways to achieve&nbsp;this:</p>
+<p>For large volume APIs where version consistency is critical, I would recommend placing the version information as part of the <span class="caps">API</span>&nbsp;call.</p>
+<p><code>GET &amp;#x2F;v1.0.0&amp;#x2F;accounts</code></p>
+<p>Versioning by using the <span class="caps">URL</span> makes it very explicit as to the version that the consumer is&nbsp;using.</p>
+<p>For less critical systems, or for APIs where breaking changes are going to be rare, I would recommend that consumers pass an optional version number as part of the <span class="caps">HTTP</span> header.  If the version number is passed as part of the post, the consumer gets a specific versioned response, otherwise they&#39;ll be receiving the latest&nbsp;version.</p>
+<p>In addition to version numbers, I always like to see specific environments affiliated with the <span class="caps">URL</span>.  This is most easily done as part of the host subdomain, as it will likely correspond with the physical or virtual machine that the API is hosted&nbsp;from:</p>
+<p><code>GET https:&amp;#x2F;&amp;#x2F;dev.example.org&amp;#x2F;accounts</code></p>
+<p><code>GET https:&amp;#x2F;&amp;#x2F;uat.example.org&amp;#x2F;accounts</code></p>
+<p><code>GET https:&amp;#x2F;&amp;#x2F;prod.example.org&amp;#x2F;accounts</code></p>
+<p>The above makes it very clear whether I&#39;m hitting the development, <span class="caps">UAT</span>, or production version of the APIs when I make my&nbsp;calls.</p>
+<p><strong>8.  How is the <span class="caps">API</span>&nbsp;documented?</strong></p>
+<p>If you have a well designed <span class="caps">API</span>, you do not need to spend hours of time documenting the API in a Word document.  If anything you are going to end up with a Word document that will become quickly out of date.  In terms of documentation, there are two things that I find&nbsp;invaluable:</p>
+<p>Firstly, mandatory and optional methods and parameters should be documented.  It&#39;s important that consumers understand what they can and cannot pass to the <span class="caps">API</span>.  What&#39;s nice is that this documentation can typically be auto generated from the method signatures or comment blocks (which will keep your documentation in sync with your&nbsp;code).</p>
+<p>Secondly, sample code to show how to call the <span class="caps">API</span>.  A few sample calls for each method can be a life saver and much more valuable than reams of documents.  In these samples, show how the request should be formatted and what the response looks&nbsp;like.</p>
+<p><strong>9.  What does the <span class="caps">API</span> return when things go&nbsp;wrong?</strong></p>
+<p>Returning useful error messages to consumers of your <span class="caps">API</span> is really important.  You should think about two types of error messages - ones that can be expressed with HTTP result codes, and ones that&nbsp;cannot.</p>
+<p>For the ones that can be expressed through a result code, simply return the result code with an optional body of information (in <span class="caps">JSON</span> format).  For example, if the access token has expired, return a 401 HTTP error code, and maybe some JSON payload to help debugging.  Also, if any part of the system is down (e.g. the database connection can&#39;t be established), I would recommend returning a 500 for clarity.  With any HTTP result code, remember to pass the right one.  A good rule of thumb is that result codes in the 400&#39;s typically indicate an error with the client, whereas codes in the 500&#39;s means that something has gone wrong on the&nbsp;server.</p>
+<p>For errors that can&#39;t be expressed through a <span class="caps">HTTP</span> result code, you should be returning a JSON payload that contains a minimum of two pieces of data - a unique error code for the issue, and a message aimed for the consumer&#x2F;developer of the application to help them debug.  For example, if the consumer tried to create a new account without including all of the mandatory fields, this would be a useful error to&nbsp;return:</p>
+<p><code>{ &amp;quot;error&amp;quot; : 16, &amp;quot;debug&amp;quot; : &amp;quot;The mandatory field for balance was missing in the request&amp;quot; }</code></p>
+<p>Some recommend returning a user message also, which can be useful.  Others use the error code to create their own message to pass to the&nbsp;user.</p>
+<p><strong>10.  Finally, what else should we be thinking about for using the <span class="caps">API</span> in&nbsp;production?</strong></p>
+<p>There are many considerations for using APIs in production - here are just a&nbsp;few:</p>
+<p>How are you going to make money from your <span class="caps">API</span>?  Are you thinking about a transaction cost per call, freemium, capped model, or something else?  Many of these systems are going to require some kind of API metering - which isn&#39;t necessarily hard, but is definitely something else to&nbsp;consider.</p>
+<p>Are you going to rate limit your <span class="caps">API</span>?  How are you going to prevent a rogue customer, application, or process, who wishes to call your API hundreds of thousands of times?  Fortunately, there are answers to this - including RFC6585 which specifically deals with rate limiting - but again, something that you should be&nbsp;considering.</p>
+<p>Should your <span class="caps">API</span> provide cached results? Is this something that can improve the performance for your consumers, and also prevent unnecessary calls to back end databases and other&nbsp;systems?</p>
+<p>How is your <span class="caps">API</span> going to work over a low bandwidth connection?  Your API might work great on your FIOS line here in the US, but do consumers get the same experience when calling the API from a J2ME application from a cell phone in the middle of Africa?  There are many ways to simulate throttled connections and this should be something that is definitely worth testing&nbsp;for.</p>
+<p>Finally, and arguably most importantly, how can you get everything to go through your <span class="caps">API</span>?  Instead of thinking of an API as a companion to your existing Web-based applications, what would it take to push everything through this API - treating the API as a single source of truth?  It might sound scary, and undoubtedly it&#39;s additional work to have everything using the API - but a single API that every application uses has the potential to offer a lot of re-use and sharing as you develop your API over&nbsp;time.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
