@@ -21,26 +21,20 @@
     <div id="content">
       <div class="content-wrap">
         <article class="article">
-          <section class="content"><p>No code is perfect, but the nasty types of bugs are the ones that happen randomly and infrequently.  On a couple of recent Android projects we&#39;ve been experiencing such bugs, and as you can guess they can be difficult to track them&nbsp;down.</p>
-<p>While Android&#39;s logcat can help, using the tool often means that you need the device connected through <span class="caps">ADB</span> and a USB cable in order to track the events.  While this is useful in development, this doesn&#39;t work so well when debugging applications that are running on devices in the&nbsp;field.</p>
-<p>Rather than setting up your own logging application or service, it&#39;s possible to setup logcat to persistently log to a file on the device or <span class="caps">SD</span> card.  To do this, simply open an ADB Shell and run logcat as a background process with the -f&nbsp;option:</p>
-<p>`</p>
-<p>adb&nbsp;shell</p>
-<h1 id="logcat-f-x2f-mnt-x2f-sdcard-x2f-extsd-x2f-logcat-txt-amp-amp-">logcat -f &#x2F;mnt&#x2F;sdcard&#x2F;extsd&#x2F;logcat.txt&nbsp;&amp;amp;</h1>
-<p>`</p>
-<p>As you can see in the above statement, this will create a new logcat process to persistently log every event to a file called logcat.txt on the <span class="caps">SD</span> card.  To kill logcat, simply find the PID through the ps tool, and kill the&nbsp;process.</p>
+          <section class="content"><p>No code is perfect, but the nasty types of bugs are the ones that happen randomly and infrequently.  On a couple of recent Android projects we’ve been experiencing such bugs, and as you can guess they can be difficult to track them&nbsp;down.</p>
+<p>While Android’s logcat can help, using the tool often means that you need the device connected through <span class="caps">ADB</span> and a USB cable in order to track the events.  While this is useful in development, this doesn’t work so well when debugging applications that are running on devices in the&nbsp;field.</p>
+<p>Rather than setting up your own logging application or service, it’s possible to setup logcat to persistently log to a file on the device or <span class="caps">SD</span> card.  To do this, simply open an ADB Shell and run logcat as a background process with the -f&nbsp;option:</p>
+<pre><code>adb shell
+# logcat -f /mnt/sdcard/extsd/logcat.txt <span class="amp">&amp;</span>
+</code></pre><p>As you can see in the above statement, this will create a new logcat process to persistently log every event to a file called logcat.txt on the <span class="caps">SD</span> card.  To kill logcat, simply find the PID through the ps tool, and kill the&nbsp;process.</p>
 <p>In case you are worried about the size of the log files, logcat also has the ability to do log&nbsp;recycling:</p>
-<p>`</p>
-<p>adb&nbsp;shell</p>
-<h1 id="logcat-r-1024-n-10-f-x2f-mnt-x2f-sdcard-x2f-extsd-x2f-logcat-txt-amp-amp-">logcat -r 1024 -n 10 -f &#x2F;mnt&#x2F;sdcard&#x2F;extsd&#x2F;logcat.txt&nbsp;&amp;amp;</h1>
-<p>`</p>
-<p>This command will create up to 10 logcat.txt files on the <span class="caps">SD</span> card (named logcat.txt.1, logcat.txt.2, logcat.txt.3, etc.) up to 1Mb in size.  Once the end of the 10<span class="ord">th</span> file is reached, it will overwrite the&nbsp;first.</p>
-<p>Finally, this is all great - but if the user reboots the device, the logcat process will be terminated.  To overcome this, simply edit the &#x2F;init.rc file and add the&nbsp;following:</p>
-<p>`</p>
-<p>service logcat -r 1024 -n 10 -f&nbsp;&#x2F;mnt&#x2F;sdcard&#x2F;extsd&#x2F;logcat.txt</p>
-<pre><code>oneshot
-</code></pre><p>`</p>
-<p>Hope this helps, and happy&nbsp;logging!</p>
+<pre><code>adb shell
+# logcat -r 1024 -n 10 -f /mnt/sdcard/extsd/logcat.txt <span class="amp">&amp;</span>
+</code></pre><p>This command will create up to 10 logcat.txt files on the <span class="caps">SD</span> card (named logcat.txt.1, logcat.txt.2, logcat.txt.3, etc.) up to 1Mb in size.  Once the end of the 10<span class="ord">th</span> file is reached, it will overwrite the&nbsp;first.</p>
+<p>Finally, this is all great - but if the user reboots the device, the logcat process will be terminated.  To overcome this, simply edit the /init.rc file and add the&nbsp;following:</p>
+<pre><code>service logcat -r 1024 -n 10 -f /mnt/sdcard/extsd/logcat.txt
+    oneshot
+</code></pre><p>Hope this helps, and happy&nbsp;logging!</p>
 </section>
         </article>
       </div>
