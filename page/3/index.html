@@ -23,165 +23,12 @@
       <div class="content-wrap">
         <article class="article intro">
           <header>
-            <p class="date"><span>13. August 2011</span></p>
-            <h2><a href="/2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/">Authenticating with Google, Facebook, and others from your jQueryMobile Application</a></h2>
-          </header>
-          <section class="content"><p>In my last post, I showed how to implement authentication using Google, Facebook, etc. for your iOS application – using the <a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe">Windows Azure Toolkit for iOS</a>.&amp;#160; This works well for iPhone applications written in Objective C, but what if you are developing a Web based mobile applications that span multiple platforms?&amp;#160; Given that everything is using Web pages, you would hope that it would be a little easier, but things can get tricky - especially if you are using&nbsp;jQueryMobile.&amp;#160; </p>
-<p>Having implemented this a couple of times now, here is a rough guide of how to integrate AppFabric <span class="caps">ACS</span> (Access Control Service) authentication into a jQueryMobile application. (There is already a ton of documentation of both jQueryMobile and ACS, so I’m assuming that you understand the basics of how these both&nbsp;work).&amp;#160;&amp;#160;&amp;#160; </p>
-<p><strong>Step 1:&amp;#160; Create your own provider selection&nbsp;screen</strong></p>
-<p>When you first start playing around with using <span class="caps">ACS</span> on mobile web browsers, the first thing you&#39;ll notice is that the default login page isn&#39;t that&nbsp;nice.&amp;#160; </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
-<p>While the functionality of logging in will work, users have to pinch zoom to be able to read the buttons, which isn&#39;t a great experience.&amp;#160; It also doesn&#39;t fit in with any jQueryMobile theme that you may have created.&amp;#160; To overcome this, we can create our own provider&nbsp;screen.&amp;#160; </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
-<p>To build something similar to the above, I&#39;ve used a jQueryMobile <a href="http:&#x2F;&#x2F;jquerymobile.com&#x2F;test&#x2F;docs&#x2F;pages&#x2F;dialog-alt.html">Dialog</a> (which has an automatic border as well as a background effect).&amp;#160; The basic code for the screen looks like the following:
-  &lt;pre class=&quot;brush:html&quot;&gt;&amp;lt;!<span class="caps">DOCTYPE</span> html&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;title&amp;gt;Select Login Provider&amp;lt;&#x2F;title&amp;gt;
-&amp;lt;&#x2F;head&amp;gt;
-&amp;lt;body&amp;gt;
-    &amp;lt;div data-role=&amp;quot;dialog&amp;quot;&amp;gt;
-        &amp;lt;div data-role=&amp;quot;header&amp;quot;&amp;gt;
-            &amp;lt;h1&amp;gt;Select Login Provider&amp;lt;&#x2F;h1&amp;gt;
-        &amp;lt;&#x2F;div&amp;gt;
-        &amp;lt;div data-role=&amp;quot;content&amp;quot;&amp;gt;
-            @{
-                if (ViewBag.JSONProviders != null)
-                    {
-                    var providers = Json.Decode(ViewBag.JSONProviders);
-                    foreach (var provider in providers)
-                    {
-                        &amp;lt;button type=&amp;quot;button&amp;quot; onclick=&amp;quot;javascript:window.location.href=&#39;@provider.LoginUrl&#39;&amp;quot;&amp;gt;@provider.Name&amp;lt;&#x2F;button&amp;gt;
-                    }
-                }
-            }
-        &amp;lt;&#x2F;div&amp;gt;
-    &amp;lt;&#x2F;div&amp;gt;
-&amp;lt;&#x2F;body&amp;gt;&nbsp;&amp;lt;&#x2F;html&amp;gt;&lt;&#x2F;pre&gt;</p>
-<p>As you can see from the above, the form is built by parsing a <span class="caps">JSON</span> object containing a list of identity providers and creating buttons for each provider – setting a name for a button and setting an on click action to the URL.&amp;#160; (The above code uses the Razor-based syntax for&amp;#160; ASP.NET MVC, but the same will work just by using JSON calls in regular&nbsp;Javascript).&amp;#160; </p>
-<p>Two things to note&nbsp;here:</p>
-<p>1.&amp;#160; It&#39;s really important to use <strong>window.location.href</strong> instead of an &amp;lt;a&amp;gt; anchor when linking to the provider – otherwise you&#39;ll break the <span class="caps">AJAX</span> model of your jQueryMobile app and a new browser window will be launched (which looks horrible, especially in full screen web&nbsp;applications).</p>
-<p>2.&amp;#160; You are probably asking yourself where the <span class="caps">JSON</span> objects actually come from.&amp;#160; This brings us to our next&nbsp;point…</p>
-<p><strong>Step 2:&amp;#160; Make a call to the <span class="caps">ACS</span> JSON&nbsp;endpoint</strong></p>
-<p>The buttons in the form are based on identity providers, which you likely setup when you configured <span class="caps">ACS</span>.&amp;#160; These providers can be extracted as JSON objects using a JSON based endpoint that the ACS service&nbsp;providers.&amp;#160; </p>
-<p>Here&#39;s the <span class="caps">URL</span> of the JSON endpoint for ACS&nbsp;v2.</p>
-<p><a href="https:&#x2F;&#x2F;{0}.accesscontrol.windows.net&#x2F;v2&#x2F;metadata&#x2F;IdentityProviders.js?protocol=wsfederation&amp;amp;realm={1}&amp;amp;reply_to={2}&amp;amp;context=&amp;amp;request_id=&amp;amp;version=1.0">https:&#x2F;&#x2F;{0}.accesscontrol.windows.net&#x2F;v2&#x2F;metadata&#x2F;IdentityProviders.js?protocol=wsfederation&amp;amp;realm={1}&amp;amp;reply_to={2}&amp;amp;context=&amp;amp;request_id=&amp;amp;version=1.0</a></p>
-<p>{0} is the namespace of your <span class="caps">ACS</span>&nbsp;service</p>
-<p>{1} is the realm within your <span class="caps">ACS</span>&nbsp;service</p>
-<p>{2} is an optional <span class="caps">URL</span> (which must be HTML encoded) that specifies where to return the browser once authentication has been completed.&amp;#160; Remember, if you are using AJAX navigation, then you&#39;ll want to pass in the correct #-prefixed syntax.&amp;#160; For example a return URL of the&nbsp;following:</p>
-<p><a href="http:&#x2F;&#x2F;localhost&#x2F;MyWebApp#&#x2F;MyWebApp&#x2F;Accounts">http:&#x2F;&#x2F;localhost&#x2F;MyWebApp#&#x2F;MyWebApp&#x2F;Accounts</a></p>
-<p>Will instruct the <span class="caps">ACS</span> service to return to the Accounts page in your jQueryMobile&nbsp;app.</p>
-<p>Again, you can make the call to the <span class="caps">JSON</span> endpoint using Javascript, or if you are using ASP.NET MVC like in Step 1 I would recommend creating a controller action called Providers which passes the return JSON object in a&nbsp;ViewBag.&amp;#160; </p>
-<p><strong>Step 3:&amp;#160; Launch the providers screen from your&nbsp;app</strong></p>
-<p>Finally, once you have your provider screen created, you&#39;ll need to call it when authentication is required.&amp;#160; There are a couple of different ways of doing this – if you are using Javascript only, then create and maintain a variable called claims – which corresponds to the claims bag returned from the service (when the <span class="caps">ACS</span> service returns it does a post back to your application so that you can capture the claims).&amp;#160; Secondly, if you are using ASP.NET MVC then you can create a second action on the Account controller called claims with something similar to the&nbsp;following:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:csharp&quot;&gt;</p>
-<p>public JsonResult&nbsp;Claims()</p>
-<p>{</p>
-<p>&amp;#160;&amp;#160;&amp;#160; return Json(string.Join(&amp;quot;n&amp;quot;, ((IClaimsIdentity)this.User.Identity).Claims.Select(c =&amp;gt; c.ClaimType + &amp;quot;: &amp;quot; +&nbsp;c.Value).ToArray()));</p>
-<p>}&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>This will return the claims bag directly from the User.Identity property from the&nbsp;controller.</p>
-<p>Well, just a short overview, but if you are thinking of implementing Google and Facebook authentication in your jQueryMobile application, hopefully this has been of some&nbsp;help.</p>
-
-          </section>
-        </article>
-        <article class="article intro">
-          <header>
             <p class="date"><span>01. August 2011</span></p>
             <h2><a href="/2011/08/01/using-federated-identity-for-ios-applications/">Using Federated Identity for iOS Applications</a></h2>
           </header>
-          <section class="content"><p>Last week, Microsoft released v1.2 of the Windows Azure Toolkit for iOS.&amp;#160; As development partner for the toolkit, <a href="http:&#x2F;&#x2F;www.neudesic.com">Neudesic</a> has been working with several customers on implementing <span class="caps">ACS</span> for iPhone and iPad applications.&amp;#160; Due to popular demand, I wanted to share a short overview of how simple it is to get this up and working for your own iOS&nbsp;projects.</p>
-<p><strong>First, some&nbsp;background…</strong></p>
-<p>Many iPhone and iPad applications have a need to authenticate.&amp;#160; Maybe it&#39;s to access sensitive information or record a particular high score against your name.&amp;#160; Implementing an authentication scheme for iOS can however be time consuming and tricky – you often have to create an authentication service, host it, expose the service through <span class="caps">REST</span>, and consume it on the device.&amp;#160; And afterwards you are responsible for backing up the user database and dealing with lost passwords,&nbsp;etc.</p>
-<p>To help overcome this many applications are now turning to external providers.&amp;#160; For example, to identify yourself when playing Zynga Poker, instead of creating a new account, you simply sign into Facebook (when launching the application for the first time) and the game uses these credentials as you play. This type of sign in method is called federated identity. This prevents Zynga from having to maintain a complex and large set of user accounts and passwords, and also prevents the player from having to remember yet another username and&nbsp;password.&amp;#160; </p>
-<p>Adding federated identity to your iPhone or iPad application can be difficult, requiring knowledge of exchange secure tokens with a set of providers, and creating and sending the right OAuth headers in your application.&amp;#160; Removing this difficultly is exactly what we are trying to address in v1.2 of the Windows Azure Toolkit for&nbsp;iOS.&amp;#160; </p>
-<p><strong>Sounds great – how do I use&nbsp;it?</strong></p>
-<p>To implement <span class="caps">ACS</span> in your application, you&#39;ll first need to access the Windows Azure portal by navigating to <a href="http:&#x2F;&#x2F;windows.azure.com&#x2F;">http:&#x2F;&#x2F;windows.azure.com</a> and signing in with your&nbsp;credentials. </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image002.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image002_thumb.png &quot;clip_image002&quot;" alt="clip_image002"></a></p>
-<p>Click on the <strong>Service Bus, Access Control &amp;amp; </strong>Caching menu item and select the <strong>Access Control</strong> menu item under the <strong>AppFabric</strong> folder.&amp;#160; Select an active Windows Azure subscription and click on the <strong>New</strong> button in the&nbsp;toolbar.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image004.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image004_thumb.png &quot;clip_image004&quot;" alt="clip_image004"></a></p>
-<p>The new service namespace dialog will open.&amp;#160; Ensure that <strong>Access Control</strong> is selected, and enter a unique namespace and country&#x2F;region for the&nbsp;service.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image006.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image006_thumb.png &quot;clip_image006&quot;" alt="clip_image006"></a></p>
-<p>The <span class="caps">ACS</span> namespace will now be created.&amp;#160; This might take a few minutes.&amp;#160; Wait until the namespace is showing in an <strong>Active</strong>&nbsp;state.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image008.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image008_thumb.png &quot;clip_image008&quot;" alt="clip_image008"></a></p>
-<p>Once this is complete, highlight the newly created service and click on the <strong>Access Control Service</strong> button in the toolbar.&amp;#160; This will launch the Access Control Service&nbsp;portal. </p>
-<p>Within the portal, click on<strong> Identity Providers </strong>and add the identity providers you would like to use for your&nbsp;application.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image010.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image010_thumb.png &quot;clip_image010&quot;" alt="clip_image010"></a></p>
-<p>The default is Windows Live <span class="caps">ID</span>, but you can add other preconfigured providers (such as Google and Yahoo!) as well as external identity systems configured to use&nbsp;WS-Federation.</p>
-<p>Once you have added the required providers, click on the <strong>Relying Parties</strong> section of the&nbsp;portal.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image012.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image012_thumb.png &quot;clip_image012&quot;" alt="clip_image012"></a></p>
-<p>Click on the <strong>Add</strong> button and enter the following information for the relying party&nbsp;application:</p>
-<p><strong>Name</strong> – a given name for your&nbsp;application</p>
-<p><strong>Realm</strong> – a unique <span class="caps">ID</span> for your application.&amp;#160; For this walkthrough, we’ll be using&nbsp;uri:wazmobiletoolkit</p>
-<p><strong>Return <span class="caps">URL</span></strong> – you can leave this&nbsp;blank</p>
-<p><strong>Error <span class="caps">URL</span></strong> – you can leave this&nbsp;blank</p>
-<p><strong>Token Format</strong> – select&nbsp;<span class="caps">SWT</span></p>
-<p><strong>Token Lifetime</strong> – Feel free to change the default from 600&nbsp;seconds. </p>
-<p>Select the identity providers that you would like to use, and then under the <strong>Token Signing Settings</strong> section, click on the <strong>Generate</strong> button to create a new symmetric key that will be used for this&nbsp;application.</p>
-<p>Finally, click on the <strong>Save</strong> button.&amp;#160; This will create the Relying Party&nbsp;Application.</p>
-<p>Next, go into the <strong>Rule Groups</strong> section of the portal and select the default rule group that was created for the&nbsp;application.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image014.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image014_thumb.png &quot;clip_image014&quot;" alt="clip_image014"></a></p>
-<p>Click on the <strong>Generate</strong> link in order to generate a set of default rules for this rule&nbsp;group.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image016.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011
-&#x2F;08&#x2F;clip_image016_thumb.png &quot;clip_image016&quot;" alt="clip_image016"></a></p>
-<p>Select the providers that you wish to use, and click on the <strong>Generate</strong> button.&amp;#160; Once this is complete, you should see a set of&nbsp;rules.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image018.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image018_thumb.png &quot;clip_image018&quot;" alt="clip_image018"></a></p>
-<p>After this step is complete, <span class="caps">ACS</span> has now been configured correctly to be used with your iOS application.&amp;#160; Make a note of your Service Namespace (found at the top of the portal) and&nbsp;Realm.</p>
-<p><strong>Ok, the service is now setup.&amp;#160; How do I use it in my Xcode&nbsp;project?</strong></p>
-<p>To start, launch Xcode (4.02 or higher) and create a new&nbsp;project.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image020.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image020_thumb.png &quot;clip_image020&quot;" alt="clip_image020"></a></p>
-<p>From the project template dialog, select a <strong>View-based application</strong> and click on the <strong>Next</strong> button.&amp;#160; Enter a <strong>Product Name</strong> and <strong>Company Identifier</strong> and click on the <strong>Next</strong> button to continue.&amp;#160; Select a directory to use for the project file and return to the&nbsp;<span class="caps">IDE</span>.</p>
-<p>Next, download the latest version of the Windows Azure Toolkit for iOS library from <a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;watoolkitios-lib">http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;watoolkitios-lib</a>. In the download will be a zip file containing two versions of the library (one for the device, one for the simulator) and some header files for the&nbsp;project.</p>
-<p>Right click on your project and select the <strong>Add Files to…</strong> menu&nbsp;option.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image022.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image022_thumb.png &quot;clip_image022&quot;" alt="clip_image022"></a></p>
-<p>Locate the .a file (for the simulator) and header files and add them to your project.&amp;#160; You may want to create a new group (called lib) to store these&nbsp;in.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image024.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image024_thumb.png &quot;clip_image024&quot;" alt="clip_image024"></a></p>
-<p>Now we need to add a reference to a library required for <span class="caps">XML</span> parsing.&amp;#160; To do this, click on the top most project file, click on the target in the 2<span class="ord">nd</span> column of the IDE, and select <strong>Build Phases</strong> from the tab&nbsp;menu. </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image026.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image026_thumb.png &quot;clip_image026&quot;" alt="clip_image026"></a></p>
-<p>In the main window, expand the <strong>Link Binary with Libraries</strong>&nbsp;option.</p>
-<p>Ensure that the libwatoolkitios.a file has been automatically added as a reference, click the + button to add a new library, and select the libxml2.dylib library from the drop down&nbsp;list.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image028.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image028_thumb.png &quot;clip_image028&quot;" alt="clip_image028"></a></p>
-<p>Click on the <strong>Add</strong> button to add a reference to this library for your&nbsp;project.</p>
-<p>Before we start adding any code, we need to add a couple of required linker flags to the project.&amp;#160; To do this, click on the <strong>Build Settings</strong> tab (next to Build&nbsp;Phases).</p>
-<p>In the search box, type “other linker” to filter the&nbsp;settings.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image030.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image030_thumb.png &quot;clip_image030&quot;" alt="clip_image030"></a></p>
-<p>You should see a setting called <strong>Other Linker Flags</strong>.&amp;#160; Double click on the right side of this row to add new&nbsp;flags.</p>
-<p>Click on the + button to add two flags.&amp;#160; The first is <strong>–ObjC</strong> and the second is <strong>–all_load</strong>.&amp;#160; Once complete, your linker flags should look like the following&nbsp;screenshot:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image032.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image032_thumb.png &quot;clip_image032&quot;" alt="clip_image032"></a></p>
-<p>Click on the <strong>Done</strong> button to save these settings.&amp;#160; The project is now configured correctly to reference the Windows Azure Toolkit&nbsp;library.</p>
-<p>To test that the library works, click on the project’s <strong>[ProjectName]AppDelegate.m</strong> file.&amp;#160; Add the following #import statement at the top of the&nbsp;class:</p>
-<h1 id="import-amp-quot-wacloudaccesscontrolclient-h-amp-quot-">import&nbsp;&amp;quot;WACloudAccessControlClient.h&amp;quot;</h1>
-<p>Next, search for a method called <strong>didFinishLaunchingWithOptions </strong>and after the <strong>[self.window makeKeyAndVisible]</strong> line, enter the following code.
-  &lt;pre&nbsp;class=&quot;brush:c&quot;&gt;</p>
-<p>NSLog(@&amp;quot;Intializing the Access Control&nbsp;Client…&amp;quot;);</p>
-<p>WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessControlClientForNamespace:@&amp;quot;iostest-walkthrough&amp;quot;&nbsp;realm:@&amp;quot;uri:wazmobiletoolkit&amp;quot;];</p>
-<p>[acsClient showInViewController:self.viewController allowsClose:<span class="caps">NO</span> withCompletionHandler:^(BOOL authenticated)&nbsp;{</p>
-<p>if&nbsp;(!authenticated)</p>
-<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;{</p>
-<p>NSLog(@&amp;quot;Error&nbsp;authenticating&amp;quot;);</p>
-<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;}</p>
-<p>else</p>
-<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;{</p>
-<p>NSLog(@&amp;quot;Creating the authentication&nbsp;token…&amp;quot;);</p>
-<p>WACloudAccessToken *token = [WACloudAccessControlClient&nbsp;sharedToken];</p>
-<p>&#x2F;<em> Do something with the token here! </em>&#x2F;</p>
-<p>&amp;#160;&amp;#160;&amp;#160;&nbsp;}</p>
-<p>}];&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>Replace the namespace and realm in the first line with the service namespace and realm for your own&nbsp;service.</p>
-<p>As you can see from the above, the code creates a new instance of the access control client, requests that the client shows itself in the current view controller, and then extracts a&nbsp;token. </p>
-<p>Build and run the application in the iOS&nbsp;Simulator. </p>
-<p>Once the application starts, you should be prompted to select an identity provider from the list that you configured in your <span class="caps">ACS</span>&nbsp;service.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image034.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image034_thumb.png &quot;clip_image034&quot;" alt="clip_image034"></a></p>
-<p>Pick one of the providers, and enter a valid set of&nbsp;credentials.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image036.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image036_thumb.png &quot;clip_image036&quot;" alt="clip_image036"></a></p>
-<p>Click on the <strong>Remember me</strong> checkbox if you want to skip this step when running this application again, and click on the <strong>Sign in</strong>&nbsp;button.</p>
-<p>The first time the application is run, you’ll be prompted to authorize the application to access your provider&nbsp;data.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image038.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;clip_image038_thumb.png &quot;clip_image038&quot;" alt="clip_image038"></a></p>
-<p>Click on the <strong>Allow</strong> button to continue.&amp;#160; The login window will now disappear and you’ll be returned to your&nbsp;application.</p>
-<p>In the debug window, you should see the following two&nbsp;logs:</p>
-<p>2011-07-22 10:12:26.284 iostest-walkthrough[25838:207] Intializing the Access Control&nbsp;Client…</p>
-<p>2011-07-22 10:12:36.359 iostest-walkthrough[25838:207] Creating the authentication&nbsp;token…</p>
-<p>If you are seeing this, congratulations!&amp;#160; You&#39;ve successfully setup federated identity for your application.&amp;#160; The final message indicates that the access token was retrieved and can be used for further use.&amp;#160; The <strong>WACloudAccessToken</strong> (derived from <strong>[WACloudAccessControlClient sharedToken]</strong>) contains an NSDictionary of claims and other properties that can be stored within your application.&amp;#160; Using these properties on future calls can be used to identify returning users to your&nbsp;application.</p>
-
+          <section class="content"><p>Last week, Microsoft released v1.2 of the Windows Azure Toolkit for iOS.  As development partner for the toolkit, <a href="http://www.neudesic.com">Neudesic</a> has been working with several customers on implementing <span class="caps">ACS</span> for iPhone and iPad applications.  Due to popular demand, I wanted to share a short overview of how simple it is to get this up and working for your own iOS&nbsp;projects.</p>
+<p>
+            <p class="more"><a href="/2011/08/01/using-federated-identity-for-ios-applications/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -189,32 +36,10 @@
             <p class="date"><span>27. May 2011</span></p>
             <h2><a href="/2011/05/27/running-visual-studio-2010-on-the-mac/">Running Visual Studio 2010 on the Mac</a></h2>
           </header>
-          <section class="content"><p>Following a few recent presentations, I&#39;ve had a couple of people ask how I run Visual Studio on the&nbsp;Mac. </p>
-<p>You&#39;ll be sad to hear that I don&#39;t have a special version of Visual Studio for Mac <span class="caps">OSX</span> - instead I am using VMWare Fusion 3.1 to run a copy of Windows 7 in a virtual machine. Fusion has a mode called &quot;Unity&quot; which allows windows from the virtual machine to interact with windows on the host operating system (even to the point where I can put icons for Windows-based applications in the dock on the Mac). There is a little performance hit running applications in this way vs. a full screen virtual machine, but it&#39;s certainly useful for presentations where you are flipping between both&nbsp;environments. </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;05&#x2F;VSMac.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;05&#x2F;VSMac-thumb.png" alt=""></a></p>
-
-          </section>
-        </article>
-        <article class="article intro">
-          <header>
-            <p class="date"><span>19. May 2011</span></p>
-            <h2><a href="/2011/05/19/more-slides-from-teched/">More Slides from TechEd</a></h2>
-          </header>
-          <section class="content"><p>Additional thanks to those who attended my session this morning (<span class="caps">DPR303</span> - Developing Enterprise-Grade Mobile Applications). I&#39;ve uploaded the deck to SlideShare - you can find it at the bottom of this&nbsp;post. </p>
-<p>&lt;span style=&quot; display: inline; float: left; margin: 0 10px 10px 0;&quot;&gt;&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;8027410&quot; marginwidth=&quot;0&quot; frameborder=&quot;0&quot; height=&quot;317&quot; scrolling=&quot;no&quot; marginheight=&quot;0&quot;&nbsp;width=&quot;380&quot;&gt;&lt;&#x2F;iframe&gt;&lt;&#x2F;span&gt;</p>
-
-          </section>
-        </article>
-        <article class="article intro">
-          <header>
-            <p class="date"><span>19. May 2011</span></p>
-            <h2><a href="/2011/05/18/teched-2011-slides-dpr304/">TechEd 2011 Slides - DPR304</a></h2>
-          </header>
-          <section class="content"><p>Thanks to everyone that came to my session at TechEd 2011 yesterday - it was a great crowd, and the presentation was a lot of fun to put together. My apologies for any confusion with the title (i.e. not making it explicit that it was a developer talk in the title) - this will definitely be something that we address next&nbsp;time. </p>
-<p>You can find the slides from the talk below, and the source code of all demos can be found on <a href="http:&#x2F;&#x2F;github.com&#x2F;simonguest">GitHub</a>. Hope you enjoy, and look forward to any&nbsp;feedback.</p>
-<p><strong><em> Update - corrected Session code in&nbsp;title </em></strong></p>
-<p>&lt;span style=&quot; display: inline; float: left; margin: 0 10px 10px 0;&quot;&gt;&lt;iframe src=&quot;http:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;embed_code&#x2F;8013939&quot; marginwidth=&quot;0&quot; height=&quot;317&quot; frameborder=&quot;0&quot; width=&quot;380&quot; marginheight=&quot;0&quot;&nbsp;scrolling=&quot;no&quot;&gt;&lt;&#x2F;iframe&gt;&lt;&#x2F;span&gt;</p>
-
+          <section class="content"><p>Following a few recent presentations, I’ve had a couple of people ask how I run Visual Studio on the&nbsp;Mac. </p>
+<p>You’ll be sad to hear that I don’t have a special version of Visual Studio for Mac <span class="caps">OSX</span> - instead I am using VMWare Fusion 3.1 to run a copy of Windows 7 in a virtual&nbsp;machine.</p>
+<p>
+            <p class="more"><a href="/2011/05/27/running-visual-studio-2010-on-the-mac/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -222,184 +47,9 @@
             <p class="date"><span>21. April 2011</span></p>
             <h2><a href="/2011/04/21/using-apple-push-notifications-from-windows-azure/">Using Apple Push Notifications from Windows Azure</a></h2>
           </header>
-          <section class="content"><p>In my <a href="http:&#x2F;&#x2F;channel9.msdn.com&#x2F;events&#x2F;MIX&#x2F;MIX11&#x2F;EXT18"><span class="caps">MIX11</span> session</a> last week I demonstrated how to create push notifications to iPhone and iPad devices from Wndows Azure.&amp;nbsp; I’ve put together this blog post to share more detail and the source code for how this&nbsp;works.</p>
-<p>Firstly, if you haven’t already, you will need to register your iPhone&#x2F;iPad application for push notifications.&amp;nbsp; To do this, log into the iOS developer center (you’ll need to be a registered Apple Developer) and in the provisioning portal setup a new App <span class="caps">ID</span>, enabling it for push notifications.&amp;nbsp; Here’s the App ID for my MIX&nbsp;demo:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
-<p>With the development certificate that you downloaded during this process, create a new Azure worker role and import the certificate into a folder called “certs”:&amp;nbsp; In addition, you’ll need to configure the properties of the certificate file such that the build action is set to&nbsp;“Content”.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;04&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
-<p>(I’ve deliberately skimmed over the previous points of creating and App <span class="caps">ID</span> and Azure Worker role as they are both well documented by Apple and&nbsp;Microsoft).</p>
-<p>&amp;nbsp;</p>
-<p>To start configuring the worker role for push notifications, first add a reference to the Windows Azure Storage Client (Microsoft.WindowsAzure.StorageClient) library.&amp;nbsp; In the OnRun section of the worker role, access the Azure queue that messages are going to be placed in.&amp;nbsp; 
-&lt;pre class=&quot;brush:c-sharp&quot;&gt;StorageCredentials creds = new StorageCredentialsAccountAndKey(&quot;<span class="caps">YOUR</span> ACCOUNT NAME&quot;, &quot;YOUR ACCOUNT&nbsp;KEY&quot;);</p>
-<p>CloudQueueClient cqc = new CloudQueueClient(&quot;&quot;<span class="caps">YOUR</span> QUEUE URL”,&nbsp;creds);</p>
-<p>var testQueue = cqc.ListQueues().First(q =&amp;gt; q.Name.StartsWith(&quot;<span class="caps">YOUR</span> QUEUE&nbsp;NAME&quot;));&lt;&#x2F;pre&gt;</p>
-<p>Then, still within the OnRun method, create a routine that checks the queue for incoming messages and sets up the connection to the <span class="caps">APN</span> (Apple Push Notification)&nbsp;service.</p>
-<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;while (true)
-            {&nbsp;Thread.Sleep(10000);</p>
-<pre><code>            if (testQueue.RetrieveApproximateMessageCount() != 0)
-            {
-
-                List&amp;lt;cloudqueuemessage&amp;gt; messages = testQueue.GetMessages(testQueue.RetrieveApproximateMessageCount()).ToList();
-                foreach (CloudQueueMessage message in messages)
-                {
-                    Trace.WriteLine(&amp;quot;Retrieved message from Queue: &amp;quot; + message.AsString);
-                    &amp;#x2F;&amp;#x2F; open the APN connection
-                    InitializeAPN();
-                    &amp;#x2F;&amp;#x2F; send message
-                    string session = message.AsString.Substring(0, message.AsString.IndexOf(&amp;#39;:&amp;#39;));
-                    SendAPNMessage(message.AsString, session);
-                    &amp;#x2F;&amp;#x2F; tear down the APN connection
-                    CloseAPN();
-
-                    testQueue.DeleteMessage(message);
-                }
-            }
-        }
-</code></pre><p>&lt;&#x2F;pre&gt;</p>
-<p>&lt;p&gt;You’ll probably want to do something a little more elegant than “while (true)” but this works for the purposes of this post.&amp;nbsp; Also, as I mentioned in the talk, you may or may not want to setup and tear down the connection to the <span class="caps">APN</span> for each message that you send.&amp;nbsp; If you are planning to send a large volume of messages to a large number of devices, Apple may view this as a denial of service attack and refuse your connection.&amp;nbsp; A more prescriptive approach in this scenario would be to instead open the connection in the OnStart method and keep it alive during&nbsp;OnRun.</p>
-<p>Within the worker role, setup the following declarations.&amp;nbsp; Most of these should be straightforward, and you’ll need to replace a number of them with your own details.&amp;nbsp; 
-&lt;pre class=&quot;brush:c-sharp&quot;&gt;private static string <span class="caps">HOST</span> =&nbsp;&quot;gateway.sandbox.push.apple.com&quot;;</p>
-<p>private static int <span class="caps">PORT</span> =&nbsp;2195;</p>
-<p>private static string CERT_PASSWORD = &quot;<span class="caps">YOUR</span>&nbsp;PASSWORD&quot;;</p>
-<p>private static X509Certificate2 CLIENT_CERT = new X509Certificate2(Environment.GetEnvironmentVariable(&quot;RoleRoot&quot;) + @&quot;approotcertsmix11_dev_cert.p12&quot;,&nbsp;CERT_PASSWORD);</p>
-<p>private static X509Certificate2Collection CLIENT_CERT_COLLECTION = new&nbsp;X509Certificate2Collection(CLIENT_CERT);</p>
-<p>private static string DEVICE_TOKEN = &quot;<span class="caps">YOUR</span> DEVICE TOKEN&quot;;&amp;nbsp; &#x2F;&#x2F;Replace this with the Device token we obtain later on in this&nbsp;example</p>
-<p>private TcpClient&nbsp;client;</p>
-<p>private SslStream sslStream;&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>With these declarations in place, we can now start writing the <span class="caps">APN</span> code.&amp;nbsp; First, create an IntializeAPN method, responsible for setting up the connection to the APN.
-&lt;pre class=&quot;brush:c-sharp&quot;&gt;private void&nbsp;InitializeAPN()</p>
-<p>{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; client = new TcpClient(<span class="caps">HOST</span>,&nbsp;PORT);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; sslStream = new SslStream(client.GetStream(),&nbsp;false);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;try</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; sslStream.AuthenticateAsClient(<span class="caps">HOST</span>, CLIENT_CERT_COLLECTION, SslProtocols.Tls,&nbsp;false);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; catch (AuthenticationException&nbsp;ex)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Trace.WriteLine(&quot;Could not open <span class="caps">APN</span> connection: &quot; +&nbsp;ex.ToString());</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; Trace.WriteLine(&quot;<span class="caps">APN</span> connection opened&nbsp;successfully.&quot;);</p>
-<p>}</p>
-<p>&lt;&#x2F;pre&gt;</p>
-<p>Then, create a method called SendAPNMessage which will construct and sent the push notification message in the correct format.&amp;nbsp; 
-&lt;pre class=&quot;brush:c-sharp&quot;&gt;private void SendAPNMessage(string message, string&nbsp;session)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;try</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; MemoryStream memoryStream = new&nbsp;MemoryStream();</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; BinaryWriter binaryWriter = new&nbsp;BinaryWriter(memoryStream);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; construct the&nbsp;message</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)0);&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)0);&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Write((byte)32); </p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; convert to hex and&nbsp;write</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; byte[] deviceToken = new byte[DEVICE_TOKEN.Length &#x2F;&nbsp;2];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; for (int i = 0; i &amp;lt; deviceToken.Length;&nbsp;i++)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; deviceToken[i] = byte.Parse(DEVICE_TOKEN.Substring(i * 2, 2),&nbsp;System.Globalization.NumberStyles.HexNumber);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Write(deviceToken);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; construct payload within <span class="caps">JSON</span> message&nbsp;framework</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; String payload = &quot;{&quot;aps&quot;:{&quot;alert&quot;:&quot;&quot; + message +&nbsp;&quot;&quot;,&quot;session&quot;:&quot;&quot;+session+&quot;&quot;,&quot;badge&quot;:1}}&quot;;</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; write payload&nbsp;data</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)0);&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; binaryWriter.Write((byte)payload.Length);&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; byte[] payloadBytes =&nbsp;System.Text.Encoding.<span class="caps">UTF8</span>.GetBytes(payload);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Write(payloadBytes);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;binaryWriter.Flush();</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; send across the&nbsp;wire</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; byte[] array =&nbsp;memoryStream.ToArray();</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;sslStream.Write(array);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;sslStream.Flush();</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; catch (Exception&nbsp;ex)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;Trace.WriteLine(ex.ToString());</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Trace.WriteLine(&quot;Message successfully&nbsp;sent.&quot;);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; }&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>You’ll notice that my SendAPNMessage method signature contains a “session” value.&amp;nbsp; For the purposes of the demo, I was sending across the session code that had changed as an explicit value in the notification message.&amp;nbsp; Feel free to change or remove this as you&nbsp;need.</p>
-<p>Finally, the close method is called to close the connection.
-&lt;pre class=&quot;brush:c-sharp&quot;&gt;private void&nbsp;CloseAPN()</p>
-<p>{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;client.Close();</p>
-<p>}&lt;&#x2F;pre&gt;</p>
-<p>At this point, you might be wondering how you obtain the DEVICE_TOKEN value for the above.&amp;nbsp; This is not the <span class="caps">UDID</span> of the device, but instead a separate token that is generated by the phone itself.&amp;nbsp; To get this token, and to handle incoming push notifications, let’s turn our attention to the XCode project.&amp;nbsp; For my demo I was receiving push notifications within a <a href="http:&#x2F;&#x2F;www.phonegap.com">PhoneGap</a> application, but this code will work equally in a regular native client&nbsp;application.</p>
-<p>First, we need to instruct the application to register for <span class="caps">APN</span> messages.&amp;nbsp; This is done using the registerForRemoteNotificationTypes method.&amp;nbsp; You’ll need to call this method when the application first starts up (for PhoneGap projects, this can be in the init method of the AppDelegate).
-&lt;pre class=&quot;brush:c&quot;&gt;NSLog(@&quot;Registering for&nbsp;APN&quot;);</p>
-<p>[[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |&nbsp;UIRemoteNotificationTypeSound)];</p>
-<p>&lt;&#x2F;pre&gt;</p>
-<p>This method has three callbacks that it can take advantage of.&amp;nbsp; One to indicate that registration was successful (we also get the Device <span class="caps">ID</span> from here), one to indicate that something went wrong (e.g. if we are running in the simulator, which doesn’t support push notifications), and one for when we actually receive a&nbsp;message).</p>
-<p>The first two are easy to handle:
-&lt;pre class=&quot;brush:c&quot;&gt;- (void)application:(UIApplication <em>)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData </em>)deviceToken&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString *str = [NSString stringWithFormat:@&quot;Device&nbsp;Token=%@&quot;,deviceToken];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;NSLog(@&quot;%@&quot;,str);</p>
-<p>}</p>
-<ul>
-<li>(void)application:(UIApplication <em>)app didFailToRegisterForRemoteNotificationsWithError:(NSError </em>)err&nbsp;{</li>
-</ul>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString *str = [NSString stringWithFormat: @&quot;Error: %@&quot;,&nbsp;err];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; NSLog(@&quot;%@&quot;,str);&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-}&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>Note how the first method (didRegisterForRemoteNotificationsWithDeviceToken) is where we actually extract the DEVICE_TOKEN string required in the worker role.&amp;nbsp; You’ll have to run this once, and copy and paste appropriately.&amp;nbsp; Of course, in a production environment, we would likely pass this value to the service via a separate&nbsp;call.&amp;nbsp; </p>
-<p>The third callback gets called when the device actually receives a message.
-&lt;pre class=&quot;brush:c&quot;&gt;- (void)application:(UIApplication <em>)application didReceiveRemoteNotification:(NSDictionary </em>)userInfo&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp; for (id key in userInfo)&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSLog(@&quot;key: %@, value: %@&quot;, key, [userInfo&nbsp;objectForKey:key]);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString *payload = [NSString stringWithFormat:@&quot;%@&quot;,[userInfo&nbsp;objectForKey:key]];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &#x2F;&#x2F; work out the session code from the <span class="caps">JSON</span>&nbsp;payload</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSRegularExpression*&nbsp;regex;</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSTextCheckingResult*&nbsp;result;</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSError* error =&nbsp;nil;</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString<em> regexStr = @&quot;session = ([^&#39;]</em>);&quot;;</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString* value =&nbsp;nil;</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; regex = [NSRegularExpression regularExpressionWithPattern:regexStr options:NSRegularExpressionCaseInsensitive&nbsp;error:&amp;amp;error];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; result = [regex firstMatchInString:payload options:0 range:NSMakeRange(0,&nbsp;payload.length)];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; if(result &amp;amp;&amp;amp; [result numberOfRanges] ==&nbsp;2)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSRange r = [result&nbsp;rangeAtIndex:1];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; value = [payload&nbsp;substringWithRange:r];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;if(value)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;{</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSLog(@&quot;Found session value in payload:&nbsp;%@&quot;,value);</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; NSString* jsString = <a href="http:&#x2F;&#x2F;URLHERE.cloudapp.net&#x2F;Session&#x2F;Lookup?session=%@&amp;quot;">NSString stringWithFormat:@&quot;handleOpenURL(&quot;[http:&#x2F;&#x2F;<span class="caps">URLHERE</span>.cloudapp.net&#x2F;Session&#x2F;Lookup?session=%@&quot;);&quot;,value];</a>;&amp;quot;,value];)</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; [webView&nbsp;stringByEvaluatingJavaScriptFromString:jsString];</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&amp;nbsp;&amp;nbsp; }&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&nbsp;}</p>
-<p>&amp;nbsp;&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>As you can see above, this method parses the payload of the message, tries to work out the session code, and if one is found, creates a new javascript call to a method called handleOpenURL which instructs PhoneGap to call the method of the same name.&amp;nbsp; Of course, you are going to want to configure this for your own scenario, but hopefully this gives you a sense of how to pass a value as part of the message, and then take an action on that&nbsp;accordingly.&amp;nbsp; </p>
-<p>Well, that wraps up this post.&amp;nbsp; I hope you enjoyed the talk at <span class="caps">MIX</span>, and that this code is useful if you have services in Windows Azure that have a need to push notification messages to iPhone and iPad&nbsp;devices. </p>
-<p>&lt;pre&gt;&lt;&#x2F;pre&gt;</p>
-
-          </section>
-        </article>
-        <article class="article intro">
-          <header>
-            <p class="date"><span>18. April 2011</span></p>
-            <h2><a href="/2011/04/18/developing-iphone-and-ipad-apps-that-leverage-windows-azure/">Developing iPhone and iPad apps that leverage Windows Azure</a></h2>
-          </header>
-          <section class="content"><p>Thanks to all that came to my session at <span class="caps">MIX11</span> last week – it was a lot of fun to put together despite a couple of demo glitches!&amp;#160; You can now <a href="http:&#x2F;&#x2F;channel9.msdn.com&#x2F;events&#x2F;MIX&#x2F;MIX11&#x2F;EXT18">view the recording</a> of this online, as well as browse and download the slides&nbsp;below.&amp;#160; </p>
-<p>I’ll be sharing the source code for the demos in the next couple of posts. 
-  &lt;div style=&quot;width: 425px&quot; id=&quot;<strong>ss_7666104&quot;&gt;<strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;ext18-guest &quot;Ext18 guest&quot;">Ext18 guest</a></strong>&lt;object id=&quot;</strong>sse7666104&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;param name=&quot;movie&quot; value=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=ext18guest-110418123055-phpapp01&amp;amp;stripped_title=ext18-guest&amp;amp;userName=simonguest&quot; &#x2F;&gt;&lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot; &#x2F;&gt;&lt;param name=&quot;allowScriptAccess&quot; value=&quot;always&quot; &#x2F;&gt;&lt;embed name=&quot;__sse7666104&quot; src=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=ext18guest-110418123055-phpapp01&amp;amp;stripped_title=ext18-guest&amp;amp;userName=simonguest&quot; type=&quot;application&#x2F;x-shockwave-flash&quot; allowscriptaccess=&quot;always&quot; allowfullscreen=&quot;true&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;&#x2F;embed&gt;&lt;&#x2F;object&gt;    &lt;div style=&quot;padding-bottom: 12px; padding-left: 0px; padding-right: 0px; padding-top: 5px&quot;&gt;View more <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;">presentations</a> from <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a>.&lt;&#x2F;div&gt;&nbsp;&lt;&#x2F;div&gt;</p>
-
-          </section>
-        </article>
-        <article class="article intro">
-          <header>
-            <p class="date"><span>09. April 2011</span></p>
-            <h2><a href="/2011/04/08/iphone-and-ipad-security/">iPhone and iPad Security</a></h2>
-          </header>
-          <section class="content"><p>Thanks to everyone that attended my April WebCast on iPhone and iPad&nbsp;Security.&amp;#160; </p>
-<p><em>“Your organization is starting to rely on iPhone and iPad devices to do business.&amp;#160; But how secure are these devices, especially in an enterprise setting?&amp;#160; How do you apply policy to the device?&amp;#160; What security considerations should you be thinking about in your own applications?&amp;#160; And what happens when people in your organization &amp;quot;jailbreak&amp;quot; a&nbsp;device?”</em></p>
-<p>This was a fun presentation to put together, covering many aspects of security from policy, data protection, network, and application&nbsp;security.</p>
-<p>You can view the recording <a href="http:&#x2F;&#x2F;www.neudesic.com&#x2F;insight&#x2F;Presentation&#x2F;Pages&#x2F;PW20110407.aspx">here</a>, or browse through the slides on slideshare below.&amp;#160; 
-  &lt;div style=&quot;width: 425px&quot; id=&quot;<strong>ss_7567963&quot;&gt;<strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;iphone-and-ipad-security &quot;iPhone and iPad Security&quot;">iPhone and iPad Security</a></strong>&lt;object id=&quot;</strong>sse7567963&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;param name=&quot;movie&quot; value=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=webcast-iphoneipadsecurity-110409000033-phpapp02&amp;amp;stripped_title=iphone-and-ipad-security&amp;amp;userName=simonguest&quot; &#x2F;&gt;&lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot; &#x2F;&gt;&lt;param name=&quot;allowScriptAccess&quot; value=&quot;always&quot; &#x2F;&gt;&lt;embed name=&quot;__sse7567963&quot; src=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=webcast-iphoneipadsecurity-110409000033-phpapp02&amp;amp;stripped_title=iphone-and-ipad-security&amp;amp;userName=simonguest&quot; type=&quot;application&#x2F;x-shockwave-flash&quot; allowscriptaccess=&quot;always&quot; allowfullscreen=&quot;true&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;&#x2F;embed&gt;&lt;&#x2F;object&gt;    &lt;div style=&quot;padding-bottom: 12px; padding-left: 0px; padding-right: 0px; padding-top: 5px&quot;&gt;View more <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;">presentations</a> from <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a>.&lt;&#x2F;div&gt;&nbsp;&lt;&#x2F;div&gt;</p>
-
+          <section class="content"><p>In my <a href="http://channel9.msdn.com/events/MIX/MIX11/EXT18"><span class="caps">MIX11</span> session</a> last week I demonstrated how to create push notifications to iPhone and iPad devices from Wndows Azure.  I’ve put together this blog post to share more detail and the source code for how this&nbsp;works.</p>
+<p>
+            <p class="more"><a href="/2011/04/21/using-apple-push-notifications-from-windows-azure/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -407,30 +57,10 @@
             <p class="date"><span>29. December 2010</span></p>
             <h2><a href="/2010/12/29/getting-authentication-working-with-wcf-and-wp7/">Getting Authentication Working with WCF and WP7</a></h2>
           </header>
-          <section class="content"><p>Although Windows Phone 7 (<span class="caps">WP7</span>) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little&nbsp;quirky.&amp;#160; </p>
-<p>After working on a project over the holidays putting together a <span class="caps">WP7</span> client to connect to a Web service requiring authentication, this is what I&nbsp;found:</p>
-<p>1.&amp;#160; <span class="caps">NTLM</span>&#x2F;Kerberos is a no&nbsp;go…</p>
-<p>As of today, the <span class="caps">WCF</span> client on WP7 does not support NTLM or Kerberos authentication.&amp;#160; If you are accessing Web services from a device, you’ll want to make sure that the your server&amp;#160; is setup to handle Basic authentication (preferably over&nbsp;SSL).</p>
-<p>2.&amp;#160; And even Basic authentication needs a helping&nbsp;hand…</p>
-<p>Even with Basic authentication enabled on the server, I was noticing that the client was still not sending the right <span class="caps">HTTP</span> headers – even when setting the <strong>ClientCredentials</strong> property on the client and playing with the config file.&amp;#160; No matter what I tried, I couldn’t get it to&nbsp;work.</p>
-<p>To overcome this however, you can force the Basic authentication details to be written as part of the request header.&amp;#160; To do this, first create a method that generates a <span class="caps">UTF8</span> encoded string for your domain, username, and password:
-  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>public static string GetCredentials(string domain, string username, string&nbsp;password)</p>
-<p>{&amp;#160;&amp;#160;&amp;#160;&amp;#160; </p>
-<pre><code>return Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format(@&amp;amp;quot;{0}{1}:{2}&amp;amp;quot;,domain,username,password)));&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; 
-</code></pre><p>}&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>Then, you’ll need to create a new property with your&nbsp;credentials:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>HttpRequestMessageProperty request = new HttpRequestMessageProperty();
-request.Headers[System.Net.HttpRequestHeader.Authorization] = &amp;quot;Basic &amp;quot; + GetCredentials;&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>Finally, add the header to your outgoing&nbsp;request:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>OperationContextScope clientScope = new OperationContextScope(client.InnerChannel);
-OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessageProperty.Name, request);&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>(in the above client is your service&nbsp;reference)</p>
-<p>And voila!&amp;#160; You should now have Basic authentication headers as part of your client requests, and you can access username&#x2F;password protected Web services from your <span class="caps">WP7</span>&nbsp;device!</p>
-<p>One final tip - during all of this you will likely need to use a tool like Fiddler to trace your requests and responses from the device.&amp;#160; If you are having troubles getting Fiddler working with the <span class="caps">WP7</span> emulator, <a href="http:&#x2F;&#x2F;phone7.wordpress.com&#x2F;2010&#x2F;10&#x2F;17&#x2F;fiddler-and-wp7-emulator-working&#x2F;">here</a> is a great post that outlines what to&nbsp;do.</p>
-
+          <section class="content"><p>Although Windows Phone 7 (<span class="caps">WP7</span>) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little&nbsp;quirky. </p>
+<p>After working on a project over the holidays putting together a <span class="caps">WP7</span> client to connect to a Web service requiring authentication, this is what I&nbsp;found…</p>
+<p>
+            <p class="more"><a href="/2010/12/29/getting-authentication-working-with-wcf-and-wp7/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -440,164 +70,259 @@ OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessagePropert
           </header>
           <section class="content"><p>Kylen, my 6 year old son, is really into world flags. At home we have a sheet of around 200 flags from across the globe, and he’s pretty close at reciting all of them (and certainly much better than Mom and&nbsp;Dad!).</p>
 <p>Spending a couple of hours over labor day last month, I set myself a task of building a “Flag Matching” application for Windows Phone 7 (<span class="caps">WP7</span>). My goal was twofold: Build a simple application that he can use (and that I can offer on the marketplace), and at the same time, look into some of the TDD best practices for developing a WP7&nbsp;application.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a>The application itself is simple enough. As shown above, the player gets presented with a picture of a flag, and four possible countries (of which only one is correct). A game consists of 20 flags, and the application maintains a high score&nbsp;table.</p>
-<p>During development of the application, this is what I&nbsp;found:</p>
-<p><strong>1. Setting up <span class="caps">TDD</span> for Windows Phone&nbsp;7</strong></p>
-<p>As a new developer for Windows Phone 7, one of the first things you’ll quickly discover is that there is no option for a test project within the <span class="caps">IDE</span>. After creating a WP7 solution, I searched for the “WP7 Test Project” template, but to no&nbsp;avail…</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a>A quick search on the Web will offer up a few alternatives and chances are, you’ll quickly reach Jeff Wilcox’s session on <a href="http:&#x2F;&#x2F;live.visitmix.com&#x2F;MIX10&#x2F;Sessions&#x2F;CL59">Unit Testing Silverlight <span class="amp">&amp;</span> Windows Phone Applications</a> from <span class="caps">MIX10</span>. This is a really good session, however the recommended approach (using a Silverlight-based unit test framework) can be somewhat&nbsp;limited.</p>
-<p>In my opinion, although it works well for small numbers of tests, not having unit tests outside the emulator makes it difficult for large test suites, using any continuous integration, and integrating with the&nbsp;<span class="caps">IDE</span>.</p>
-<p>If unit tests in the emulator don’t work for you either, here’s a&nbsp;workaround:</p>
-<p>In your solution, create a new project of type <strong>Windows Phone Class Library</strong>.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a>Name it appropriately (I called mine <strong>FlagMatch.Test</strong>) and include a reference to the original Windows Phone project (<strong>FlagMatch</strong>). Add the <a href="http:&#x2F;&#x2F;nunit.org&#x2F;">NUnit</a> unit test framework library as a reference (I’m using v2.0.50727) and write your tests as you normally would (of course, specific to the NUnit syntax).
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;[TestFixture]
-public class FlagModelTests
-{
-    [Test]
-    public void TestFourRandomFlags_AllUnique()
-    {
-        Assert.AreEqual(4, Flag.FourRandom.GroupBy(f =&gt; f.Name).Select(f =&gt; f).Count());
-    }&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>Once you have a set of tests, you can then integrate these within Visual Studio. I’ve had reasonable luck with <a href="http:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;visualnunit&#x2F;">Visual NUnit</a>, a free <span class="caps">IDE</span> plug in that works well with many versions of Visual&nbsp;Studio.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a>Alternatively, if you use <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;resharper&#x2F;">ReSharper</a>, you’ll find that their <span class="caps">IDE</span> integration works great&nbsp;also.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a>My preference is to use ReSharper as it works well with with another JetBrains product called <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;dotcover&#x2F;">dotCover</a> – for which you can use to analyze test code coverage in your Windows Phone&nbsp;application.</p>
-<p>Although you’ll find the majority of your unit tests will work great, you may well come across some strange errors. Most of these will be related to operations on the phone that cannot be replicated outside the emulator. For example, accessing isolated storage or referring to embedded resources&#x2F;images as part of the project works well within the emulator, but not so much from a class&nbsp;library.</p>
-<p>To get around this, you’ll need to create some mock objects to handle these operations. In my test project, I have a <strong>MockStorageProvider </strong>that I use in place of calls to isolated storage:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;[Test]
-public void TestResumeButton_NotVisibleOnStartup()
-{
-    MainViewModel viewModel = new MainViewModel(new MockStorageProvider());
-    Assert.AreEqual(Visibility.Collapsed, viewModel.ResumeGameButtonVisibility);&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>As you can see, I pass the mock object to the view model (more on this in the next section) as an optional constructor parameter. All storage operations then use this MockStorageProvider instead of writing to isolated storage (which would have generated an exception during the tests). This also has the advantage that I can add additional tests within the mock object to ensure that the storage provider is being called correctly from the&nbsp;application.</p>
-<p><strong>2. Using <span class="caps">MVVM</span> with&nbsp;WP7</strong></p>
-<p>For anyone with experience of testing Silverlight projects, you’ll know that although <span class="caps">XAML</span> provides a code separation layer, testing parts of the UI (e.g. actions when a button is pressed) can still be difficult. This can be overcome by using a pattern called <a href="http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Model_View_ViewModel"><span class="caps">MVVM</span></a> (Model View ViewModel). I’m not going to go into the details of <span class="caps">MVVM</span> here (there are plenty of other resources that do a great job) other than to say it can be used for WP7 applications with a little tweaking. The core reason is that WP7 is based largely on the SL3 codebase, which does not contain a complete commanding event&nbsp;model.</p>
-<p>There are a couple of approaches in order to get <span class="caps">MVVM</span> working on WP7. The first would be to reuse one of the existing samples&#x2F;libraries available today. Your mileage may vary (as I found some were designed for pre-RTM versions), although I’ve heard good reviews about Laurent Bugnion’s <a href="http:&#x2F;&#x2F;galasoft.ch&#x2F;mvvm&#x2F;getstarted&#x2F;">MVVMLite</a>&nbsp;project.</p>
-<p>If instead you’d like to learn how implement this yourself, here is how I achieved&nbsp;it:</p>
-<p>First, you should create a view model base. Assuming you are going to have multiple view models (I ended up with one per page), it’s a good idea.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class ViewModelBase : INotifyPropertyChanged
-{
-    public event PropertyChangedEventHandler&nbsp;PropertyChanged;</p>
-<pre><code>public void NotifyPropertyChanged(String propertyName)
-{
-    if (PropertyChanged != null)
-    {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-    }
-}
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>Next, create your view model, inheriting from ViewModelBase.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class MainViewModel : ViewModelBase
-{
-    public string NewGameButtonTitle
-    {
-        get { return AppResources.NewGameButtonTitle; }&nbsp;}</p>
-<pre><code>public NewGameCommand NewGameButton
-{
-    get
-    {
-        return new NewGameCommand();
-    }
-}
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>For the purposes of this sample code, let’s imagine that we have a single page with a “New Game” button. As you can see above, the view model contains two properties – one for the title of the button, the second for the command that this button will be bound&nbsp;to.</p>
-<p>In order to implement the commands, you’ll need a couple of things. The first is a command service:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public static class CommandService
-{
-    private static readonly DependencyProperty&nbsp;_commandProperty;</p>
-<pre><code>static CommandService()
-{
-    _commandProperty = DependencyProperty.RegisterAttached(&amp;quot;Command&amp;quot;, typeof(ICommand), typeof(CommandService),
-    new PropertyMetadata(OnCommandChanged));
-}
+<p>
+            <p class="more"><a href="/2010/10/18/test-driven-development-tdd-and-windows-phone-7/">more</a></p>
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>18. September 2010</span></p>
+            <h2><a href="/2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/">JavaOne Tutorial Apache Tomcat on Windows Azure</a></h2>
+          </header>
+          <section class="content"><p>&lt;html xmlns=&quot;&quot;&gt;As I mentioned in <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;2010&#x2F;09&#x2F;08&#x2F;speaking-at-javaone-2010&#x2F;">my previous post</a>, I’ll be participating in a <a href="http:&#x2F;&#x2F;www.eventreg.com&#x2F;cc250&#x2F;sessionDetail.jsp?SID=313962">panel</a> at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1&nbsp;request.</p>
+<p>Here is an overview of what I will be&nbsp;showing:</p>
+<p><strong>Step 1 – What you’ll need to get&nbsp;started</strong></p>
+<p>As you might imagine, you are going to first need a Windows Azure account.  I would recommend going to <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;windowsazure&#x2F;offers">www.microsoft.com&#x2F;windowsazure&#x2F;offers</a> and signing up for the introductory special, which will allow you to test your application for free.  The introductory offer gives you the first 25 hours at no cost, which should be more than enough time to get up and&nbsp;running.</p>
+<p><strong>I**</strong>f you are at JavaOne however, **I have a limited quantity (100) of tokens that give you 30 days worth of access with no need to submit any registration or credit card information.  See me at the end of the panel session or throughout the conference, and in exchange for a business card, I’ll be happy to give you one at no&nbsp;cost!</p>
+<p>After you have your account, you’ll want to download and install the <a href="http:&#x2F;&#x2F;go.microsoft.com&#x2F;fwlink&#x2F;?LinkID=130232">Windows Azure <span class="caps">SDK</span></a>.  After installation, set your <span class="caps">PATH</span> environment to include the location of the SDK binaries (typically <em>C:Program FilesWindows Azure SDKv1.1bin</em>).  This is important to ensure that the <span class="caps">SDK</span> is accessible from the command&nbsp;line.</p>
+<p>Finally, you’ll need to install the <a href="http:&#x2F;&#x2F;code.msdn.microsoft.com&#x2F;winazuretomcat">Windows Azure Tomcat Solution Accelerator</a>.  Feel free to install this in any directory you’d like – I’m using <em>c:devjavaone2010tomcatazure</em> for the purposes of this&nbsp;tutorial.</p>
+<p>&lt;p$1$2$3$4$5$6&gt;</p>
+<p><strong>Step 2 – Building and running your&nbsp;site</strong></p>
+<p>With all of the pre-requisites downloaded and installed, it’s time to build and test your site.  To do this, open a command prompt, and navigate to the directory that you chose for the solution accelerator.  From this directory, run <strong>buildme.cmd</strong>.  You’ll be prompted to provide the installation path of your Tomcat installation and a <span class="caps">JRE</span> on your&nbsp;machine.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
+<p>After a successful build, run the <strong>runme.cmd</strong> file. This will run Tomcat using the Windows Azure Desktop Execution Tool – also known as the local development&nbsp;fabric.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a></p>
+<p>This is a great way to test that your application is going to work when deployed to production.  Navigate to the <span class="caps">URL</span> provided at the end  (replace the tcp with http) to ensure that the Tomcat instance is working correctly on your local&nbsp;machine.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a></p>
+<p>You can open the development fabric tool (found running in your system tray) if you want to stop and&#x2F;or investigate the&nbsp;service.</p>
+<p>&lt;p$1$2$3$4$5$6&gt;</p>
+<p><strong>Step 3 – Packaging and deploying your&nbsp;site</strong></p>
+<p>Once you are satisfied that everything looks good, it’s time to package the application ready for deployment to the cloud.  To do this, run the <strong>packme.cmd </strong>script.  This will invoke the Windows Azure Packaging Tool, and pull together everything needed into one package file for&nbsp;deployment.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a></p>
+<p>When this has completed, you should see a <strong>Tomcat.cspkg </strong>file and a <strong>ServiceConfiguration.cscfg </strong>file in the directory.  The .cspkg file is quite large as it contains your application, the Tomcat instance, and <span class="caps">JRE</span> binaries.  Despite the size, this format makes it convenient if you prefer to use a different version of Tomcat or a different JRE in the&nbsp;future.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a></p>
+<p>To deploy to the cloud, log on to the portal (<a href="http:&#x2F;&#x2F;windows.azure.com">http:&#x2F;&#x2F;windows.azure.com</a>) and create a new hosted service.  Walk through the wizard to specify the name, description, <span class="caps">URL</span>, and location where you want the service to be deployed.  Next, hit the “Deploy” button and specify the location of the previous package and configuration&nbsp;file.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a></p>
+<p>You have two options when it comes to deploying – either a file from your local storage (i.e. your local disk) or a file from an Azure storage account (blob storage).  If you have issues with the local storage (many http connections timeout before the package can be uploaded in time), I would recommend using <a href="http:&#x2F;&#x2F;azurestorageexplorer.codeplex.com&#x2F;">Neudesic’s Azure Storage Explorer</a> to upload your files to a blob storage&nbsp;container.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a></p>
+<p>Hit <em>Deploy</em>, and your package will be uploaded to Windows Azure – this will likely take a few minutes because of the size of the&nbsp;deployment.</p>
+<p>Once this has been completed, hit the <em>Run</em> button to bring your site to&nbsp;life.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a></p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a></p>
+<p>Once you have a site up and running, feel free to explore some of the ways that you can either scale your application to multiple nodes or explore some of the <a href="http:&#x2F;&#x2F;www.windowsazure4j.org">other features</a> on Windows Azure available to Java&nbsp;developers.</p>
+<p>&lt;p$1$2$3$4$5$6&gt;</p>
+<p>There are many ways that this could be improved by integrating with existing build environments (I think Maven integration would be fascinating), but hopefully this short tutorial gives you a starting point for getting a simple Tomcat site up and running on Windows&nbsp;Azure.</p>
 
-public static ICommand GetCommand(DependencyObject dependencyObject)
-{
-    return (ICommand)dependencyObject.GetValue(_commandProperty);
-}
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>04. August 2010</span></p>
+            <h2><a href="/2010/08/04/easy-event-logging-on-windows-azure/">Easy Event Logging on Windows Azure</a></h2>
+          </header>
+          <section class="content"><p>I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.&amp;#160;&amp;#160; Effective logging can be difficult to setup.&amp;#160; Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs,&nbsp;etc.&amp;#160; </p>
+<p>Instead, I wanted an easy way to log custom events and exceptions in my application.&amp;#160; This is how to do&nbsp;it:</p>
+<p>1. Create a class that inherits from System.Diagnostics.TraceListener.&amp;#160; 
+  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>public class AzureTraceListener :&nbsp;TraceListener   </p>
+<p>{    </p>
+<p>public static List&amp;lt;String&amp;gt; Events = new&nbsp;List&amp;lt;String&amp;gt;(); </p>
+<p>&amp;#160;&amp;#160;&amp;#160; public override void Write(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;} </p>
+<p>&amp;#160;&amp;#160;&amp;#160; public override void WriteLine(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;}  </p>
+<p>} 
+&lt;&#x2F;pre&gt;
+2.&amp;#160; In your web role, add a reference to your custom trace listener.&amp;#160; This is done by adding the following two lines in your OnStart()&nbsp;method.</p>
+<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
+<p>AzureTraceListener atl = new AzureTraceListener();<br>Trace.Listeners.Add(atl);</p>
+<p>&amp;#160;
+&lt;&#x2F;pre&gt;
+3.&amp;#160; In your application, log your events using the Trace.Write(string)&nbsp;method.</p>
+<p>4.&amp;#160; To display your events, create a new page called Traceviewer.aspx with the following block of&nbsp;<span class="caps">HTML</span>:</p>
+<p>&lt;pre&nbsp;class=&quot;brush:html&quot;&gt;</p>
+<p>&amp;lt;h1&amp;gt;Trace Log&amp;lt;&#x2F;h1&amp;gt;<br>&amp;lt;% foreach (String eventitem in WebRole1.AzureTraceListener.Events)<br>&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Response.Write(&amp;quot;&amp;lt;h4&amp;gt;&amp;quot;+eventitem+&amp;quot;&amp;lt;&#x2F;h4&amp;gt;&amp;quot;);<br>&amp;#160;&amp;#160; } 
+%&amp;gt;&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>That’s it.&amp;#160; Deploy your application and simply call Traceviewer.aspx to look at all of your generated&nbsp;events.</p>
 
-public static void SetCommand(DependencyObject dependencyObject, ICommand value)
-{
-    dependencyObject.SetValue(_commandProperty, value);
-}
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>02. August 2010</span></p>
+            <h2><a href="/2010/08/02/cita-p-certified-it-architect/">CITA-P – Certified IT Architect</a></h2>
+          </header>
+          <section class="content"><p>Last week I took (and passed!) my <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;web&#x2F;home&#x2F;certification&#x2F;professional"><span class="caps">CITA</span>-P</a> examination.&amp;#160; <span class="caps">CITA</span>-P (Certified IT Architect) is a new certification, offered through <a href="http:&#x2F;&#x2F;www.iasahome.org"><span class="caps">IASA</span></a> (the International Association of Software Architects).&amp;#160; I wanted to share some thoughts on the certification, the process, and why you might want to consider applying&nbsp;yourself.</p>
+<p><strong>The&nbsp;Certification</strong></p>
+<p>The <span class="caps">CITA</span>-P certification evaluates an IT Architect across six core&nbsp;areas:</p>
+<ul>
+<li>Business &#x2F; Technology Mapping<em>   Design Skills</em>   Human Dynamics<em>   <span class="caps">IT</span> Environment</em>   Quality Attributes*   Software Architecture or Infrastructure Architecture (you pick one of the&nbsp;two)  </li>
+</ul>
+<p>Each of the above six areas has around ten or so subcategories which go into some detail.&amp;#160; There is a worksheet available <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;c&#x2F;document_library&#x2F;get_file?uuid=a05a964c-8662-4df7-a3c0-a7fe99b6b771&amp;amp;groupId=25692">here</a> on the <span class="caps">IASA</span> site that covers all six, and can be very useful to reflect on your own strengths and weaknesses, even if you are not planning on taking the&nbsp;exam.</p>
+<p>The goal of the certification is to gauge your level of competency across each of these six areas.&amp;#160; The majority of this will of course be based on your knowledge, experience, and personal&nbsp;reflections.&amp;#160; </p>
+<p><strong>The&nbsp;Process</strong></p>
+<p>Because it would be impossible (and indeed, wrong) to certify <span class="caps">IT</span> Architects through a multiple choice examination, the process of certification is an involved process, although very well&nbsp;structured.</p>
+<p>The first part requires submitting a set of documentation.&amp;#160; The details of what is required can be found in the <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;c&#x2F;document_library&#x2F;get_file?uuid=79c2a82d-eea7-4d5a-bfea-0dab221f3563&amp;amp;groupId=25692">application guide</a>, and for my submission I decided to offer my perspectives and thoughts across the six certification areas.&amp;#160; I wrote a story about each, reflecting my experience, views, and examples of projects that I’ve been involved&nbsp;in.</p>
+<p>After submission, I received my date for the in-person board review, which is split into three parts:&amp;#160; The first part is a 30 minute presentation of your choosing.&amp;#160; The board is looking for experience across the certification areas, and also for communication skills.&amp;#160; Staying within the 30 minute timeslot and having a presentation that is both engaging and covers all of the areas is difficult, but important if you are going to be&nbsp;successful. </p>
+<p>Following the presentation comes a line of questioning, with each of the four board members given ten minutes to question you about your presentation.&amp;#160; The idea here is not to pick holes in the presentation or play <a href="http:&#x2F;&#x2F;speakfearlessly.net&#x2F;how-to-deal-with-the-stump-the-chump-dynamic-in-presentations&#x2F;">stump the chump</a>, but merely to validate experience in areas that you may not have shown in the presentation.&amp;#160; A large amount of my presentation was based on a framework around cloud computing, so while I had many questions related to this, I also saw the board trying to relate the material to other areas which I didn’t mention in the&nbsp;material.</p>
+<p>After the first round of questioning, you are given a 15 minute break.&amp;#160; This is a great opportunity to get some water and gather your thoughts while the board compares notes to look for areas they might have missed.&amp;#160; Another round of questioning follows (4 x 10 minutes) on various topics and it’s all over.&amp;#160; After the board review concludes, the board members meet and you are given their decision together with helpful advice in a couple of&nbsp;days.</p>
+<p><strong>A Good&nbsp;Thing?</strong></p>
+<p>Although this is my first experience, I’ve been a strong supporter of <span class="caps">IT</span> Architect certification since my time in the Platform Architecture Team here at Microsoft, and I believe it’s a good thing for the&nbsp;industry.</p>
+<p>We see many <span class="caps">IT</span> Architects in our industry today.&amp;#160; Most inherit that role during the natural evolution of their career.&amp;#160; Many of these are indeed valid IT Architects, but I have the impression that other are also riding on the cache of the title.&amp;#160; If we are going to grow this profession, it’s important that we standardize the areas and level of experience we expect from this&nbsp;role.</p>
+<p><strong>More&nbsp;Information?</strong></p>
+<p>For more information about <span class="caps">CITA</span>-P certification in your area, I would recommend getting in <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;web&#x2F;home&#x2F;about&#x2F;contact">contact with <span class="caps">IASA</span></a> for more&nbsp;information.</p>
 
-private static void OnCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpceArgs)
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>22. April 2010</span></p>
+            <h2><a href="/2010/04/22/moving-vhds-to-the-cloud/">Moving VHDs to the Cloud</a></h2>
+          </header>
+          <section class="content"><p>When I speak with customers about cloud computing, a common question is often “how do I migrate an application to the cloud?&quot;  While this is a multi-part answer, one of the hurdles for migration is often&nbsp;storage. </p>
+<p>Many applications store data using the file system (e.g. read &#x2F; write a file to d:dataconfig.xml).  Moving these types of applications to the cloud can be difficult as the storage mechanisms in the cloud are somewhat&nbsp;different. </p>
+<p>To help address this problem, in Feb 2010 we released v1.1 of the <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;downloads&#x2F;details.aspx?FamilyID=5664019e-6860-4c33-9843-4eb40b297ab6&amp;amp;DisplayLang=en">Windows Azure <span class="caps">SDK</span></a> which supports a new feature call Cloud Drives.  A Cloud Drive is the ability to mount a virtual drive in the cloud so that applications can write to it as they would a local drive.  This cloud drive is persisted so that even if the machine goes down, the data is not&nbsp;lost.</p>
+<p>What many people don’t realize however is that the format that the Cloud Drive uses is interchangeable with the <span class="caps">VHD</span> (Virtual Hard Drive) format used by virtualization products such as Hyper-V, Virtual PC, Windows Server, and Windows 7.  What this means is that you can create a single VHD, use it locally on a Windows PC, attach it to a virtualized image, and now copy it to the cloud and access it there also.  As you can imagine, for anyone looking to migrate applications to the cloud, this opens up a world of&nbsp;possibilities.</p>
+<p>In this post, I’ll walk through a series of steps that show creating a <span class="caps">VHD</span> from scratch, copying it to the cloud, and accessing it from a web role running in&nbsp;Azure.</p>
+<p><strong>Before you&nbsp;begin</strong></p>
+<p>You’ll of course need an Azure account.  If you don’t have one, you can go <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;windowsazure&#x2F;account&#x2F;">here</a> to sign&nbsp;up.</p>
+<p>Once you have your account, you’ll need to setup two new&nbsp;services. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a> </p>
+<p>You’ll need to create a storage account – this is where the VHDs will be stored – and a hosted service to run your application from.  When you set them up, make sure that they are created in the same geography (i.e. don’t have your storage account in Asia, and your hosted service in the <span class="caps">US</span> as the drive mounting has to be in the same&nbsp;region).</p>
+<p>Once you have your storage account and service created, you are ready to create and upload your&nbsp;<span class="caps">VHD</span>. </p>
+<p><strong>Step 1.  You’ll need a&nbsp;<span class="caps">VHD</span></strong></p>
+<p>If you already have a <span class="caps">VHD</span> file that you would like to use, you can skip to Step 2.  You’ll be copying this VHD to the cloud, so you may want to choose a smaller VHD file for test&nbsp;purposes.</p>
+<p>If you are running Windows 7, creating a new <span class="caps">VHD</span> is&nbsp;easy. </p>
+<p>Firstly, go to the start menu and type <strong>disk management</strong>. </p>
+<p>From the start menu click on <strong>Create and format hard disk&nbsp;partitions</strong></p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
+<p>This will open up the disk management tool.  From the <strong>Action</strong> menu, select <strong>Create <span class="caps">VHD</span></strong>.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a></p>
+<p>Enter a location for the <span class="caps">VHD</span> file and a size.  The minimum is 16Mb and the maximum is likely the amount of free disk space on your&nbsp;machine. </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a> </p>
+<p>When your disk appears in the management tool, right click on the disk name and select <strong>Initialize Disk</strong>.  Select the default (<span class="caps">MBR</span>) and select&nbsp;OK.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a></p>
+<p>After initialization, right click on the disk and create a <strong>New Simple Volume</strong>.  Walk through the wizard, accepting the defaults and assign a drive letter to the <span class="caps">VHD</span>.  Finally, format the disk using NTFS (a quick format is fine).  If a dialog box appears asking you to format the disk (sometimes the disk gets detected just before formatting has begun), just hit&nbsp;cancel.</p>
+<p>After this is done, you can open the drive and access it as you would any other drive. Add some files and folders,&nbsp;etc.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a> </p>
+<p>When you are ready to upload to the cloud, you’ll need to detach the drive.  To do this, go back in to the disk management tool, right click on the disk name and select <strong>Detach <span class="caps">VHD</span></strong>.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a></p>
+<p>(Do not select the Delete the virtual hard disk file checkbox – otherwise, they’ll be nothing to&nbsp;upload!)</p>
+<p><strong>Step 2.  Upload it to Azure&nbsp;Storage</strong></p>
+<p>The next step is to upload the <span class="caps">VHD</span> to the cloud.  The VHD will be stored in something called Blob (Binary Large OBject) storage.  You may have heard of blob storage if you’ve seen any of the introductory Azure presentations.  It’s the type of storage that is used for binary data such as images, videos, and the&nbsp;like.</p>
+<p>In February we enabled support for Page Blobs.  Page Blobs are binary objects stored in the cloud that support random read&#x2F;writes through pages.  This makes them ideal for dealing with <span class="caps">VHD</span> type of access, and this is the format that we’ll be using to upload our VHD to the&nbsp;cloud.</p>
+<p>The one caveat of this is that you must use a tool that supports page blobs (most of the tools available today only support regular blobs).  The tool I would recommend is <a href="http:&#x2F;&#x2F;www.cerebrata.com&#x2F;Products&#x2F;CloudStorageStudio&#x2F;Default.aspx">Cloud Storage Studio</a> by Cerebrata as it supports page blobs through a nice&nbsp;interface.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a></p>
+<p>Open the tool and access the storage account that you created in the “Before you begin” section earlier in this&nbsp;post. </p>
+<p>I would recommend creating a new container for your <span class="caps">VHD</span> images to keep them separate from other content.  As shown in the screenshot above, I’ve created a container called&nbsp;vhd.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a></p>
+<p>Select the container, and click on the <strong>Upload Page Blob</strong> button.  There are two upload buttons – you need the one with the icon that includes the page and the up&nbsp;arrow.</p>
+<p>Point to the location of your <span class="caps">VHD</span> file and click on the <strong>Upload</strong>&nbsp;button.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a></p>
+<p>This might take a little way depending on the size of your <span class="caps">VHD</span> and the speed of your&nbsp;network.</p>
+<p>Once you have uploaded the file, validate that it exists by hitting the refresh&nbsp;button.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image10.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb10.png &quot;image&quot;" alt="image"></a></p>
+<p>With the <span class="caps">VHD</span> uploaded, we can now move on to creating the cloud application that accesses&nbsp;it.</p>
+<p><strong>Step 3.  Accessing the <span class="caps">VHD</span> from Windows&nbsp;Azure </strong></p>
+<p>I’m going to assume that you have some knowledge of creating an <span class="caps">ASP</span>.NET application and uploading it to Windows Azure.  If you haven’t done this before, I would recommend checking out the <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;downloads&#x2F;details.aspx?FamilyID=413E88F8-5966-4A83-B309-53B7B77EDF78&amp;amp;displaylang=en">Windows Azure Training Kit</a>.</p>
+<p>To access the <span class="caps">VHD</span> in the cloud, we create a webrole and use the following&nbsp;code.</p>
+<p>Add reference to the <strong>Microsoft.WindowsAzure.CloudDrive </strong><span class="caps">DLL</span> that can be found in the GAC (assuming that you have the <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;downloads&#x2F;details.aspx?FamilyID=dba6a576-468d-4ef6-877e-b14e3c865d3a&amp;amp;displaylang=en">v1.1 <span class="caps">SDK</span></a> installed).  Then, in your webrole, you’ll need to add the following using&nbsp;statements:</p>
+<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.ServiceRuntime;
+using Microsoft.WindowsAzure.StorageClient;&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>Here is the code that you should run in your web role.  (You can place this behind a button or&nbsp;something…)</p>
+<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;
+&#x2F;&#x2F; Setup the account details
+String accountName = &quot;&quot;;  &#x2F;&#x2F; insert your storage account name here
+String accountKey = &quot;”;  &#x2F;&#x2F; insert your storage account primary key&nbsp;here</p>
+<p>StorageCredentialsAccountAndKey credentials = new StorageCredentialsAccountAndKey(accountName,&nbsp;accountKey);</p>
+<p>CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, new Uri(String.Format(&quot;http:&#x2F;&#x2F;{0}.blob.core.windows.net&quot;,accountName)),
+                                                                            new Uri(String.Format(&quot;http:&#x2F;&#x2F;{0}.queue.core.windows.net&quot;, accountName)),
+                                                                            new Uri(String.Format(&quot;http:&#x2F;&#x2F;{0}.table.core.windows.net&quot;, accountName))&nbsp;);</p>
+<p>&#x2F;&#x2F; initialize the local cache - need to trim the end backslash otherwise, <span class="caps">HRESULT</span>=D0000033
+LocalResource localCache = RoleEnvironment.GetLocalResource(&quot;LocalCache&quot;);
+CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&#39;&#39;),&nbsp;localCache.MaximumSizeInMegabytes);</p>
+<p>&#x2F;&#x2F; Create and mount the drive
+CloudDrive c = storageAccount.CreateCloudDrive(&quot;vhd&#x2F;myvhd.vhd&quot;);
+String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes,&nbsp;DriveMountOptions.None);</p>
+<p>&#x2F;&#x2F; do regular System.<span class="caps">IO</span>.File and System.IO.Directory operations here against driveLetter
+Response.Write(System.IO.Directory.GetFiles(driveLetter + &quot;&quot;).Count() + &quot; files found on the root of the mounted&nbsp;drive.&quot;);</p>
+<p>&#x2F;&#x2F; unmount the drive
+c.Unmount();&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>There are five main pieces to the&nbsp;code.</p>
+<p>Firstly, the storage account reference is created using the account name and key that you retrieve when you setup your Azure&nbsp;account.</p>
+<p>After that we need to initialize a local cache used by the cloud drive.  To create this, insert the following code into your ServiceDefinition.csdef file on your&nbsp;webrole.</p>
+<p>&lt;pre class=&quot;brush:xml&quot;&gt;
+&amp;lt;LocalResources&amp;gt;
+  &amp;lt;LocalStorage name=&quot;LocalCache&quot; cleanOnRoleRecycle=&quot;false&quot; sizeInMB=&quot;100&quot; &#x2F;&amp;gt;
+&amp;lt;&#x2F;LocalResources&amp;gt;
+&lt;&#x2F;pre&gt;
+We then create and mount the drive using the <strong>CreateCloudDrive</strong> and <strong>Mount</strong> methods.  Make sure that the path and name to your <span class="caps">VHD</span> matches what you uploaded in Step&nbsp;2.</p>
+<p>Once the drive is mounted we get a drive letter (as a string – e.g. “f:”).  You can then make calls to that drive letter using the regular calls (e.g. <strong>System.<span class="caps">IO</span>.File</strong> and <strong>System.<span class="caps">IO</span>.Directory</strong>).  In a worker role you can even launch applications from the <span class="caps">VHD</span> by spawning a new&nbsp;process. </p>
+<p>Finally, to unmount the drive, just call the <strong>Unmount</strong> method to release the <span class="caps">VHD</span>&nbsp;image.</p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image11.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb11.png &quot;image&quot;" alt="image"></a> </p>
+<p>There are a lot of details behind the scenes that I’m not going to go into here (e.g. read and read&#x2F;write access to the <span class="caps">VHD</span>)  - if you want to learn more, I would recommend checking out <a href="http:&#x2F;&#x2F;microsoftpdc.com&#x2F;Sessions&#x2F;SVC14">this <span class="caps">PDC</span> session</a> by Brad&nbsp;Calder</p>
+<p><strong>Appendix.  Running this in a local development&nbsp;environment.</strong></p>
+<p>You should note that uploading a <span class="caps">VHD</span> only works using a live deployment in the cloud.  In the local development fabric, you’ll find that you cannot access a remote VHD (you’ll get a HRESULT = 80070003 error).  Also, you can’t upload a page blob to local development&nbsp;storage.</p>
+<p>However, you can still duplicate the same functionality in the local development environment by using this&nbsp;code:</p>
+<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;
+&#x2F;&#x2F; Setup the account details
+CloudStorageAccount storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
+&#x2F;&#x2F; initialize the local cache - need to trim the end backslash otherwise, <span class="caps">HRESULT</span>=D0000033
+LocalResource localCache = RoleEnvironment.GetLocalResource(&quot;LocalCache&quot;);
+CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&#39;&#39;),&nbsp;localCache.MaximumSizeInMegabytes);</p>
+<p>&#x2F;&#x2F; Create and mount the drive
+CloudDrive c =&nbsp;storageAccount.CreateCloudDrive(&quot;vhd&#x2F;myvhd.vhd&quot;);</p>
+<p>&#x2F;&#x2F; try creating the drive if it doesn&#39;t exist
+try
 {
-    if (dependencyObject is Button)
-    {
-        string parameter = dependencyObject.GetValue(_commandProperty).ToString();
-        Button button = (Button)dependencyObject;
-        ICommand command = (ICommand)dpceArgs.NewValue;
-        button.Click += delegate(object sender, RoutedEventArgs arg) { command.Execute(parameter); };
-    }
+        c.Create(16);
 }
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>There are a good number of examples of this around (just search for <span class="caps">MVVM</span>) – this one I found in a great post from the <a href="http:&#x2F;&#x2F;codingsolutions.blogspot.com&#x2F;2010&#x2F;03&#x2F;steps-to-run-windows-phone-7-unit-test.html">Coding Solutions</a>&nbsp;blog.</p>
-<p>After this, you’ll need to create event handlers. Here’s a simple handler for when the new button is pressed.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class CommandEvents
+        catch (Exception)
 {
-    public static EventHandler NewGameButtonPressed;&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>Your command itself simply implements the ICommand interface:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class NewGameCommand : ICommand
-{
-    public NewGameCommand()
-    {&nbsp;}</p>
-<pre><code>public bool CanExecute(object parameter)
-{
-    return true;
-}
+         &#x2F;&#x2F; ignore - <span class="caps">VHD</span> folder already exists&nbsp;}</p>
+<p>String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes,&nbsp;DriveMountOptions.None);</p>
+<p>&#x2F;&#x2F; do regular System.<span class="caps">IO</span>.File and System.IO.Directory operations here against driveLetter
+Response.Write(System.IO.Directory.GetFiles(driveLetter + &quot;&quot;).Count() + &quot; files found on the root of the mounted&nbsp;drive.&quot;);</p>
+<p>&#x2F;&#x2F; unmount the drive
+c.Unmount();&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>There are a couple of differences from the live&nbsp;environment.</p>
+<p>Firstly, instead of using the public account details, we can just make a call to <strong>CloudStorageAccount.DevelopmentStorageAccount</strong>. </p>
+<p>Secondly, just before we mount the drive we actually try to create it using the <strong>c.Create(16)</strong> command.  If it already exists, then it throws an exception that we just&nbsp;ignore.</p>
+<p>It’s important to know that this doesn’t actually create a <span class="caps">VHD</span> file. Instead, it creates a new directory in this&nbsp;folder:</p>
+<p><strong>c:users[username]AppDataLocaldftmpwadddevstoreaccount1vhd</strong></p>
+<p>You can now access this folder through Windows Explorer, go into the .vhd folder and add&#x2F;remove files as you wish.  Once you are ready to move to a production environment you simply copy the files from this directory in to a new <span class="caps">VHD</span> (as created in Step 1), upload, and switch to the production&nbsp;code.</p>
 
-public event EventHandler CanExecuteChanged;
-
-public void Execute(object parameter)
-{
-    if (this.CanExecute(null))
-    {
-        if (CommandEvents.NewGameButtonPressed != null)
-        {
-            CommandEvents.NewGameButtonPressed(this, new EventArgs());
-        }
-    }
-}
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>With all these in place, you can now bind the command to the actual button in your <span class="caps">XAML</span> file. On your XAML page, you’ll need to add the following namespace:
-  &lt;pre style=&quot;clear:&nbsp;both&quot;&gt;xmlns:Commands=&quot;clr-namespace:FlagMatch.Commands&quot;&lt;&#x2F;pre&gt;  </p>
-<p>And on the button itself, simply bind to the command using the following:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;button name=&quot;button1&quot; margin=&quot;134,505,0,0&quot; verticalalignment=&quot;Top&quot; commands:commandservice.command=&quot;{Binding Path=NewGameButton}&quot; content=&quot;{Binding NewGameButtonTitle}&quot; height=&quot;72&quot; horizontalalignment=&quot;Left&quot;&nbsp;width=&quot;227&quot;&lt;&#x2F;pre&gt;  </p>
-<p>Notice how the content of the button is bound to the <strong>NewGameButtonTitle</strong> in the view model, and the command is bound to the <strong>NewGameButton</strong> command. More importantly, notice also how there are no traditional event handlers needed&nbsp;here.</p>
-<p>The final piece of the puzzle is to register the view model and the button event handler in the <span class="caps">XAML</span> code behind. To do this, in the code behind, we create an instance of the view model:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;private readonly MainViewModel _mainViewModel = new&nbsp;MainViewModel();&lt;&#x2F;pre&gt;  </p>
-<p>Then in the constructor, bind the view model to the datacontext and register the button event handler.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;LayoutRoot.DataContext =&nbsp;_mainViewModel;</p>
-<p>CommandEvents.NewGameButtonPressed += new&nbsp;EventHandler(StartGame);&lt;&#x2F;pre&gt;  </p>
-<p>The StartGame method simply performs a navigate action for us. This is something that just can’t be moved into the view model.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;private void StartGame(object sender, EventArgs e)
-{
-    NavigationService.Navigate(new Uri(&quot;&#x2F;GamePage.xaml&quot;, UriKind.Relative));&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>Other than that, there is no additional <span class="caps">UI</span> logic required in code behind – which means for a slightly more complex implementation, but one that provides great test&nbsp;coverage.</p>
-<p>A final point worth noting is designer support. As you start building out controls using the <span class="caps">MVVM</span> paradigm, you’ll likely find that the designer ends up being difficult to&nbsp;use.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a>Because we are binding content directly to the view model, the designer doesn’t know where to pick up values to be shown at design time. Fortunately, there is a way around this. Simply add a reference to the view model in your App.xaml file:
-  &lt;pre style=&quot;clear: both&quot;&gt;&lt;local:mainviewmodel x:key=&quot;MainViewModel&quot;&nbsp;xmlns:local=&quot;clr-namespace:FlagMatch.ViewModels&quot;&gt;&lt;&#x2F;local:mainviewmodel&gt;&lt;&#x2F;pre&gt;  </p>
-<p>Rebuild the project, and you’ll see that the designer picks up the default values from a instance of the view model&nbsp;class:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a><strong>3. Localization and&nbsp;<span class="caps">MVVM</span></strong></p>
-<p>Finally, I wanted to make sure that my <span class="caps">MVVM</span> model could be used for multiple&nbsp;languages.</p>
-<p>You may have noticed that in the previous code sample, the title of the button is returned as <strong>AppResources.NewGameButtonTitle</strong> (instead of returning “New Game”).
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public string NewGameButtonTitle
-{
-    get { return AppResources.NewGameButtonTitle; }&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>This is to make localization easy (well… easier!). Under my <strong>Locales</strong> namespace there are two&nbsp;files:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a><strong>AppResources.resx</strong> is a resource file that contains default (in my case English) string values. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “New&nbsp;Game”.</p>
-<p>As you may have guessed, <strong>AppResources.es-<span class="caps">ES</span>.resx</strong> is the Spanish version of this resource file. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “Nuevo&nbsp;Juego”</p>
-<p>In order to enable the Spanish localized version, we need to do a few&nbsp;things:</p>
-<p>Firstly, create separate resource files for all your languages, using the <strong>AppResources.[lang].resx </strong>format as stated&nbsp;above.</p>
-<p>Next, in the .resx file, ensure that the access modifier is set to&nbsp;public.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a>(Otherwise, you’ll find that it just doesn’t offer the localized&nbsp;version).</p>
-<p>Them edit your .csproj file outside Visual Studio (using Notepad or similar). Add the supported country code in the <strong>SupportedCultures </strong>tag.
-  &lt;pre style=&quot;clear:&nbsp;both&quot;&gt;&lt;supportedcultures&gt;es-<span class="caps">ES</span>&lt;&#x2F;supportedcultures&gt;&lt;&#x2F;pre&gt;  </p>
-<p>Save the file and reload the project in Visual&nbsp;Studio.</p>
-<p>Once this is done, deploy the application to the emulator, and set the language of the emulator appropriately (Settings &#x2F; Region and Language &#x2F; Display Language). The emulator will&nbsp;restart.</p>
-<p>Finally, test your application. You should find that the new language strings are now&nbsp;used:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a>(My Spanish isn’t that good, so apologies for any mistakes&nbsp;above!).</p>
-<p>One word of caution: The testing process on the Windows Phone Marketplace is strict when it comes to supporting multiple languages. If you submit an application that supports multiple languages, you really need to make sure that <em>all</em> strings are localized (and you provide localized screenshots and product descriptions) in order to pass the testing&nbsp;certification.</p>
-<p><strong><em> Update: I&#39;ve recently moved the source code for the project - you can now find it on&nbsp;http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;flagmatch </em></strong></p>
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
+            <p class="date"><span>21. April 2009</span></p>
+            <h2><a href="/2009/04/20/displaying-xps-documents-in-silverlight/">Displaying XPS Documents in Silverlight</a></h2>
+          </header>
+          <section class="content"><p>I’ve recently been involved on a project that has a requirement to create and view <span class="caps">XPS</span> documents in Silverlight.&amp;#160; The application needs to display the XPS file in a full screen window together with zoom and navigation&nbsp;features.</p>
+<p>After a little searching on how to do this, I was able to get a head start with <a href="http:&#x2F;&#x2F;blogs.msdn.com&#x2F;delay&#x2F;archive&#x2F;2007&#x2F;05&#x2F;22&#x2F;lighting-up-the-xml-paper-specification-proof-of-concept-xps-reader-for-silverlight.aspx">this great post</a> from David Anson, which includes sample code for viewing <span class="caps">XPS</span> files in Silverlight 2 beta 2.&amp;#160; As his <a href="http:&#x2F;&#x2F;blogs.msdn.com&#x2F;delay&#x2F;archive&#x2F;2008&#x2F;10&#x2F;18&#x2F;roadblock-in-the-way-of-migrating-the-proof-of-concept-silverlight-xps-reader-simplesilverlightxpsviewer-sample-does-not-work-on-silverlight-2-rtw.aspx">updated post</a> attests to however, there were a few issues with Silverlight 2 due to a breaking change with the ways that font resources could be referenced from within a Silverlight assembly.&amp;#160; Fortunately, <a href="http:&#x2F;&#x2F;www.dotneteer.com&#x2F;Weblog&#x2F;post&#x2F;2008&#x2F;11&#x2F;Fix-for-Simple-XPS-Silverlight-Viewer-for-Silverlight-2.aspx">this post</a> from Li Chen pointed me in the right direction, separating out the <span class="caps">ODTTF</span> fonts into separate XAP files which can be referenced at&nbsp;runtime.&amp;#160; </p>
+<p>The sample code provided by Li Chen works well with the sample <span class="caps">XPS</span> files provided, but I couldn’t get it working with an XPS file generated using Microsoft Word.&amp;#160; After a little debugging this weekend, I found a few subtleties with how the code dealt with XPS files geneated from Microsoft&nbsp;Word:</p>
+<p>Firstly, the root document of the <span class="caps">XPS</span> file is called FixedDoc.fdoc instead of FixedDocument.fdoc (which is the name when using the XPS Printer Driver).&amp;#160; This was fairly easy to correct using a simple check:
+  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
+<p>&#x2F;&#x2F; Added to support &amp;quot;Save as <span class="caps">XPS</span>&amp;quot; from Microsoft Word<br>if (resourceInfo == null)<br>{<br>&amp;#160;&amp;#160;&amp;#160; resourceInfo = Application.GetResourceStream(_streamResourceInfo, ConvertPartName(&amp;quot;&#x2F;Documents&#x2F;1&#x2F;FixedDoc.fdoc&amp;quot;));<br>}&nbsp;&lt;&#x2F;div&gt;  </p>
+<p>Secondly, the .fdoc file refers to pages using relative links.&amp;#160; Instead of the absolute link (e.g. &#x2F;Documents&#x2F;1&#x2F;Pages&#x2F;1.page), a relative link (e.g. &#x2F;Page&#x2F;1.page) was causing the sample to be unable to find the pages.&amp;#160; A small piece of code to append the full path quickly fixes this also.
+  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
+<p>&#x2F;&#x2F; Update the page names for &amp;quot;Save as <span class="caps">XPS</span>&amp;quot; from Microsoft Word<br>List&amp;lt;string&amp;gt; _newPageNames = new List&amp;lt;string&amp;gt;();<br>foreach (String pageName in _pageNames)<br>{<br>&amp;#160;&amp;#160;&amp;#160; if (pageName.StartsWith(&amp;quot;Page&amp;quot;))<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; _newPageNames.Add(&amp;quot;&#x2F;Documents&#x2F;1&#x2F;&amp;quot; + pageName);<br>&amp;#160;&amp;#160;&amp;#160; }<br>}&nbsp;&lt;&#x2F;div&gt;  </p>
+<p>Finally, it looks like Word includes a page attribute called BidiLevel, which isn’t recognized by the Canvas element.&amp;#160; Adding an additional exclusion line into the sample code quickly fixed it.
+  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
+<p>_elementAttributesToRemove.Add(&amp;quot;Glyphs&amp;quot;, new List&amp;lt;string&amp;gt; { &amp;quot;BidiLevel&amp;quot; });&nbsp;&lt;&#x2F;div&gt;  </p>
+<p>The result seems to work quite well, with an <span class="caps">XPS</span> file saved from Microsoft Word viewable within&nbsp;Silverlight.&amp;#160;&amp;#160; </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;DisplayingXPSDocumentsinSilverlight_9130&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;DisplayingXPSDocumentsinSilverlight_9130&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a> </p>
+<p>If you are interested in trying this yourself, I’ve posted a version of the sample code <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;downloads&#x2F;SimpleSilverlightXpsViewer.zip">here</a> which contains the above modifications.&amp;#160; To use the modified sample with your own <span class="caps">XPS</span> file, do the&nbsp;following:&amp;#160; </p>
+<p>1.&amp;#160; Go into Microsoft Word and “Save as &#x2F; <span class="caps">XPS</span>” to create a new XPS&nbsp;file.</p>
+<p>2.&amp;#160; Download and compile the sample (note: only works in Visual Studio&nbsp;2008).&amp;#160; </p>
+<p>3.&amp;#160; Copy the <span class="caps">XPS</span> into your Visual Studio project, in the <strong>SimpleSilverlightXpsViewer_Web </strong>project.&amp;#160; </p>
+<p>4.&amp;#160; In Windows Explorer, rename the original <span class="caps">XPS</span> file to a ZIP file.&amp;#160; Ignore the warning about changing the file&nbsp;extension.</p>
+<p>5.&amp;#160; Open the zip file and go into the &#x2F;Resources directory.&amp;#160; Look for font files ending in <span class="caps">ODTTF</span> - these are embedded font files for the XPS file and must be referenced separately in the Silverlight project.&amp;#160; Copy all of these ODTTF files to the <strong>SampleWordGenerated </strong>project in the solution.&amp;#160; Also note that the <span class="caps">ODTTF</span> files are dynamically named when the XPS file is generated.&amp;#160; This means that although you may have already imported the correct ODTTF files for previous XPS file that use the same fonts, you’ll still need to re-import the fonts again to handle a new XPS&nbsp;file.&amp;#160; </p>
+<p>6.&amp;#160; Edit <strong>default.html </strong>in <strong>SimpleSilverlightXpsViewer_Web </strong>and on line 70 change the <strong>xpsDocument=SampleWordGenerated.xps </strong>to the correct name of your <span class="caps">XPS</span>&nbsp;file.&amp;#160; </p>
+<p>7.&amp;#160; F5 to run and you should see your <span class="caps">XPS</span> document displayed within a Silverlight&nbsp;control!</p>
+<p>There is still a bit of work to do with the sample code, which I think would be worth taking into a CodePlex project.&amp;#160; For example, the code should initially read the <span class="caps">XPS</span> root file (FixedDocSeq.fdseq) instead of looking or FixedDoc.fdoc or FixedDocument.fdoc directly.&amp;#160; It would also be great to figure out a better way of extracting the fonts more dynamically at runtime.&amp;#160; Other than that though I found this to be a good solution to display XPS files in Silverlight applications, especially useful as Silverlight doesn’t support the FlowDocument element (which is commonly used in WPF applications for creating documents and report&nbsp;generation).</p>
 
           </section>
         </article>

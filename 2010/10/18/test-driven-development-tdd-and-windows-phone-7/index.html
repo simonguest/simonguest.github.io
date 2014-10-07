@@ -14,7 +14,7 @@
     <header class="header">
       <div class="content-wrap">
         <h1>Test Driven Development (TDD) and Windows Phone 7</h1>
-        <p class="author">Written by <span class="author"></span>
+        <p class="author">Written by <span class="author">Simon Guest</span>
         </p>
       </div>
     </header>
@@ -23,164 +23,200 @@
         <article class="article">
           <section class="content"><p>Kylen, my 6 year old son, is really into world flags. At home we have a sheet of around 200 flags from across the globe, and he’s pretty close at reciting all of them (and certainly much better than Mom and&nbsp;Dad!).</p>
 <p>Spending a couple of hours over labor day last month, I set myself a task of building a “Flag Matching” application for Windows Phone 7 (<span class="caps">WP7</span>). My goal was twofold: Build a simple application that he can use (and that I can offer on the marketplace), and at the same time, look into some of the TDD best practices for developing a WP7&nbsp;application.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a>The application itself is simple enough. As shown above, the player gets presented with a picture of a flag, and four possible countries (of which only one is correct). A game consists of 20 flags, and the application maintains a high score&nbsp;table.</p>
+<p><span class="more"></span></p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/flag.png" alt="Flag"></p>
+<p>The application itself is simple enough. As shown above, the player gets presented with a picture of a flag, and four possible countries (of which only one is correct). A game consists of 20 flags, and the application maintains a high score&nbsp;table.</p>
 <p>During development of the application, this is what I&nbsp;found:</p>
-<p><strong>1. Setting up <span class="caps">TDD</span> for Windows Phone&nbsp;7</strong></p>
+<p><strong>Setting up <span class="caps">TDD</span> for Windows Phone&nbsp;7</strong></p>
 <p>As a new developer for Windows Phone 7, one of the first things you’ll quickly discover is that there is no option for a test project within the <span class="caps">IDE</span>. After creating a WP7 solution, I searched for the “WP7 Test Project” template, but to no&nbsp;avail…</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a>A quick search on the Web will offer up a few alternatives and chances are, you’ll quickly reach Jeff Wilcox’s session on <a href="http:&#x2F;&#x2F;live.visitmix.com&#x2F;MIX10&#x2F;Sessions&#x2F;CL59">Unit Testing Silverlight <span class="amp">&amp;</span> Windows Phone Applications</a> from <span class="caps">MIX10</span>. This is a really good session, however the recommended approach (using a Silverlight-based unit test framework) can be somewhat&nbsp;limited.</p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/addnewitem.png" alt="Add New Item"></p>
+<p>A quick search on the Web will offer up a few alternatives and chances are, you’ll quickly reach Jeff Wilcox’s session on <a href="http://live.visitmix.com/MIX10/Sessions/CL59">Unit Testing Silverlight <span class="amp">&amp;</span> Windows Phone Applications</a> from <span class="caps">MIX10</span>. This is a really good session, however the recommended approach (using a Silverlight-based unit test framework) can be somewhat&nbsp;limited.</p>
 <p>In my opinion, although it works well for small numbers of tests, not having unit tests outside the emulator makes it difficult for large test suites, using any continuous integration, and integrating with the&nbsp;<span class="caps">IDE</span>.</p>
 <p>If unit tests in the emulator don’t work for you either, here’s a&nbsp;workaround:</p>
 <p>In your solution, create a new project of type <strong>Windows Phone Class Library</strong>.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a>Name it appropriately (I called mine <strong>FlagMatch.Test</strong>) and include a reference to the original Windows Phone project (<strong>FlagMatch</strong>). Add the <a href="http:&#x2F;&#x2F;nunit.org&#x2F;">NUnit</a> unit test framework library as a reference (I’m using v2.0.50727) and write your tests as you normally would (of course, specific to the NUnit syntax).
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;[TestFixture]
-public class FlagModelTests
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/solution.png" alt="Solution"></p>
+<p>Name it appropriately (I called mine <strong>FlagMatch.Test</strong>) and include a reference to the original Windows Phone project (<strong>FlagMatch</strong>). Add the <a href="http://nunit.org/">NUnit</a> unit test framework library as a reference (I’m using v2.0.50727) and write your tests as you normally would (of course, specific to the NUnit&nbsp;syntax).</p>
+<pre><code class="lang-cs">[TestFixture]
+<span class="keyword">public</span> <span class="keyword">class</span> FlagModelTests
 {
     [Test]
-    public void TestFourRandomFlags_AllUnique()
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestFourRandomFlags_AllUnique</span>()
     {
-        Assert.AreEqual(4, Flag.FourRandom.GroupBy(f =&gt; f.Name).Select(f =&gt; f).Count());
-    }&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>Once you have a set of tests, you can then integrate these within Visual Studio. I’ve had reasonable luck with <a href="http:&#x2F;&#x2F;sourceforge.net&#x2F;projects&#x2F;visualnunit&#x2F;">Visual NUnit</a>, a free <span class="caps">IDE</span> plug in that works well with many versions of Visual&nbsp;Studio.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a>Alternatively, if you use <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;resharper&#x2F;">ReSharper</a>, you’ll find that their <span class="caps">IDE</span> integration works great&nbsp;also.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a>My preference is to use ReSharper as it works well with with another JetBrains product called <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;dotcover&#x2F;">dotCover</a> – for which you can use to analyze test code coverage in your Windows Phone&nbsp;application.</p>
-<p>Although you’ll find the majority of your unit tests will work great, you may well come across some strange errors. Most of these will be related to operations on the phone that cannot be replicated outside the emulator. For example, accessing isolated storage or referring to embedded resources&#x2F;images as part of the project works well within the emulator, but not so much from a class&nbsp;library.</p>
-<p>To get around this, you’ll need to create some mock objects to handle these operations. In my test project, I have a <strong>MockStorageProvider </strong>that I use in place of calls to isolated storage:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;[Test]
-public void TestResumeButton_NotVisibleOnStartup()
+        Assert.AreEqual(<span class="number">4</span>, Flag.FourRandom.GroupBy(f =&gt; f.Name).Select(f =&gt; f).Count());
+    }
+}
+</code></pre>
+<p>Once you have a set of tests, you can then integrate these within Visual Studio. I’ve had reasonable luck with <a href="http://sourceforge.net/projects/visualnunit/">Visual NUnit</a>, a free <span class="caps">IDE</span> plug in that works well with many versions of Visual&nbsp;Studio.</p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/nunit.png" alt="Nunit"></p>
+<p>Alternatively, if you use <a href="http://www.jetbrains.com/resharper/">ReSharper</a>, you’ll find that their <span class="caps">IDE</span> integration works great&nbsp;also.</p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/sessions.png" alt="Sessions"></p>
+<p>My preference is to use ReSharper as it works well with with another JetBrains product called <a href="http://www.jetbrains.com/dotcover/">dotCover</a> – for which you can use to analyze test code coverage in your Windows Phone&nbsp;application.</p>
+<p>Although you’ll find the majority of your unit tests will work great, you may well come across some strange errors. Most of these will be related to operations on the phone that cannot be replicated outside the emulator. For example, accessing isolated storage or referring to embedded resources/images as part of the project works well within the emulator, but not so much from a class&nbsp;library.</p>
+<p>To get around this, you’ll need to create some mock objects to handle these operations. In my test project, I have a <strong>MockStorageProvider</strong> that I use in place of calls to isolated&nbsp;storage:</p>
+<pre><code class="lang-cs">[Test]
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestResumeButton_NotVisibleOnStartup</span>()
 {
-    MainViewModel viewModel = new MainViewModel(new MockStorageProvider());
-    Assert.AreEqual(Visibility.Collapsed, viewModel.ResumeGameButtonVisibility);&nbsp;}&lt;&#x2F;pre&gt;  </p>
+    MainViewModel viewModel = <span class="keyword">new</span> MainViewModel(<span class="keyword">new</span> MockStorageProvider());
+    Assert.AreEqual(Visibility.Collapsed, viewModel.ResumeGameButtonVisibility);
+}
+</code></pre>
 <p>As you can see, I pass the mock object to the view model (more on this in the next section) as an optional constructor parameter. All storage operations then use this MockStorageProvider instead of writing to isolated storage (which would have generated an exception during the tests). This also has the advantage that I can add additional tests within the mock object to ensure that the storage provider is being called correctly from the&nbsp;application.</p>
-<p><strong>2. Using <span class="caps">MVVM</span> with&nbsp;WP7</strong></p>
-<p>For anyone with experience of testing Silverlight projects, you’ll know that although <span class="caps">XAML</span> provides a code separation layer, testing parts of the UI (e.g. actions when a button is pressed) can still be difficult. This can be overcome by using a pattern called <a href="http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Model_View_ViewModel"><span class="caps">MVVM</span></a> (Model View ViewModel). I’m not going to go into the details of <span class="caps">MVVM</span> here (there are plenty of other resources that do a great job) other than to say it can be used for WP7 applications with a little tweaking. The core reason is that WP7 is based largely on the SL3 codebase, which does not contain a complete commanding event&nbsp;model.</p>
-<p>There are a couple of approaches in order to get <span class="caps">MVVM</span> working on WP7. The first would be to reuse one of the existing samples&#x2F;libraries available today. Your mileage may vary (as I found some were designed for pre-RTM versions), although I’ve heard good reviews about Laurent Bugnion’s <a href="http:&#x2F;&#x2F;galasoft.ch&#x2F;mvvm&#x2F;getstarted&#x2F;">MVVMLite</a>&nbsp;project.</p>
+<p><strong>Using <span class="caps">MVVM</span> with&nbsp;WP7</strong></p>
+<p>For anyone with experience of testing Silverlight projects, you’ll know that although <span class="caps">XAML</span> provides a code separation layer, testing parts of the UI (e.g. actions when a button is pressed) can still be difficult. This can be overcome by using a pattern called <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel"><span class="caps">MVVM</span></a> (Model View ViewModel). I’m not going to go into the details of <span class="caps">MVVM</span> here (there are plenty of other resources that do a great job) other than to say it can be used for WP7 applications with a little tweaking. The core reason is that WP7 is based largely on the SL3 codebase, which does not contain a complete commanding event&nbsp;model.</p>
+<p>There are a couple of approaches in order to get <span class="caps">MVVM</span> working on WP7. The first would be to reuse one of the existing samples/libraries available today. Your mileage may vary (as I found some were designed for pre-RTM versions), although I’ve heard good reviews about Laurent Bugnion’s <a href="http://galasoft.ch/mvvm/getstarted/">MVVMLite</a>&nbsp;project.</p>
 <p>If instead you’d like to learn how implement this yourself, here is how I achieved&nbsp;it:</p>
-<p>First, you should create a view model base. Assuming you are going to have multiple view models (I ended up with one per page), it’s a good idea.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class ViewModelBase : INotifyPropertyChanged
+<p>First, you should create a view model base. Assuming you are going to have multiple view models (I ended up with one per page), it’s a good&nbsp;idea.</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">class</span> ViewModelBase : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler&nbsp;PropertyChanged;</p>
-<pre><code>public void NotifyPropertyChanged(String propertyName)
-{
-    if (PropertyChanged != null)
-    {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-    }
-}
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>Next, create your view model, inheriting from ViewModelBase.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class MainViewModel : ViewModelBase
-{
-    public string NewGameButtonTitle
-    {
-        get { return AppResources.NewGameButtonTitle; }&nbsp;}</p>
-<pre><code>public NewGameCommand NewGameButton
-{
-    get
-    {
-        return new NewGameCommand();
-    }
-}
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>For the purposes of this sample code, let’s imagine that we have a single page with a “New Game” button. As you can see above, the view model contains two properties – one for the title of the button, the second for the command that this button will be bound&nbsp;to.</p>
-<p>In order to implement the commands, you’ll need a couple of things. The first is a command service:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public static class CommandService
-{
-    private static readonly DependencyProperty&nbsp;_commandProperty;</p>
-<pre><code>static CommandService()
-{
-    _commandProperty = DependencyProperty.RegisterAttached(&amp;quot;Command&amp;quot;, typeof(ICommand), typeof(CommandService),
-    new PropertyMetadata(OnCommandChanged));
-}
+    <span class="keyword">public</span> <span class="keyword">event</span> PropertyChangedEventHandler PropertyChanged;
 
-public static ICommand GetCommand(DependencyObject dependencyObject)
-{
-    return (ICommand)dependencyObject.GetValue(_commandProperty);
-}
-
-public static void SetCommand(DependencyObject dependencyObject, ICommand value)
-{
-    dependencyObject.SetValue(_commandProperty, value);
-}
-
-private static void OnCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpceArgs)
-{
-    if (dependencyObject is Button)
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">NotifyPropertyChanged</span>(String propertyName)
     {
-        string parameter = dependencyObject.GetValue(_commandProperty).ToString();
-        Button button = (Button)dependencyObject;
-        ICommand command = (ICommand)dpceArgs.NewValue;
-        button.Click += delegate(object sender, RoutedEventArgs arg) { command.Execute(parameter); };
-    }
-}
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>There are a good number of examples of this around (just search for <span class="caps">MVVM</span>) – this one I found in a great post from the <a href="http:&#x2F;&#x2F;codingsolutions.blogspot.com&#x2F;2010&#x2F;03&#x2F;steps-to-run-windows-phone-7-unit-test.html">Coding Solutions</a>&nbsp;blog.</p>
-<p>After this, you’ll need to create event handlers. Here’s a simple handler for when the new button is pressed.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class CommandEvents
-{
-    public static EventHandler NewGameButtonPressed;&nbsp;}&lt;&#x2F;pre&gt;  </p>
-<p>Your command itself simply implements the ICommand interface:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public class NewGameCommand : ICommand
-{
-    public NewGameCommand()
-    {&nbsp;}</p>
-<pre><code>public bool CanExecute(object parameter)
-{
-    return true;
-}
-
-public event EventHandler CanExecuteChanged;
-
-public void Execute(object parameter)
-{
-    if (this.CanExecute(null))
-    {
-        if (CommandEvents.NewGameButtonPressed != null)
+        <span class="keyword">if</span> (PropertyChanged != <span class="keyword">null</span>)
         {
-            CommandEvents.NewGameButtonPressed(this, new EventArgs());
+            PropertyChanged(<span class="keyword">this</span>, <span class="keyword">new</span> PropertyChangedEventArgs(propertyName));
         }
     }
 }
-</code></pre><p>}&lt;&#x2F;pre&gt;  </p>
-<p>With all these in place, you can now bind the command to the actual button in your <span class="caps">XAML</span> file. On your XAML page, you’ll need to add the following namespace:
-  &lt;pre style=&quot;clear:&nbsp;both&quot;&gt;xmlns:Commands=&quot;clr-namespace:FlagMatch.Commands&quot;&lt;&#x2F;pre&gt;  </p>
-<p>And on the button itself, simply bind to the command using the following:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;button name=&quot;button1&quot; margin=&quot;134,505,0,0&quot; verticalalignment=&quot;Top&quot; commands:commandservice.command=&quot;{Binding Path=NewGameButton}&quot; content=&quot;{Binding NewGameButtonTitle}&quot; height=&quot;72&quot; horizontalalignment=&quot;Left&quot;&nbsp;width=&quot;227&quot;&lt;&#x2F;pre&gt;  </p>
-<p>Notice how the content of the button is bound to the <strong>NewGameButtonTitle</strong> in the view model, and the command is bound to the <strong>NewGameButton</strong> command. More importantly, notice also how there are no traditional event handlers needed&nbsp;here.</p>
-<p>The final piece of the puzzle is to register the view model and the button event handler in the <span class="caps">XAML</span> code behind. To do this, in the code behind, we create an instance of the view model:
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;private readonly MainViewModel _mainViewModel = new&nbsp;MainViewModel();&lt;&#x2F;pre&gt;  </p>
-<p>Then in the constructor, bind the view model to the datacontext and register the button event handler.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;LayoutRoot.DataContext =&nbsp;_mainViewModel;</p>
-<p>CommandEvents.NewGameButtonPressed += new&nbsp;EventHandler(StartGame);&lt;&#x2F;pre&gt;  </p>
-<p>The StartGame method simply performs a navigate action for us. This is something that just can’t be moved into the view model.
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;private void StartGame(object sender, EventArgs e)
+</code></pre>
+<p>Next, create your view model, inheriting from&nbsp;ViewModelBase.</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">class</span> MainViewModel : ViewModelBase
 {
-    NavigationService.Navigate(new Uri(&quot;&#x2F;GamePage.xaml&quot;, UriKind.Relative));&nbsp;}&lt;&#x2F;pre&gt;  </p>
+    <span class="keyword">public</span> <span class="keyword">string</span> NewGameButtonTitle
+    {
+        <span class="keyword">get</span> { <span class="keyword">return</span> AppResources.NewGameButtonTitle; }
+    }
+
+    <span class="keyword">public</span> NewGameCommand NewGameButton
+    {
+        <span class="keyword">get</span>
+        {
+            <span class="keyword">return</span> <span class="keyword">new</span> NewGameCommand();
+        }
+    }
+}
+</code></pre>
+<p>For the purposes of this sample code, let’s imagine that we have a single page with a “New Game” button. As you can see above, the view model contains two properties – one for the title of the button, the second for the command that this button will be bound&nbsp;to.</p>
+<p>In order to implement the commands, you’ll need a couple of things. The first is a command&nbsp;service:</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> CommandService
+{
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> DependencyProperty _commandProperty;
+
+    <span class="keyword">static</span> CommandService()
+    {
+        _commandProperty = DependencyProperty.RegisterAttached(<span class="string">"Command"</span>, <span class="keyword">typeof</span>(ICommand), <span class="keyword">typeof</span>(CommandService),
+        <span class="keyword">new</span> PropertyMetadata(OnCommandChanged));
+    }
+
+    <span class="keyword">public</span> <span class="keyword">static</span> ICommand <span class="title">GetCommand</span>(DependencyObject dependencyObject)
+    {
+        <span class="keyword">return</span> (ICommand)dependencyObject.GetValue(_commandProperty);
+    }
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetCommand</span>(DependencyObject dependencyObject, ICommand <span class="keyword">value</span>)
+    {
+        dependencyObject.SetValue(_commandProperty, <span class="keyword">value</span>);
+    }
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnCommandChanged</span>(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpceArgs)
+    {
+        <span class="keyword">if</span> (dependencyObject <span class="keyword">is</span> Button)
+        {
+            <span class="keyword">string</span> parameter = dependencyObject.GetValue(_commandProperty).ToString();
+            Button button = (Button)dependencyObject;
+            ICommand command = (ICommand)dpceArgs.NewValue;
+            button.Click += <span class="keyword">delegate</span>(<span class="keyword">object</span> sender, RoutedEventArgs arg) { command.Execute(parameter); };
+        }
+    }
+}
+</code></pre>
+<p>There are a good number of examples of this around (just search for <span class="caps">MVVM</span>) – this one I found in a great post from the <a href="http://codingsolutions.blogspot.com/2010/03/steps-to-run-windows-phone-7-unit-test.html">Coding Solutions</a>&nbsp;blog.</p>
+<p>After this, you’ll need to create event handlers. Here’s a simple handler for when the new button is&nbsp;pressed.</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">class</span> CommandEvents
+{
+    <span class="keyword">public</span> <span class="keyword">static</span> EventHandler NewGameButtonPressed;
+}
+</code></pre>
+<p>Your command itself simply implements the ICommand&nbsp;interface:</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">class</span> NewGameCommand : ICommand
+{
+    <span class="keyword">public</span> <span class="title">NewGameCommand</span>()
+    {
+    }
+
+    <span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">CanExecute</span>(<span class="keyword">object</span> parameter)
+    {
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    }
+
+    <span class="keyword">public</span> <span class="keyword">event</span> EventHandler CanExecuteChanged;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="keyword">object</span> parameter)
+    {
+        <span class="keyword">if</span> (<span class="keyword">this</span>.CanExecute(<span class="keyword">null</span>))
+        {
+            <span class="keyword">if</span> (CommandEvents.NewGameButtonPressed != <span class="keyword">null</span>)
+            {
+                CommandEvents.NewGameButtonPressed(<span class="keyword">this</span>, <span class="keyword">new</span> EventArgs());
+            }
+        }
+    }
+}
+</code></pre>
+<p>With all these in place, you can now bind the command to the actual button in your <span class="caps">XAML</span> file. On your XAML page, you’ll need to add the following&nbsp;namespace:</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">pre</span> <span class="attribute">style</span>=<span class="value">"clear: both"</span>&gt;</span>xmlns:Commands="clr-namespace:FlagMatch.Commands"<span class="tag">&lt;/<span class="title">pre</span>&gt;</span>
+</code></pre>
+<p>And on the button itself, simply bind to the command using the&nbsp;following:</p>
+<pre><code>button name=&quot;button1&quot; margin=&quot;134,505,0,0&quot; verticalalignment=&quot;Top&quot; commands:commandservice.command=&quot;{Binding Path=NewGameButton}&quot; content=&quot;{Binding NewGameButtonTitle}&quot; height=&quot;72&quot; horizontalalignment=&quot;Left&quot; width=&quot;227&quot;
+</code></pre><p>Notice how the content of the button is bound to the <strong>NewGameButtonTitle</strong> in the view model, and the command is bound to the <strong>NewGameButton</strong> command. More importantly, notice also how there are no traditional event handlers needed&nbsp;here.</p>
+<p>The final piece of the puzzle is to register the view model and the button event handler in the <span class="caps">XAML</span> code behind. To do this, in the code behind, we create an instance of the view&nbsp;model:</p>
+<pre><code class="lang-cs"><span class="keyword">private</span> <span class="keyword">readonly</span> MainViewModel _mainViewModel = <span class="keyword">new</span> MainViewModel();
+</code></pre>
+<p>Then in the constructor, bind the view model to the datacontext and register the button event&nbsp;handler.</p>
+<pre><code class="lang-cs">LayoutRoot.DataContext = _mainViewModel;
+CommandEvents.NewGameButtonPressed += <span class="keyword">new</span> EventHandler(StartGame);
+</code></pre>
+<p>The StartGame method simply performs a navigate action for us. This is something that just can’t be moved into the view&nbsp;model.</p>
+<pre><code class="lang-cs"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">StartGame</span>(<span class="keyword">object</span> sender, EventArgs e)
+{
+    NavigationService.Navigate(<span class="keyword">new</span> Uri(<span class="string">"/GamePage.xaml"</span>, UriKind.Relative));
+}
+</code></pre>
 <p>Other than that, there is no additional <span class="caps">UI</span> logic required in code behind – which means for a slightly more complex implementation, but one that provides great test&nbsp;coverage.</p>
 <p>A final point worth noting is designer support. As you start building out controls using the <span class="caps">MVVM</span> paradigm, you’ll likely find that the designer ends up being difficult to&nbsp;use.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a>Because we are binding content directly to the view model, the designer doesn’t know where to pick up values to be shown at design time. Fortunately, there is a way around this. Simply add a reference to the view model in your App.xaml file:
-  &lt;pre style=&quot;clear: both&quot;&gt;&lt;local:mainviewmodel x:key=&quot;MainViewModel&quot;&nbsp;xmlns:local=&quot;clr-namespace:FlagMatch.ViewModels&quot;&gt;&lt;&#x2F;local:mainviewmodel&gt;&lt;&#x2F;pre&gt;  </p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/mvvmblank.png" alt="MVVM Blank"></p>
+<p>Because we are binding content directly to the view model, the designer doesn’t know where to pick up values to be shown at design time. Fortunately, there is a way around this. Simply add a reference to the view model in your App.xaml&nbsp;file:</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">local:mainviewmodel</span> <span class="attribute">x:key</span>=<span class="value">"MainViewModel"</span> <span class="attribute">xmlns:local</span>=<span class="value">"clr-namespace:FlagMatch.ViewModels"</span>&gt;</span><span class="tag">&lt;/<span class="title">local:mainviewmodel</span>&gt;</span>
+</code></pre>
 <p>Rebuild the project, and you’ll see that the designer picks up the default values from a instance of the view model&nbsp;class:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a><strong>3. Localization and&nbsp;<span class="caps">MVVM</span></strong></p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/mvvmfilled.png" alt="MVVM Filled"></p>
+<p><strong>Localization and&nbsp;<span class="caps">MVVM</span></strong></p>
 <p>Finally, I wanted to make sure that my <span class="caps">MVVM</span> model could be used for multiple&nbsp;languages.</p>
-<p>You may have noticed that in the previous code sample, the title of the button is returned as <strong>AppResources.NewGameButtonTitle</strong> (instead of returning “New Game”).
-  &lt;pre class=&quot;brush:c-sharp&quot;&gt;public string NewGameButtonTitle
+<p>You may have noticed that in the previous code sample, the title of the button is returned as <strong>AppResources.NewGameButtonTitle</strong> (instead of returning “New&nbsp;Game”).</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">string</span> NewGameButtonTitle
 {
-    get { return AppResources.NewGameButtonTitle; }&nbsp;}&lt;&#x2F;pre&gt;  </p>
+    <span class="keyword">get</span> { <span class="keyword">return</span> AppResources.NewGameButtonTitle; }
+}
+</code></pre>
 <p>This is to make localization easy (well… easier!). Under my <strong>Locales</strong> namespace there are two&nbsp;files:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a><strong>AppResources.resx</strong> is a resource file that contains default (in my case English) string values. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “New&nbsp;Game”.</p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/locales.png" alt="Locales"></p>
+<p><strong>AppResources.resx</strong> is a resource file that contains default (in my case English) string values. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “New&nbsp;Game”.</p>
 <p>As you may have guessed, <strong>AppResources.es-<span class="caps">ES</span>.resx</strong> is the Spanish version of this resource file. In there, you’ll find that <strong>NewGameButtonTitle</strong> refers to a string called “Nuevo&nbsp;Juego”</p>
 <p>In order to enable the Spanish localized version, we need to do a few&nbsp;things:</p>
 <p>Firstly, create separate resource files for all your languages, using the <strong>AppResources.[lang].resx </strong>format as stated&nbsp;above.</p>
 <p>Next, in the .resx file, ensure that the access modifier is set to&nbsp;public.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a>(Otherwise, you’ll find that it just doesn’t offer the localized&nbsp;version).</p>
-<p>Them edit your .csproj file outside Visual Studio (using Notepad or similar). Add the supported country code in the <strong>SupportedCultures </strong>tag.
-  &lt;pre style=&quot;clear:&nbsp;both&quot;&gt;&lt;supportedcultures&gt;es-<span class="caps">ES</span>&lt;&#x2F;supportedcultures&gt;&lt;&#x2F;pre&gt;  </p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/resx.png" alt="ResX"></p>
+<p>(Otherwise, you’ll find that it just doesn’t offer the localized&nbsp;version).</p>
+<p>Them edit your .csproj file outside Visual Studio (using Notepad or similar). Add the supported country code in the <strong>SupportedCultures</strong>&nbsp;tag.</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">supportedcultures</span>&gt;</span>es-<span class="caps">ES</span><span class="tag">&lt;/<span class="title">supportedcultures</span>&gt;</span>
+</code></pre>
 <p>Save the file and reload the project in Visual&nbsp;Studio.</p>
-<p>Once this is done, deploy the application to the emulator, and set the language of the emulator appropriately (Settings &#x2F; Region and Language &#x2F; Display Language). The emulator will&nbsp;restart.</p>
+<p>Once this is done, deploy the application to the emulator, and set the language of the emulator appropriately (Settings / Region and Language / Display Language). The emulator will&nbsp;restart.</p>
 <p>Finally, test your application. You should find that the new language strings are now&nbsp;used:</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;10&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a>(My Spanish isn’t that good, so apologies for any mistakes&nbsp;above!).</p>
+<p><img src="/articles/test-driven-development-tdd-and-windows-phone-7/locale.png" alt="Locale"></p>
+<p>(My Spanish isn’t that good, so apologies for any mistakes&nbsp;above!).</p>
 <p>One word of caution: The testing process on the Windows Phone Marketplace is strict when it comes to supporting multiple languages. If you submit an application that supports multiple languages, you really need to make sure that <em>all</em> strings are localized (and you provide localized screenshots and product descriptions) in order to pass the testing&nbsp;certification.</p>
-<p><strong><em> Update: I&#39;ve recently moved the source code for the project - you can now find it on&nbsp;http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;flagmatch </em></strong></p>
+<p><strong>Update: I’ve recently moved the source code for the project - you can now find it on <a href="http://github.com/simonguest/flagmatch">http://github.com/simonguest/flagmatch</a></strong></p>
 </section>
         </article>
       </div>

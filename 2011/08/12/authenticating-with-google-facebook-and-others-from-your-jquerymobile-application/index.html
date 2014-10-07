@@ -14,66 +14,73 @@
     <header class="header">
       <div class="content-wrap">
         <h1>Authenticating with Google, Facebook, and others from your jQueryMobile Application</h1>
-        <p class="author">Written by <span class="author"></span>
+        <p class="author">Written by <span class="author">Simon Guest</span>
         </p>
       </div>
     </header>
     <div id="content">
       <div class="content-wrap">
         <article class="article">
-          <section class="content"><p>In my last post, I showed how to implement authentication using Google, Facebook, etc. for your iOS application – using the <a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe">Windows Azure Toolkit for iOS</a>.&amp;#160; This works well for iPhone applications written in Objective C, but what if you are developing a Web based mobile applications that span multiple platforms?&amp;#160; Given that everything is using Web pages, you would hope that it would be a little easier, but things can get tricky - especially if you are using&nbsp;jQueryMobile.&amp;#160; </p>
-<p>Having implemented this a couple of times now, here is a rough guide of how to integrate AppFabric <span class="caps">ACS</span> (Access Control Service) authentication into a jQueryMobile application. (There is already a ton of documentation of both jQueryMobile and ACS, so I’m assuming that you understand the basics of how these both&nbsp;work).&amp;#160;&amp;#160;&amp;#160; </p>
-<p><strong>Step 1:&amp;#160; Create your own provider selection&nbsp;screen</strong></p>
-<p>When you first start playing around with using <span class="caps">ACS</span> on mobile web browsers, the first thing you&#39;ll notice is that the default login page isn&#39;t that&nbsp;nice.&amp;#160; </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
-<p>While the functionality of logging in will work, users have to pinch zoom to be able to read the buttons, which isn&#39;t a great experience.&amp;#160; It also doesn&#39;t fit in with any jQueryMobile theme that you may have created.&amp;#160; To overcome this, we can create our own provider&nbsp;screen.&amp;#160; </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
-<p>To build something similar to the above, I&#39;ve used a jQueryMobile <a href="http:&#x2F;&#x2F;jquerymobile.com&#x2F;test&#x2F;docs&#x2F;pages&#x2F;dialog-alt.html">Dialog</a> (which has an automatic border as well as a background effect).&amp;#160; The basic code for the screen looks like the following:
-  &lt;pre class=&quot;brush:html&quot;&gt;&amp;lt;!<span class="caps">DOCTYPE</span> html&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;title&amp;gt;Select Login Provider&amp;lt;&#x2F;title&amp;gt;
-&amp;lt;&#x2F;head&amp;gt;
-&amp;lt;body&amp;gt;
-    &amp;lt;div data-role=&amp;quot;dialog&amp;quot;&amp;gt;
-        &amp;lt;div data-role=&amp;quot;header&amp;quot;&amp;gt;
-            &amp;lt;h1&amp;gt;Select Login Provider&amp;lt;&#x2F;h1&amp;gt;
-        &amp;lt;&#x2F;div&amp;gt;
-        &amp;lt;div data-role=&amp;quot;content&amp;quot;&amp;gt;
+          <section class="content"><p>In my last post, I showed how to implement authentication using Google, Facebook, etc. for your iOS application – using the <a href="http://github.com/microsoft-dpe">Windows Azure Toolkit for iOS</a>.  This works well for iPhone applications written in Objective C, but what if you are developing a Web based mobile applications that span multiple platforms?  Given that everything is using Web pages, you would hope that it would be a little easier, but things can get tricky - especially if you are using&nbsp;jQueryMobile. </p>
+<p><span class="more"></span></p>
+<p>Having implemented this a couple of times now, here is a rough guide of how to integrate AppFabric <span class="caps">ACS</span> (Access Control Service) authentication into a jQueryMobile application. (There is already a ton of documentation of both jQueryMobile and ACS, so I’m assuming that you understand the basics of how these both&nbsp;work).   </p>
+<p><strong>Step 1:  Create your own provider selection&nbsp;screen</strong></p>
+<p>When you first start playing around with using <span class="caps">ACS</span> on mobile web browsers, the first thing you’ll notice is that the default login page isn’t that&nbsp;nice. </p>
+<p><img src="/articles/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/defaultlogin.png" alt="Default Login"></p>
+<p>While the functionality of logging in will work, users have to pinch zoom to be able to read the buttons, which isn’t a great experience.  It also doesn’t fit in with any jQueryMobile theme that you may have created.  To overcome this, we can create our own provider&nbsp;screen. </p>
+<p><img src="/articles/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/jquerylogin.png" alt="jQuery Login"></p>
+<p>To build something similar to the above, I’ve used a jQueryMobile <a href="http://jquerymobile.com/test/docs/pages/dialog-alt.html">Dialog</a> (which has an automatic border as well as a background effect).  The basic code for the screen looks like the&nbsp;following:</p>
+<pre><code class="lang-html"><span class="doctype">&lt;!<span class="caps">DOCTYPE</span> html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Select Login Provider<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">data-role</span>=<span class="value">"dialog"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">data-role</span>=<span class="value">"header"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Select Login Provider<span class="tag">&lt;/<span class="title">h1</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">data-role</span>=<span class="value">"content"</span>&gt;</span>
             @{
                 if (ViewBag.JSONProviders != null)
                     {
                     var providers = Json.Decode(ViewBag.JSONProviders);
                     foreach (var provider in providers)
                     {
-                        &amp;lt;button type=&amp;quot;button&amp;quot; onclick=&amp;quot;javascript:window.location.href=&#39;@provider.LoginUrl&#39;&amp;quot;&amp;gt;@provider.Name&amp;lt;&#x2F;button&amp;gt;
+                        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"button"</span> <span class="attribute">onclick</span>=<span class="value">"javascript:window.location.href='@provider.LoginUrl'"</span>&gt;</span>@provider.Name<span class="tag">&lt;/<span class="title">button</span>&gt;</span>
                     }
                 }
             }
-        &amp;lt;&#x2F;div&amp;gt;
-    &amp;lt;&#x2F;div&amp;gt;
-&amp;lt;&#x2F;body&amp;gt;&nbsp;&amp;lt;&#x2F;html&amp;gt;&lt;&#x2F;pre&gt;</p>
-<p>As you can see from the above, the form is built by parsing a <span class="caps">JSON</span> object containing a list of identity providers and creating buttons for each provider – setting a name for a button and setting an on click action to the URL.&amp;#160; (The above code uses the Razor-based syntax for&amp;#160; ASP.NET MVC, but the same will work just by using JSON calls in regular&nbsp;Javascript).&amp;#160; </p>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+</code></pre>
+<p>As you can see from the above, the form is built by parsing a <span class="caps">JSON</span> object containing a list of identity providers and creating buttons for each provider – setting a name for a button and setting an on click action to the URL.  (The above code uses the Razor-based syntax for  ASP.NET MVC, but the same will work just by using JSON calls in regular&nbsp;Javascript). </p>
 <p>Two things to note&nbsp;here:</p>
-<p>1.&amp;#160; It&#39;s really important to use <strong>window.location.href</strong> instead of an &amp;lt;a&amp;gt; anchor when linking to the provider – otherwise you&#39;ll break the <span class="caps">AJAX</span> model of your jQueryMobile app and a new browser window will be launched (which looks horrible, especially in full screen web&nbsp;applications).</p>
-<p>2.&amp;#160; You are probably asking yourself where the <span class="caps">JSON</span> objects actually come from.&amp;#160; This brings us to our next&nbsp;point…</p>
-<p><strong>Step 2:&amp;#160; Make a call to the <span class="caps">ACS</span> JSON&nbsp;endpoint</strong></p>
-<p>The buttons in the form are based on identity providers, which you likely setup when you configured <span class="caps">ACS</span>.&amp;#160; These providers can be extracted as JSON objects using a JSON based endpoint that the ACS service&nbsp;providers.&amp;#160; </p>
-<p>Here&#39;s the <span class="caps">URL</span> of the JSON endpoint for ACS&nbsp;v2.</p>
-<p><a href="https:&#x2F;&#x2F;{0}.accesscontrol.windows.net&#x2F;v2&#x2F;metadata&#x2F;IdentityProviders.js?protocol=wsfederation&amp;amp;realm={1}&amp;amp;reply_to={2}&amp;amp;context=&amp;amp;request_id=&amp;amp;version=1.0">https:&#x2F;&#x2F;{0}.accesscontrol.windows.net&#x2F;v2&#x2F;metadata&#x2F;IdentityProviders.js?protocol=wsfederation&amp;amp;realm={1}&amp;amp;reply_to={2}&amp;amp;context=&amp;amp;request_id=&amp;amp;version=1.0</a></p>
-<p>{0} is the namespace of your <span class="caps">ACS</span>&nbsp;service</p>
+<ol>
+<li><p>It’s really important to use <strong>window.location.href</strong> instead of an anchor when linking to the provider – otherwise you’ll break the <span class="caps">AJAX</span> model of your jQueryMobile app and a new browser window will be launched (which looks horrible, especially in full screen web&nbsp;applications).</p>
+</li>
+<li><p>You are probably asking yourself where the <span class="caps">JSON</span> objects actually come from.  This brings us to our next&nbsp;point…</p>
+</li>
+</ol>
+<p><strong>Step 2:  Make a call to the <span class="caps">ACS</span> JSON&nbsp;endpoint</strong></p>
+<p>The buttons in the form are based on identity providers, which you likely setup when you configured <span class="caps">ACS</span>.  These providers can be extracted as JSON objects using a JSON based endpoint that the ACS service&nbsp;providers. </p>
+<p>Here’s the <span class="caps">URL</span> of the JSON endpoint for ACS&nbsp;v2.</p>
+<pre><code>https://{0}.accesscontrol.windows.net/v2/metadata/IdentityProviders.js?protocol=wsfederation&amp;realm={1}&amp;reply_to={2}&amp;context=&amp;request_id=&amp;version=1.0](https://{0}.accesscontrol.windows.net/v2/metadata/IdentityProviders.js?protocol=wsfederation&amp;realm={1}&amp;reply_to={2}&amp;context=&amp;request_id=&amp;version=1.0)
+</code></pre><p>{0} is the namespace of your <span class="caps">ACS</span>&nbsp;service</p>
 <p>{1} is the realm within your <span class="caps">ACS</span>&nbsp;service</p>
-<p>{2} is an optional <span class="caps">URL</span> (which must be HTML encoded) that specifies where to return the browser once authentication has been completed.&amp;#160; Remember, if you are using AJAX navigation, then you&#39;ll want to pass in the correct #-prefixed syntax.&amp;#160; For example a return URL of the&nbsp;following:</p>
-<p><a href="http:&#x2F;&#x2F;localhost&#x2F;MyWebApp#&#x2F;MyWebApp&#x2F;Accounts">http:&#x2F;&#x2F;localhost&#x2F;MyWebApp#&#x2F;MyWebApp&#x2F;Accounts</a></p>
-<p>Will instruct the <span class="caps">ACS</span> service to return to the Accounts page in your jQueryMobile&nbsp;app.</p>
-<p>Again, you can make the call to the <span class="caps">JSON</span> endpoint using Javascript, or if you are using ASP.NET MVC like in Step 1 I would recommend creating a controller action called Providers which passes the return JSON object in a&nbsp;ViewBag.&amp;#160; </p>
-<p><strong>Step 3:&amp;#160; Launch the providers screen from your&nbsp;app</strong></p>
-<p>Finally, once you have your provider screen created, you&#39;ll need to call it when authentication is required.&amp;#160; There are a couple of different ways of doing this – if you are using Javascript only, then create and maintain a variable called claims – which corresponds to the claims bag returned from the service (when the <span class="caps">ACS</span> service returns it does a post back to your application so that you can capture the claims).&amp;#160; Secondly, if you are using ASP.NET MVC then you can create a second action on the Account controller called claims with something similar to the&nbsp;following:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:csharp&quot;&gt;</p>
-<p>public JsonResult&nbsp;Claims()</p>
-<p>{</p>
-<p>&amp;#160;&amp;#160;&amp;#160; return Json(string.Join(&amp;quot;n&amp;quot;, ((IClaimsIdentity)this.User.Identity).Claims.Select(c =&amp;gt; c.ClaimType + &amp;quot;: &amp;quot; +&nbsp;c.Value).ToArray()));</p>
-<p>}&nbsp;&lt;&#x2F;pre&gt;</p>
+<p>{2} is an optional <span class="caps">URL</span> (which must be HTML encoded) that specifies where to return the browser once authentication has been completed.  Remember, if you are using AJAX navigation, then you’ll want to pass in the correct #-prefixed syntax.  For example a return URL of the&nbsp;following:</p>
+<pre><code>http://localhost/MyWebApp#/MyWebApp/Accounts
+</code></pre><p>Will instruct the <span class="caps">ACS</span> service to return to the Accounts page in your jQueryMobile&nbsp;app.</p>
+<p>Again, you can make the call to the <span class="caps">JSON</span> endpoint using Javascript, or if you are using ASP.NET MVC like in Step 1 I would recommend creating a controller action called Providers which passes the return JSON object in a&nbsp;ViewBag. </p>
+<p><strong>Step 3:  Launch the providers screen from your&nbsp;app</strong></p>
+<p>Finally, once you have your provider screen created, you’ll need to call it when authentication is required.  There are a couple of different ways of doing this – if you are using Javascript only, then create and maintain a variable called claims – which corresponds to the claims bag returned from the service (when the <span class="caps">ACS</span> service returns it does a post back to your application so that you can capture the claims).  Secondly, if you are using ASP.NET MVC then you can create a second action on the Account controller called claims with something similar to the&nbsp;following:</p>
+<pre><code class="lang-csharp">public JsonResult Claims()
+{
+    return Json(string.Join(&quot;n&quot;, ((IClaimsIdentity)this.User.Identity).Claims.Select(c =&gt; c.ClaimType + &quot;: &quot; + c.Value).ToArray()));
+}
+</code></pre>
 <p>This will return the claims bag directly from the User.Identity property from the&nbsp;controller.</p>
 <p>Well, just a short overview, but if you are thinking of implementing Google and Facebook authentication in your jQueryMobile application, hopefully this has been of some&nbsp;help.</p>
 </section>

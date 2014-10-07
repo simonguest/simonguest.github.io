@@ -26,20 +26,9 @@
             <p class="date"><span>08. April 2013</span></p>
             <h2><a href="/2013/04/08/jquery-mobile-and-angularjs-working-together/">jQuery Mobile and AngularJS Working Together</a></h2>
           </header>
-          <section class="content"><p>Both jQuery Mobile (jQM) and AngularJS are awesome at what they do, but getting them to play nicely together can be tricky.  As you may have discovered, both want to manipulate the <span class="caps">URL</span>&#x2F;routes and DOM such that it&#39;s very easily to get them in conflict.  Having been through this recently, I wanted to share some recommendations to get them working&nbsp;together:</p>
-<p><strong>Load jQM libs before&nbsp;AngularJS</strong></p>
-<p>Because both frameworks heavily manipulate the <span class="caps">DOM</span>, it&#39;s important to get the load order right.  I found that loading AngularJS first led to some interesting (and annoying!) UI functionality.  The correct order should be jQuery first, followed by jQM, and then AngularJS:
-<code>&amp;amp;lt;script src=&amp;quot;http:&amp;#x2F;&amp;#x2F;code.jquery.com&amp;#x2F;jquery-1.8.2.min.js&amp;quot;&amp;amp;gt;&amp;amp;lt;&amp;#x2F;script&amp;amp;gt;
-&amp;amp;lt;script src=&amp;quot;http:&amp;#x2F;&amp;#x2F;code.jquery.com&amp;#x2F;mobile&amp;#x2F;1.3.0&amp;#x2F;jquery.mobile-1.3.0.min.js&amp;quot;&amp;amp;gt;&amp;amp;lt;&amp;#x2F;script&amp;amp;gt;
-&amp;amp;lt;script src=&amp;quot;https:&amp;#x2F;&amp;#x2F;ajax.googleapis.com&amp;#x2F;ajax&amp;#x2F;libs&amp;#x2F;angularjs&amp;#x2F;1.0.6&amp;#x2F;angular.min.js&amp;quot;&amp;amp;gt;&amp;amp;lt;&amp;#x2F;script&amp;amp;gt;
-&amp;amp;lt;script src=&amp;quot;https:&amp;#x2F;&amp;#x2F;ajax.googleapis.com&amp;#x2F;ajax&amp;#x2F;libs&amp;#x2F;angularjs&amp;#x2F;1.0.6&amp;#x2F;angular-resource.min.js&amp;quot;&amp;amp;gt;&amp;amp;lt;&amp;#x2F;script&amp;amp;gt;</code>
-<strong>Let jQM handle the <span class="caps">URL</span>&nbsp;routing</strong></p>
-<p>I&#39;m likely to get flamed for this by <span class="caps">MV</span>* purists, but I recommend letting jQM handle all of the URL routing - and not using AngularJS for any routing.  Firstly, I spent a lot of time trying it the other way (disabling routing for jQM, and configuring various routes, templates, partial files, etc.).  Even when it did work, it was just a mess - it looked like someone had taken a shotgun to my jQM app and blown it into several pieces.  Secondly, I would argue that URL routing really shouldn&#39;t be a primary consideration for a mobile Web app.  The app is more likely launched by an icon on the home screen vs. a search or link with any type of query string.  Even if it does, a simple check for a null scope is all that&#39;s&nbsp;required.</p>
-<p><strong>Create a single Angular controller for a group of jQM&nbsp;pages</strong></p>
-<p>Conforming to #2 means that you can create a single controller that spans a number of individual jQM pages.  This usage results in very elegant single <span class="caps">HTML</span> page together with a single controller - yet has the advantage of offering multiple pages to the&nbsp;user.</p>
-<p>To demonstrate this in more detail, and because you can&#39;t have enough Todo list apps, I&#39;ve put together a <a href="http:&#x2F;&#x2F;github.com&#x2F;simonguest&#x2F;jqm-angular-sample">sample</a> using jQM, AngularJS, speaking to a service using Node, Mongoose, and MongoDB.  (To run, you&#39;ll need a local Mongo <span class="caps">DB</span> called &quot;todo&quot; with a collection called &quot;tasks&quot;).  It definitely shows the power of both frameworks running together.  In just 75 lines of HTML and 29 lines of JavaScript for the controller, I have a mobile app with full CRUD support.  Hope you find it&nbsp;useful.</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage1.png &quot;NewImage.png&quot;" alt="NewImage"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;04&#x2F;NewImage2.png &quot;NewImage.png&quot;" alt="NewImage"></p>
-
+          <section class="content"><p>Both jQuery Mobile (jQM) and AngularJS are awesome at what they do, but getting them to play nicely together can be tricky.  As you may have discovered, both want to manipulate the <span class="caps">URL</span>/routes and DOM such that it’s very easily to get them in conflict.  Having been through this recently, I wanted to share some recommendations to get them working&nbsp;together.</p>
+<p>
+            <p class="more"><a href="/2013/04/08/jquery-mobile-and-angularjs-working-together/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -47,98 +36,10 @@
             <p class="date"><span>22. March 2013</span></p>
             <h2><a href="/2013/03/22/on-demand-vpn-using-openvpn-for-ios/">On-Demand VPN using OpenVPN for iOS</a></h2>
           </header>
-          <section class="content"><p>Many large organizations have existing VPNs in place, and the rise in development of enterprise mobile applications often requires that apps running outside the firewall need to &quot;<span class="caps">VPN</span> in&quot; before they are allowed to access any corporate&nbsp;resources.</p>
-<p>While enabling a <span class="caps">VPN</span> is fairly easy on most mobile devices, I&#39;ve found that many IT organizations would like to automate this such that the device automatically connects to the VPN when the Enterprise App or an internal Website is launched. Having gone through this with a couple of customers, I&#39;ve put this post together to highlight how this can be&nbsp;done.</p>
-<p><strong>Which <span class="caps">VPN</span> types support On Demand for&nbsp;iOS?</strong></p>
-<p>iOS 4.2 introduced features designed for the enterprise. These features included several <span class="caps">VPN</span> clients (L2TP, PPTP, Cisco IPSEC), many of which can be configured to automatically initiate the connection based upon DNS requests for certain&nbsp;domains.</p>
-<p>While this on demand feature has been around for a while, it does have a couple of caveats. Firstly, it&#39;s only available for <span class="caps">SSL</span> based VPNs. An SSL-based VPN is a connection that relies on a client&#x2F;server side certificate for authentication. Having an SSL-based VPN means that the connection can be established without asking the user for credentials (e.g. a password or RSA token). Because an on-demand VPN could be connecting and disconnecting every few minutes, this makes sense as prompting the user could cause a jarring user experience. Secondly, the on demand VPN can only be setup using the iPhone Configuration utility. While you can create a VPN connection on iOS devices (under general&#x2F;settings), it&#39;s not possible to create an SSL-based VPN or specify any of the on demand&nbsp;domains.</p>
-<p>With this in mind, I&#39;ll be showing how to establish an On Demand <span class="caps">VPN</span> using OpenVPN and the OpenVPN client for iOS that was released earlier this&nbsp;year.</p>
-<p><strong>Server-Side&nbsp;Setup</strong></p>
-<p>The first step is of course to setup an OpenVPN server. If you don&#39;t have access to one already, there are plenty of guides to help you set one up. If you don&#39;t have access to a spare machine on the network, you can also use a Linux <span class="caps">VM</span> instance hosted on EC2, Azure, or any other hosting provider. This <a href="http:&#x2F;&#x2F;holgr.com&#x2F;blog&#x2F;2009&#x2F;06&#x2F;setting-up-openvpn-on-amazons-ec2&#x2F;">article</a> is a pretty good guide for setting this up on <span class="caps">EC2</span> and the instructions should be able to be tailored to other hosting&nbsp;environments.</p>
-<p><strong>Generating Certficates and&nbsp;Keys</strong></p>
-<p>Once you have your OpenVPN server running, you&#39;ll need to either import or generate certificates and keys required to establish the connection. If you don&#39;t have access to certificates already, you can find some great documentation <a href="http:&#x2F;&#x2F;openvpn.net&#x2F;index.php&#x2F;open-source&#x2F;documentation&#x2F;howto.html">here</a> on how to create your own using the EasyRSA project on Github. (Scroll down and look for instructions on using&nbsp;easy-rsa)</p>
-<p>These are the certificates you&#39;ll need to generate using&nbsp;EasyRSA:</p>
-<p><strong>ca.crt </strong>(<span class="caps">CA</span> certificate required for both server and client)
-&lt;span&gt;<strong>dh2048pem</strong> (A 2048bit Diffie Hellman key that is required on the server)&lt;&#x2F;span&gt;
-&lt;span&gt;<strong>server.crt</strong> (The server-side certificate)&lt;&#x2F;span&gt;
-&lt;span&gt;<strong>server.key</strong> (The key for the server-side certificate)&lt;&#x2F;span&gt;
-&lt;span&gt;<strong>client1.crt</strong> (The client-side certificate)&lt;&#x2F;span&gt;
-&lt;span&gt;<strong>client1.key</strong> (The key for the client-side&nbsp;certificate)&lt;&#x2F;span&gt;</p>
-<p><strong>Configuring&nbsp;OpenVPN </strong></p>
-<p>Place the certificates in a folder called keys (under &#x2F;etc&#x2F;openvpn&#x2F;keys) and modify your &#x2F;etc&#x2F;openvpn.conf file to look similar to the&nbsp;following:</p>
-<p><code>tls-server
-port 443
-proto tcp-server
-dev tun
-ifconfig 192.168.2.1 192.168.2.2
-keepalive 10 120
-comp-lzo
-persist-key
-persist-tun
-verb 3
-push &amp;quot;ifconfig 192.168.2.2 192.168.2.1&amp;quot;
-push &amp;quot;redirect-gateway&amp;quot;
-dh keys&amp;#x2F;dh2048.pem
-ca keys&amp;#x2F;ca.crt
-cert keys&amp;#x2F;server.crt
-key keys&amp;#x2F;server.key</code></p>
-<p>This should be fairly straightforward to understand from the documentation, especially if you&#39;ve used OpenVPN before. As you can see, we are creating a peer to peer connection using two private <span class="caps">IP</span> addresses (192.168.2.1 and 192.168.2.2). Don&#39;t worry if these don&#39;t match your internal network on the OpenVPN box - they don&#39;t need to in order to get this up and&nbsp;running.</p>
-<p>For the purposes of this article, I have the <span class="caps">VPN</span> running on a tcp:443 connect, but feel free to adjust the protocol and port to match your own environment (assuming that you have the necessary ports open on your&nbsp;Firewall).</p>
-<p>Once you have the server configured, you can start&nbsp;OpenVPN:</p>
-<p><code>openvpn --config &amp;#x2F;etc&amp;#x2F;openvpn&amp;#x2F;openvpn.conf</code></p>
-<p>Assuming that the server starts <span class="caps">OK</span>, you can move to the next&nbsp;step.</p>
-<p><strong>Installing and Configuring the&nbsp;Client</strong></p>
-<p>The OpenVPN client can be found on the AppStore. At the time of writing it&#39;s version 1.0 build 47, which has a few bugs here and here, but still seems to work&nbsp;well.</p>
-<p>After you have this installed, go ahead and install the iPhone Configuration Utility on your Mac. This can be found on the Enterprise iPhone Support page (http:&#x2F;&#x2F;apple.com&#x2F;support&#x2F;iphone&#x2F;enterprise). Don&#39;t worry - although it&#39;s called the iPhone Configuration Utility, this will also work for setting up a <span class="caps">VPN</span> on an iPad device&nbsp;also.</p>
-<p>After launching the utility, create a new configuration profile. In the general tab, enter the mandatory fields for name and identifier. Then, click on the credentials tab. We need to import the client certificate and key that was generated earlier using&nbsp;EasyRSA.</p>
-<p>Unfortunately, the iPhone Configuration Utility (which we&#39;ll call <span class="caps">IPCU</span> from now on) doesn&#39;t support importing .CRT and .KEY files directly, so we&#39;ll need to generate a PKCS#12 file for use here. To do this, in the Terminal locate your client certificate and key files, and run the following&nbsp;command:</p>
-<p><code>openssl pkcs12 -export -in client1.crt -inkey client1.key -out client1.p12</code></p>
-<p>The result of this should be a .p12 file, that you can now import into the credentials section of&nbsp;<span class="caps">IPCU</span>.</p>
-<p>Note:  When you generate the .p12 file, you will be asked for an export password for the file. Enter something, and use the same password in <span class="caps">IPCU</span> (there is a field just under the certificate picture). If you don&#39;t enter a password, you will likely get a profile error when you try to deploy this to the&nbsp;device.</p>
-<p>With this done, now navigate to the <span class="caps">VPN</span> tab and create a new VPN connection. IPCU doesn&#39;t support including an OpenVPN config file, so we&#39;ll have to create the majority of the settings in this tab - this is where things get fun&nbsp;:-)</p>
-<p>Give the connection a name, and select &quot;Custom <span class="caps">SSL</span>&quot; for the connection type. For the identifier, use the&nbsp;following:</p>
-<p><code>net.openvpn.OpenVPN-Connect.vpnplugin</code></p>
-<p>This is telling the <span class="caps">VPN</span> client that a specific bundle ID (the OpenVPN app) should be used for this&nbsp;connection.</p>
-<p>Next, in the Server field, enter the <span class="caps">DNS</span> name or IP address for your OpenVPN&nbsp;server.</p>
-<p>The Custom Data contains keys and strings that replicate what would have normally gone into a config.ovpn file. These are the entries that you will&nbsp;need:</p>
-<p>ca - This is a tricky one to get right. We can&#39;t point it to a ca.crt file, because there is no way of bundling a file using the <span class="caps">IPCU</span> tool. To overcome this, open the ca.crt file in TextEdit and replace all of the newline&#x2F;carriage returns with n. What you should end up with is a single (long) line of text that starts with ——-BEGIN CERTIFICATE——- and has several lines delimitered by n ending with ——-END CERTIFICATE——-. Once you have this, paste this entire line into the value for the ca&nbsp;key.</p>
-<p>comp-lzo - enter the key, but you don&#39;t have to give it a&nbsp;value.</p>
-<p>dev - set this to&nbsp;tun</p>
-<p>port - set to&nbsp;443</p>
-<p>proto - set to&nbsp;tcp</p>
-<p>(Again if you are using something other than <span class="caps">TCP</span> port 443, feel free to&nbsp;change)</p>
-<p>remote - set to [your server name]&nbsp;443</p>
-<p>(replace your server name with the <span class="caps">DNS</span> name or IP address of your OpenVPN&nbsp;server)</p>
-<p>verb - set to&nbsp;3</p>
-<p>Here&#39;s a quick screenshot of my&nbsp;profile:</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;03&#x2F;NewImage.png &quot;NewImage.png&quot;" alt="NewImage"></p>
-<p>That should wrap up the custom data&nbsp;piece.</p>
-<p>Under User Authentication, select Certificate - and then under Credential select the client certificate from the drop&nbsp;down.</p>
-<p>Finally, check the &quot;Enable <span class="caps">VPN</span> On Demand&quot; box, and in the below table enter the domain names or IP addresses for the hosts that VPN is required for. For this tutorial, I have a single entry for 192.168.2.1 with &quot;Always&nbsp;Establish&quot;.</p>
-<p><strong>That&#39;s&nbsp;it!</strong></p>
-<p>This configuration should be enough to get <span class="caps">VPN</span> On Demand working with OpenVPN on the iOS client. To test, deploy the configuration profile to the device. Assuming that this works, open a browser and browse to 192.168.2.1 - this should invoke the VPN connection and forward the requests to the OpenVPN server. If you have a test page running on the OpenVPN server then this should be displayed in the&nbsp;browser.</p>
-<p><strong>If it didn&#39;t&nbsp;work…</strong></p>
-<p>There&#39;s a good chance that things won&#39;t work first time, just due the complexity of the setup.  Here are some of the common tips&#x2F;tricks that I found during the&nbsp;process.</p>
-<ul>
-<li><p>Firstly, the console window in <span class="caps">IPCU</span> will be your best friend. The most common error I saw was related to the CA certificate. If you get these, it likely means that your CA entry in IPCU is wrong. Go back and make sure you&#39;ve correctly replaced the linebreaks with n&#39;s and&nbsp;retest.</p>
-</li>
-<li><p>There are a few &quot;bugettes&quot; in the iOS client. As of build 47 these&nbsp;include:</p>
-</li>
-</ul>
-<p>The tcp-client param is not supported in the iOS client. Use tcp&nbsp;instead.</p>
-<p>The client expects ifconfig information to be pushed to it (using the push lines in the server config). It doesn&#39;t seem to be possible to configure ifconfig lines&nbsp;locally.</p>
-<p>The &quot;redirect-gateway&quot; seems to be required for the iOS client - whereas Tunnelblick connects without&nbsp;it.</p>
-<ul>
-<li>Workflow. Getting <span class="caps">VPN</span> On Demand working right off the bat can be hard, especially if multiple parts of the configuration are wrong. If you are new to OpenVPN, you might want to setup a VPN with a the following configurations (in terms of complexity just to get&nbsp;working):</li>
-</ul>
-<p>OpenVPN w&#x2F; Secret Key - using Desktop machine (use Tunnelblick for the Mac)
-&lt;span&gt;OpenVPN w&#x2F; Certificate - using Desktop machine&lt;&#x2F;span&gt;
-&lt;span&gt;OpenVPN for iOS w&#x2F; Certificate - using the actual OpenVPN for iOS Client (not <span class="caps">IPCU</span>)&lt;&#x2F;span&gt;
-&lt;span&gt;OpenVPN for iOS w&#x2F; Certificate - using&nbsp;IPCU&lt;&#x2F;span&gt; </p>
-<ul>
-<li>Browser Refresh.  If it looks like everything is working (<span class="caps">VPN</span> established, etc.) but you still don&#39;t get your Web page, try refreshing the browser&#x2F;making a 2<span class="ord">nd</span> request.  I&#39;m not sure whether this is something in the config, or a &quot;feature&quot; of the OpenVPN client for iOS - but I&#39;ve found that refreshing often helps brings the page to life after the VPN connection has been&nbsp;established.</li>
-</ul>
-
+          <section class="content"><p>Many large organizations have existing VPNs in place, and the rise in development of enterprise mobile applications often requires that apps running outside the firewall need to “<span class="caps">VPN</span> in” before they are allowed to access any corporate&nbsp;resources.</p>
+<p>While enabling a <span class="caps">VPN</span> is fairly easy on most mobile devices, I’ve found that many IT organizations would like to automate this such that the device automatically connects to the VPN when the Enterprise App or an internal Website is launched. Having gone through this with a couple of customers, I’ve put this post together to highlight how this can be&nbsp;done.</p>
+<p>
+            <p class="more"><a href="/2013/03/22/on-demand-vpn-using-openvpn-for-ios/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -147,9 +48,9 @@ key keys&amp;#x2F;server.key</code></p>
             <h2><a href="/2013/02/07/qcamera/">QCamera</a></h2>
           </header>
           <section class="content"><p>Doing mobile development on a Mac?  Need to show your mobile device using your <span class="caps">USB</span> camera during a&nbsp;presentation?</p>
-<p>Here&#39;s a quick utility that I hacked together over the weekend to do just that.  Supports mirroring&#x2F;reversed images (which is why PhotoBooth won&#39;t work for this) and borderless mode to keep it in the foreground over an <span class="caps">IDE</span> or presentation.  Hope you find it&nbsp;useful!</p>
-<p><a href="https:&#x2F;&#x2F;itunes.apple.com&#x2F;us&#x2F;app&#x2F;id598853070?mt=12"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;02&#x2F;Available_on_the_App_Store_Badge_US-UK_135x40.png &quot;Available_on_the_App_Store_Badge_US-UK_135x40.png&quot;" alt="Available on the App Store Badge US UK 135x40"></a></p>
-
+<p>Here’s a quick utility that I hacked together over the weekend to do just that.  Supports mirroring/reversed images (which is why PhotoBooth won’t work for this) and borderless mode to keep it in the foreground over an <span class="caps">IDE</span> or presentation.  Hope you find it&nbsp;useful!</p>
+<p>
+            <p class="more"><a href="/2013/02/07/qcamera/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -157,46 +58,9 @@ key keys&amp;#x2F;server.key</code></p>
             <p class="date"><span>06. July 2012</span></p>
             <h2><a href="/2012/07/06/uploading-photos-from-mobile-web-applications/">Uploading Photos from Mobile Web Applications</a></h2>
           </header>
-          <section class="content"><p>Here at Neudesic, we&#39;re fortunate to be involved in many exciting <span class="caps">HTML5</span>&#x2F;Mobile Web applications for different organizations. For many of these projects, one of the common requests, especially for field-facing mobile applications, is the ability to upload a photo from within a web page in a mobile&nbsp;browser.</p>
-<p>If you are not familiar with the space, you may think this should be default behaviour, but surprisingly uploading media is one of those areas that is still going through the standardization process. Eric Bidelman has a <a href="http:&#x2F;&#x2F;www.html5rocks.com&#x2F;en&#x2F;tutorials&#x2F;getusermedia&#x2F;intro&#x2F;">great overview</a> of the three &quot;rounds&quot; of standardization that have taken place so far as part of the <a href="http:&#x2F;&#x2F;www.w3.org&#x2F;2009&#x2F;dap&#x2F;">Device <span class="caps">API</span> working group</a>.</p>
-<p><strong>What can you do&nbsp;today?</strong></p>
-<p>While Eric&#39;s article gives a great overview of what&#39;s likely to come, the purpose of this post is to explore what&#39;s possible today, outlining the relative pros and cons of each&nbsp;approach.</p>
-<p>Firstly, let&#39;s take a look at what&#39;s supported out of the&nbsp;box:</p>
-<p><strong>Android</strong></p>
-<p>If you are using Android 3.x+ (i.e. either Android tablets running Honeycomb or later, and Android phones running <span class="caps">ICS</span>) - or users are running Chrome or Firefox Mobile for Android, the browser will support an input element that can invoke the&nbsp;camera:</p>
-<p><code>&amp;amp;lt;input type=&amp;quot;file&amp;quot; accept=&amp;quot;image&amp;#x2F;*&amp;quot; capture=&amp;quot;camera&amp;quot;&amp;amp;gt;</code></p>
-<p>Simply add this element to your web page, and together with some server-side processing for the upload, users can upload the image from their&nbsp;device.</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2012&#x2F;07&#x2F;AndroidImageUpload.png &quot;AndroidImageUpload.png&quot;" alt="Android Image Upload"></p>
-<p>As Eric mentions in his article, it does look like things are heading towards <em>getUserMedia()</em> instead. Although this new <span class="caps">API</span> works with latest versions of the desktop version of Chrome, we haven&#39;t found anything that works on mobile browsers as of&nbsp;yet.</p>
-<p><strong>iPhone&#x2F;iPad</strong></p>
-<p>Unfortunately, the input element above does not work on Mobile Safari on iOS5 today - the experience for the user is just a disabled button. This is true for the recently released version of Chrome for iOS also (as it&#39;s just a wrapper over&nbsp;UIWebView).</p>
-<p>Things are changing however.  At <span class="caps">WWDC</span> this year, Apple publicly announced support for photo and video uploads within Mobile Safari shipping with iOS 6. It&#39;s difficult to say much more about the implementation here (as the developer&#x2F;beta programs are under NDA), but if you have access to Apple&#39;s developer program, it&#39;s definitely worth checking&nbsp;out.</p>
-<p><strong>Apache Cordova&nbsp;(PhoneGap)</strong></p>
-<p>If you want to support earlier Android versions, and&#x2F;or can&#39;t wait for iOS 6, arguably the most popular choice is Apache Cordova (previously known as PhoneGap). Apache Cordova provides a native wrapper around <span class="caps">HTML</span>-based content, and supports several platforms today - including iOS and Android. The Cordova API supports media capture, and with a couple of lines of JavaScript, it&#39;s possible to instantiate the camera or invoke the camera rolls within your Mobile Web&nbsp;application.</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2012&#x2F;07&#x2F;CameraRoll.png &quot;CameraRoll.png&quot;" alt="Camera Roll on iOS"></p>
-<p><strong>Pros:</strong> Works with the most popular versions of mobile browsers, and as of now, Cordova provides a good user experience for the user. The user presses a &quot;add photo&quot; button in the <span class="caps">HTML</span> application, and the native wrapper invokes the camera control without the user needing to know whats going on. If using the camera roll, the API also supports the option of uploading multiple&nbsp;photos.</p>
-<p><strong>Cons:</strong> Using Cordova does however change the deployment model for the application. No longer can you just visit a Web site to use your application - you now need to think about distributing your application - either via the AppStore for public-facing applications or through another channel for enterprise&nbsp;apps.</p>
-<p>In addition to the deployment, Cordova also introduces several options that need to be considered for actually transfering the image to the site. The default is to use Base64 encoding, which is good for small images, but we&#39;ve experienced performance problems on large images from <span class="caps">5MP</span>+ cameras. The Cordova API does support a File Transfer API, which works well except it doesn&#39;t yet support authentication, so you&#39;ll need to create an anonymous area to post your photos to. If you do need authentication, you&#39;ll want to send the photo directly after capture, which will likely mean writing a custom Cordova plug in and using NSUrlConnection to send your photo to the&nbsp;server.</p>
-<p><strong>Companion&nbsp;Application</strong></p>
-<p>An alternative approach to wrapping your <span class="caps">HTML</span> content with native code is to ship a &quot;companion application&quot; responsible for uploading the&nbsp;photo.</p>
-<p>Both iOS and Android support custom <span class="caps">URL</span> schemes, which means that applications can respond to different URL requests from the browser. For example, I can create a native application responsible for taking and uploading pictures, using a custom URL scheme called simonphoto:&#x2F;&#x2F; which I can then pass various parameters - for example, the ID of a project that I&#39;m uploading photos for. Once the user clicks on the simonphoto:&#x2F;&#x2F; link within the mobile browser, the application launches and I can take and upload as many photos as I&nbsp;want.</p>
-<p><strong>Pros:</strong> The biggest draw to this approach is that the <span class="caps">HTML</span> application doesn&#39;t need to be wrapped with any native&nbsp;code.</p>
-<p><strong>Cons: </strong>While I don&#39;t have to wrap my <span class="caps">HTML</span>, the user still needs to obtain the companion application, which will likely involve a trip to the AppStore or other link for download. In addition, even when the companion application is downloaded, the user experience isn&#39;t quite as slick as the the PhoneGap approach. For example, in iOS there is no natural way of getting back to the Web app once the native application is ready to hand back control (unless you pass a return or app id in the parameters). Also, there is no way of checking whether the companion application is installed or not from the Web&nbsp;page.</p>
-<p><strong>Picup</strong></p>
-<p><a href="http:&#x2F;&#x2F;picupapp.com">Picup</a> is an example of a free companion app that works in a similar way as outlined above. It uses the fileupload:&#x2F;&#x2F; <span class="caps">URL</span> scheme to invoke the Picup app, which much be&nbsp;installed.</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2012&#x2F;07&#x2F;Picup.png &quot;Picup.png&quot;" alt="Picup Application"></p>
-<p><strong>Pros: </strong>As&nbsp;above.</p>
-<p><strong>Cons:</strong> As above. No version for Android (although I&#39;m sure there are equivalent apps&nbsp;available).</p>
-<p><strong>Email</strong></p>
-<p>Finally, a very simple approach, but one that I&#39;ve seen a couple of people use is sending the photo via email. Your application has a &quot;mailto&quot; link which includes a subject (maybe the <span class="caps">ID</span> corresponding to the application) and body that reads &quot;Please remember to attach your photo&quot;. The user attaches the photo manually and it&#39;s sent to a server-monitored email store for&nbsp;processing.</p>
-<p><strong>Pros: </strong>Nothing native here, and deployment model stays the&nbsp;same.</p>
-<p><strong>Cons: </strong>Funky experience for the user. You&#39;ll also need to setup a server side environment to handle the incoming emails, strip the attachments, and correlate with your&nbsp;application.</p>
-<p><strong>Summary</strong></p>
-<p>A lengthy post, but hopefully it gives you an overview of how to do photo upload from mobile devices today. To&nbsp;summarize:</p>
-<p>If you are writing an application that won&#39;t be released for a few months, and will primarily target Android <span class="caps">ICS</span> and iOS6, you should be able to use the &amp;lt;input&#x2F;&amp;gt; element outlined above to invoke the camera and upload a picture. If you do this, make sure you understand the transition to getUserMedia as the specifications&nbsp;mature.</p>
-<p>If you are writing an application that needs to target today&#39;s platforms - namely Android 2.x and iOS5, you&#39;ll either need to use Cordova to create a wrapper or a companion application (either hand crafted, or something like Picup). Choosing between Cordova and a companion application is a balance of user experience vs. deployment. A Cordova application will keep the user experience seamless, but you will be responsible for the deployment of the application as a&nbsp;result.</p>
-<p>If you don&#39;t want to do any device development, and are just looking to provide a shortcut for users to send photos, you could consider the basic mailto: &#x2F; email link&nbsp;approach.</p>
-
+          <section class="content"><p>Here at Neudesic, we’re fortunate to be involved in many exciting <span class="caps">HTML5</span>/Mobile Web applications for different organizations. For many of these projects, one of the common requests, especially for field-facing mobile applications, is the ability to upload a photo from within a web page in a mobile&nbsp;browser.</p>
+<p>
+            <p class="more"><a href="/2012/07/06/uploading-photos-from-mobile-web-applications/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -204,56 +68,9 @@ key keys&amp;#x2F;server.key</code></p>
             <p class="date"><span>27. June 2012</span></p>
             <h2><a href="/2012/06/27/announcing-neudesic-slingshot/">Announcing Neudesic Slingshot!</a></h2>
           </header>
-          <section class="content"><p>&lt;small&gt;Getting SharePoint working on a mobile device can be hard. The “out of the box” experience, even with SharePoint 2010, is very basic and doesn’t take advantage of the device. Solutions on the AppStore are a step in the right direction, but many don’t do anything over providing the ability to browse a SharePoint site.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;At Neudesic, we are hoping to change all this through a project we call <a href="http:&#x2F;&#x2F;neudesic.github.com&#x2F;slingshot">Slingshot</a>.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Slingshot is an open source mobile client and library for SharePoint. Built upon the jQuery Mobile and Apache Cordova frameworks, Slingshot makes it ridiculously easy to expose tasks, announcements, documents, and virtually any other object directly from SharePoint to any mobile device.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2012&#x2F;06&#x2F;myWPEdit_Image_1340834594.jpg" alt="myWPEdit Image">&lt;&#x2F;small&gt;&lt;small&gt;￼&lt;&#x2F;small&gt;&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;We demonstrated Slingshot for the first time in public at the SharePointFest in Denver this week, and the response has been tremendous. For those that didn’t make it to the event, I wanted to use this blog post to expand on what the framework can do.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Slingshot is very lightweight, and can be deployed in one of two ways: The code can run on the SharePoint server, and users access it using their mobile browser. Alternatively the same code can run on the mobile device in a native application, with no changes required on the SharePoint server.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Here’s a quick run through of what Slingshot supports today:
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;SharePoint Lists and Items &lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Slingshot uses the <span class="caps">ODATA</span> support in SharePoint 2010 to expose virtually any list or item to the mobile device. The out of the box demo shows announcements, tasks, and organizational details, and it’s easy to extend to workflows and other lists. Each of these items can be exposed through a form with touch native controls.  &lt;&#x2F;small&gt;&lt;small&gt;For example, task items have a slider control to indicate percentage complete.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Bi-Directional Updates&lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;The sample app also demonstrates bi-directional updating. Update an item from SharePoint <span class="caps">UI</span>, and it automatically gets updated on the mobile device. Alternatively, update on the mobile device and the item is automatically updated in SharePoint. This update is seamless, so the user doesn’t have to hit “save” after making the change on the mobile device.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Document Library Support&lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;One of the core scenarios for using Slingshot is to browse document libraries, which Slingshot handles really well. Supported file types (such as PDFs) can also be opened directly from the mobile app.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Integration with Photo Capture
-&lt;&#x2F;small&gt;</strong> &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Browsing and opening files from a mobile device is useful, but Slingshot also supports uploading data from the device. The majority of phones now come with a camera. The sample application shows how to take a photo on the device and upload it to a document library or attach it to an item. We find this functionality well suited for field employees who need to interact with workflows that involve taking pictures and uploading them to SharePoint.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Support for Offline Scenarios
-&lt;&#x2F;small&gt;</strong> &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Because Slingshot works locally on the device it enables a number of offline scenarios. Currently the application has the ability to work offline, and we are working on synchronization of SharePoint lists and items to the device, which will provide a true offline experience if no connection is available.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Authentication&lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Authentication works in one of two ways. If you are accessing Slingshot via a mobile browser, the browser will prompt for credentials (the same way as if you&#39;d just navigated to any other SharePoint page). If you are running Slingshot locally on the device, we use a form-based mechanism that can be customized and extended as needed.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Multi Platform Support&lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Because we&#39;ve developed all of this using jQuery Mobile and Cordova (PhoneGap), it is supported on multiple platforms by default. Both these frameworks support up to six platforms today, including iOS, Android, Windows Phone 7, and Blackberry. We provide default templates for iPhone and Android, and creating new templates for other devices is as simple as creating new <span class="caps">CSS</span> files.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Easy to Extend and Update&lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Apart from the device integration, everything in Slingshot is based on <span class="caps">HTML5</span> and JavaScript. For those coming from a web background, this makes it very simple to extend and&nbsp;update.&lt;&#x2F;small&gt;</p>
-<p>&lt;small&gt; &lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Best of all, we&#39;ve licensed Slingshot as an open source framework, under the <span class="caps">MIT</span> license. You can get all the bits for free, and we even have other developers that are signing up to contribute.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Ready to see more? If you didn’t have an opportunity to stop by the booth at SharePointFest in Denver, check out the &lt;&#x2F;small&gt;<a href="http:&#x2F;&#x2F;neudesic.github.com&#x2F;slingshot">&lt;small&gt;repo&lt;&#x2F;small&gt;</a>&lt;small&gt; on GitHub – or drop me a line using the &lt;&#x2F;small&gt;<a href="http:&#x2F;&#x2F;simonguest.com&#x2F;contact-me&#x2F;">&lt;small&gt;contact form&lt;&#x2F;small&gt;</a>&lt;small&gt; if you&#39;d like more information. Neudesic is actively extending this framework for many other scenarios and customers, and we&#39;d be happy to help you extend this for your own needs also. &lt;&#x2F;small&gt;&lt;small&gt;&nbsp;&lt;&#x2F;small&gt;</p>
-
+          <section class="content"><p>Getting SharePoint working on a mobile device can be hard. The “out of the box” experience, even with SharePoint 2010, is very basic and doesn’t take advantage of the device. Solutions on the AppStore are a step in the right direction, but many don’t do anything over providing the ability to browse a SharePoint site. At Neudesic, we are hoping to change all this through a project we call <a href="http://neudesic.github.com/slingshot">Slingshot</a>.</p>
+<p>
+            <p class="more"><a href="/2012/06/27/announcing-neudesic-slingshot/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -261,83 +78,20 @@ key keys&amp;#x2F;server.key</code></p>
             <p class="date"><span>24. April 2012</span></p>
             <h2><a href="/2012/04/24/an-objective-view-of-meaps/">An Objective View of MEAPs</a></h2>
           </header>
-          <section class="content"><p>I recently had the opportunity to put together some research for a customer who has been interested in the <span class="caps">MEAP</span> (Mobile Enterprise Application Platform) space.  My premise is that the market has become flooded with MEAPs (Mobile Enterprise Application Platforms, as coined by Gartner), yet most of them are fundamentally taking organizations and developers down the wrong path when it comes to developing mobile applications.  The problem is that MEAPs demo really well in front of the CIO… &amp;ldquo;Wow!  You just hit F5, and your application is compiled and deployed to iOS, Android, Blackberry devices…  Where do I sign?&amp;rdquo; &amp;ndash; yet the reality is very different.&nbsp;Namely:</p>
-<p><strong>Language Abstraction</strong> – Many MEAPs have their own language that claim to be similar to Java or a flavor of JavaScript.  Even if it is the same language, there is always something new to learn.  Also, developers tend to shy away from learning any language that&amp;rsquo;s vendor specific (<span class="caps">APEX</span> on Force.com anyone?&nbsp;;&amp;ndash;)</p>
-<p><strong>Language Limitations</strong> – When you create a language that abstracts other languages you always end up serving only the lowest common denominator.  Often there are ways of coding styles and nuances supported in the native language that the <span class="caps">MEAP</span> won&amp;rsquo;t expose because it&amp;rsquo;s not on other&nbsp;platforms.</p>
-<p><strong>Platform Limitations</strong> – Time has shown that platform abstraction doesn&amp;rsquo;t work (do a search on Wikipedia for cross platform <span class="caps">RAD</span> tools if you don&amp;rsquo;t believe me).  Also, platforms change quickly.  What happens if&#x2F;when the next version of iOS is released?  You have to wait for your MEAP vendor to catchup before you can use any of the&nbsp;features.</p>
-<p><strong><span class="caps">UI</span> Limitations</strong> – Following on from the previous point, many of the controls that MEAPs offer also follow the lowest common denominator rule.  For example, Cocoa Touch has a neat feature called a &amp;ldquo;Half Page Curl Transition&amp;rdquo;.  If you abstract your <span class="caps">UI</span> to a MEAP vendor, how is this supported on other platforms?  Either a) it&amp;rsquo;s not (so by default you can&amp;rsquo;t use it on iOS), b) you can only use it on iOS (which breaks the promise of a MEAP) or c) it&amp;rsquo;s implemented as a hack job on all&nbsp;platforms. </p>
-<p><strong>Tooling</strong> – <span class="caps">MEAP</span> tooling is often Web based, or bundled as an Eclipse add-on &amp;ndash; but in both cases it often doesn&amp;rsquo;t fit in with the other tools that developers use today (e.g. ALM, refactoring, unit testing, etc.).  Also, many of the MEAP vendors seem to be aiming their toolsets towards business analysts.  When are we going to let this one go?  Business analysts have an important role to play in teams, but they shouldn&amp;rsquo;t be developing UI, and they shouldn&amp;rsquo;t be writing&nbsp;code.</p>
-<p><strong>Debugging</strong> – Let&amp;rsquo;s say you create your application with a <span class="caps">MEAP</span>, and then it crashes 1 time in every 10 (i.e. one of those really nasty bugs to find).  What are you going to do?   a) Reach out to Apple?  I suspect they won&amp;rsquo;t help you.  b) Search the web for other people with the same issue?  Could be difficult to find.  c) Pay the MEAP vendor even more money to investigate your issue?  Ah, that&amp;rsquo;s the&nbsp;one…</p>
-<p><strong>Data Abstraction </strong>– Many MEAPs offer connectors to databases, <span class="caps">XML</span> files, SAP, etc.  Not only are these costly, but many are just pass-through connectors, so as a developer you don&amp;rsquo;t get any control over the connection.  Want to implement synchronization?  Want to change the formatting or query for better optimization?  Probably not going to be&nbsp;possible.</p>
-<p><strong>Difficult to Extend</strong> – Many MEAPs don&amp;rsquo;t extend very easily.  Found a new JavaScript library that you want to use in your application?  How about a native control that you&#39;d like to display?  Could be tough.  Some MEAPs do offer bridging to native code – but in which case, why not just write the whole thing in native code to start&nbsp;with?</p>
-<p><strong>Vendor Lock In</strong> – The sum of all the above leads to quite the definition of vendor lock in.  Chances are by the time you deploy your first application you&#39;ll be signed up with an expensive support and service agreement, with your developers working on code in a language that they&#39;ll never be able to re-use, on a platform that won&amp;rsquo;t go&nbsp;anywhere.</p>
-<p>I&#39;ve extended this into a presentation that you can find below &amp;ndash; which cover the above points in more detail, plus outline some general alternative approaches to creating applications without the dependency on a <span class="caps">MEAP</span>&nbsp;framework.</p>
-<p>&lt;div style=&quot;width:425px&quot; id=&quot;<strong>ss_12678560&quot;&gt;<strong><a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;objective-view-of-meaps &quot;Objective View of MEAPs&quot;">Objective View of MEAPs</a></strong>&lt;object id=&quot;</strong>sse12678560&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;param name=&quot;movie&quot; value=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=objectiveviewofmeaps-120424223859-phpapp01&amp;stripped_title=objective-view-of-meaps&amp;userName=simonguest&quot; &#x2F;&gt;&lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot;&#x2F;&gt;&lt;param name=&quot;allowScriptAccess&quot; value=&quot;always&quot;&#x2F;&gt;&lt;param name=&quot;wmode&quot; value=&quot;transparent&quot;&#x2F;&gt;&lt;embed name=&quot;__sse12678560&quot; src=&quot;http:&#x2F;&#x2F;static.slidesharecdn.com&#x2F;swf&#x2F;ssplayer2.swf?doc=objectiveviewofmeaps-120424223859-phpapp01&amp;stripped_title=objective-view-of-meaps&amp;userName=simonguest&quot; type=&quot;application&#x2F;x-shockwave-flash&quot; allowscriptaccess=&quot;always&quot; allowfullscreen=&quot;true&quot; wmode=&quot;transparent&quot; width=&quot;425&quot; height=&quot;355&quot;&gt;&lt;&#x2F;embed&gt;&lt;&#x2F;object&gt;&lt;div style=&quot;padding:5px 0 12px&quot;&gt;View more <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;">presentations</a> from <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest">Simon Guest</a>.&lt;&#x2F;div&gt;&lt;&#x2F;div&gt;</p>
-<p>Based on other people&amp;rsquo;s experience with MEAPs, am I missing&nbsp;anything?</p>
-
+          <section class="content"><p>I recently had the opportunity to put together some research for a customer who has been interested in the <span class="caps">MEAP</span> (Mobile Enterprise Application Platform) space.  My premise is that the market has become flooded with MEAPs (Mobile Enterprise Application Platforms, as coined by Gartner), yet most of them are fundamentally taking organizations and developers down the wrong path when it comes to developing mobile applications.  The problem is that MEAPs demo really well in front of the CIO… “Wow!  You just hit F5, and your application is compiled and deployed to iOS, Android, Blackberry devices…  Where do I sign?” – yet the reality is very&nbsp;different.</p>
+<p>
+            <p class="more"><a href="/2012/04/24/an-objective-view-of-meaps/">more</a></p>
           </section>
         </article>
         <article class="article intro">
           <header>
             <p class="date"><span>12. April 2012</span></p>
-            <h2><a href="/2012/04/12/tips-tricks-and-recommendations-for-html5-x2f-mobile-web-development/">Tips, Tricks, and Recommendations for HTML5&amp;#x2F;Mobile Web Development</a></h2>
+            <h2><a href="/2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/">Tips, Tricks, and Recommendations for HTML5/Mobile Web Development</a></h2>
           </header>
-          <section class="content"><p>Over the past few months I&#39;ve been fortunate to have worked with several customers creating Mobile Web applications for different devices.  These have included an iPad based Mobile Web app for a healthcare provider, a cross-platform Mobile Web app for a commercial real estate broker, and an Android tablet solution to allow scientists to research experiment details from the comfort of their&nbsp;lab.</p>
-<p>From these projects, I&#39;ve come up with a list of tips, tricks, and recommendations that I wanted to share if you are looking to develop your own Mobile Web applications.  Hope you find them&nbsp;useful…</p>
-<p><strong>Understand the differences between Mobile Web and hybrid&nbsp;applications</strong></p>
-<p>It&amp;rsquo;s important to make an early decision on whether your application is going to be pure Mobile Web (the user accesses it through the browser on the device) or hybrid (the user launches an application with an embedded control to display web based content).  The decision to use the mobile browser or to have a dedicated hybrid application will likely be determined by the functionality the application requires.  For example, obtaining the <span class="caps">GPS</span> location from the device can be performed perfectly well inside the browser, but accessing the camera from a Web page needs a hybrid application to provide the&nbsp;functionality. </p>
-<p>In my experience there are three common features that drive developers towards a hybrid application:  1. Access to the camera.  2. Access to local contacts on the device.  3. Deployment to the AppStore&#x2F;Marketplace.  The first two are to overcome limitations of what can and can&amp;rsquo;t be accessed through the mobile browser (and is something that Mozilla is trying to tackle through <a href="https:&#x2F;&#x2F;wiki.mozilla.org&#x2F;WebAPI">WebAPI</a>).  The latter one is probably the most important to understand however &amp;ndash; as while a hybrid solution will enable the application to be published to the app stores, extreme care needs to be taken to ensure that the application will not be rejected.  This is most common with applications destined for Apple&amp;rsquo;s AppStore (if Apple view your application as a single container for web content with no apparent native functionality, they will more than likely reject&nbsp;it).</p>
-<p>If you do take the hybrid approach, you really have two options to build the application &amp;ndash; you can either set out and build a native application, embed a WebView control and then hook different events to create your own bridge between the two.  This can be very useful if you only have a small piece of Web functionality that you need to embed in your application.  Alternatively, you can consider using a framework such as <a href="http:&#x2F;&#x2F;phonegap.com&#x2F;">PhoneGap</a> (now known as <a href="http:&#x2F;&#x2F;incubator.apache.org&#x2F;cordova&#x2F;">Apache Cordova</a>).  Using Cordova is  not without it&amp;rsquo;s challenges (for example, with cross domain scripting and client side certificate authentication), but it can definitely give you a head start especially if the majority of your application is going to be based on mobile web&nbsp;content.</p>
-<p><strong>Setup a robust development and testing&nbsp;environment
-</strong></p>
-<p>Setting up a robust development environment might be viewed as obvious for most of us, but tools for developing Mobile Web applications are still relatively immature, so it&amp;rsquo;s an important area to get right before you start your first app.  In the most basic setup, you are going to need three things to be&nbsp;successful:</p>
-<p>The first is a great <span class="caps">IDE</span> for HTML development.  You&#39;ve probably got your favorite already, but a strong IDE with as much JavaScript code completion support as possible will be your friend.  Personally, I switch between <a href="http:&#x2F;&#x2F;macromates.com&#x2F;">TextMate</a>, <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;visualstudio&#x2F;en-us">Visual Studio 2010</a>, and <a href="http:&#x2F;&#x2F;www.jetbrains.com&#x2F;webstorm&#x2F;">WebStorm</a> depending on which platform I&#39;m working with.  It&amp;rsquo;s also interested to see where Adobe are headed with their&nbsp;toolset.</p>
-<p>Secondly, you are going to need a browser capable of inspecting the <span class="caps">DOM</span> and doing JavaScript debugging.  Personally, I use Safari for doing this, but Chrome and&#x2F;or IE9 will equally provide you the tools that you need.  The important thing here is not so much the choice of the browser, but the understanding of how to breakpoint JavaScript code and inspect elements both on and off the&nbsp;page. </p>
-<p>Finally, you&#39;ll need some kind of device, or device emulator.  Switching the user agent on a desktop browser will only get you so far, and eventually you are going to need to test on something representative of the device that the user will be using.  If you are developing an application that will be primarily used on iOS devices, I would certainly recommend a Mac (as the iOS simulator is very robust).  If a Mac doesn&amp;rsquo;t float your boat as your development machine however you could consider a hosted solution such as <a href="http:&#x2F;&#x2F;www.macincloud.com&#x2F;">MacinCloud</a> or simply do all your debugging using an iPod touch.  There are a few <span class="caps">PC</span> based utilities that claim to emulate mobile safari&#x2F;iOS, but I&#39;ve had a poor experience with all of&nbsp;them.</p>
-<p>For Android, I tend to avoid the emulator whenever possible (it&amp;rsquo;s a resource hog) and instead have a selection of devices that I can use for debugging on the fly.  I&#39;ve found that the key for Android testing is to have a selection of devices with preferably different resolutions and running different versions of the <span class="caps">OS</span> (e.g. a separate device running 2.1, 2.2, 2.3, and 4.0 should cover most of the current market, unless you have a need to go back to 1.6 for some reason).  If you don&amp;rsquo;t have access to physical handsets, you may want to consider one of the testing providers such as <a href="http:&#x2F;&#x2F;www.perfectomobile.com&#x2F;">Perfecto Mobile</a>.  They have a variety of devices that you can rent, covering many different&nbsp;platforms.</p>
-<p><strong>Use client side JavaScript instead of server side&nbsp;scripting
-</strong></p>
-<p>If you&#39;ve been developing Web applications for some time, especially enterprise facing applications, you&#39;ll be used to having a lot of the presentation and application logic tied up in server side scripts, maybe running server-side <span class="caps">ASP</span>, ASP.NET, JSP, PHP, etc.  When developing Mobile Web applications however, things need to change.  While server-side scripting will of course still work for a mobile application (and might be very tempting as you start to write your first application), it quickly creates a tight coupling between your device and the server.  In the old days where you were accessing the server from a desktop browser on the same network, this wasn&amp;rsquo;t a problem &amp;ndash; but once you move the experience to a mobile device with a potentially patchy network connection, the last thing you want to be doing is relying on the server side for generation of pages and views.  If your mobile web application needs to do a roundtrip to the server when you hit the &amp;ldquo;Next Page&amp;rdquo; button, you&#39;re going to be heading for a world of&nbsp;hurt.</p>
-<p>The answer is to move as much (if not all) of the application logic to client-side JavaScript.  This might be a painful exercise as you translate the move from an <span class="caps">MVC</span> server side framework to handcrafting page navigation using client side JavaScript, but the pay off will be worth it.  If you have all of the application logic locally, together with pre-fetching as many of the pages into the DOM when your application first loads, you effectively disconnect yourself from the server side which makes performance much better and also moving to offline much easier.  Of course, you still want to communicate with the server side &amp;ndash; who doesn&amp;rsquo;t? &amp;ndash; but this should be done via a set of asynchronous REST&#x2F;JSON calls to bring data into the application rather than relying on the server to generate HTML for your&nbsp;application.</p>
-<p><strong>Design for running&nbsp;offline
-</strong></p>
-<p>Related to the previous point, you should also start thinking about how your application could run offline, even if you have no plans to do so.  This will put you on a good architectural path, and will also mean that your application will work if and when network connectivity is lost.  There are plenty of articles explaining how to enable offline access in <span class="caps">HTML5</span> applications, so I won&amp;rsquo;t plan to cover here &amp;ndash; other than to say you&#39;ll be creating a cache manifest for your application, specifying the files to go into your cache, enabling the scripts for checking the cache when your application starts, and handling control logic accordingly (e.g. when you hit that submit button, you&#39;ll want to know whether there is network connectivity before making the call to the&nbsp;server!).</p>
-<p>If there&amp;rsquo;s one piece of advice that I can offer here however (and we learned this the hard way) it is to design for offline first, but implement last.  Do all of the right things to support offline in your application, but don&amp;rsquo;t enable it until you are close to the end of your development cycle.  If you enable it too early, it can cause mayhem with the development team &amp;ndash; as your developers could end up debugging against a version of the application that could be slightly older &amp;ndash; or the cache doesn&amp;rsquo;t get refreshed in the way it should.  This doesn&amp;rsquo;t application to local storage &amp;ndash; this is fine to access during development &amp;ndash; I would just recommend not enabling the cache manifest until you go into&nbsp;<span class="caps">UAT</span>.</p>
-<p><strong>Select the right <span class="caps">UI</span> framework for your&nbsp;needs
-</strong></p>
-<p>Almost every other day there seems to be a new <span class="caps">HTML</span> UI framework released, and mobile frameworks are no exception.  At Neudesic we&#39;ve had most experience and success using <a href="/2012/04/12/tips-tricks-and-recommendations-for-html5-x2f-mobile-web-development/www.jquerymobile.com">jQuery Mobile</a>, but have equally done work using <a href="http:&#x2F;&#x2F;www.sencha.com&#x2F;">Sencha</a>, <a href="http:&#x2F;&#x2F;dojotoolkit.org&#x2F;features&#x2F;mobile">Dojo</a> and others.  As all the frameworks offer slightly different combinations of controls, I&#39;ve found one of the tricks for selecting a suitable framework is to first build out a list of the controls that you are likely to need.  For example, in one project we developed a set of paper prototypes (side note &amp;ndash; I really dig <a href="http:&#x2F;&#x2F;www.uistencils.com&#x2F;"><span class="caps">UI</span> Stencils</a> for this) and realized that we would be creating a multi-tabbed application, with many lists on each page.  Knowing what controls we were likely to use ahead of time made selecting the framework easier, and also put into perspective what controls we would have to build from&nbsp;scratch.</p>
-<p>The good news is that most of the frameworks have demo pages&#x2F;sites available, so that you can check them out beforehand without having to download anything.   This can be a great way of testing the controls across a different number of devices, as well as getting a feel for the performance.  My rough order of magnitude is that <span class="caps">HTML</span> based mobile UI will feel around 85% of a native control &amp;ndash; it will look similar, react similar, but you just know that there&amp;rsquo;s this 10 &amp;ndash; 15% gap that doesn&amp;rsquo;t quite feel&nbsp;native.</p>
-<p><strong>Understand the caveats with implementing maps in Mobile Web&nbsp;applications
-</strong></p>
-<p>Related to the last point, many applications have a need to display maps and pinpoints, and this will likely remain true for many mobile web applications that you might be creating.  Based on experience, there are a couple of caveats that need to be understood before you head down this&nbsp;path.</p>
-<p>Firstly, performance on Mobile Web map controls is not to par with native controls.  Using Google Maps in Safari on iOS seems sluggish when comparing it to using MapKit in a native iOS application.  I&#39;m not sure what optimizations have been done in MapKit to give it the performance it has, but the difference is quite noticeable.  As a result, if your application has a fundamental need to do a lot of mapping (i.e. if this is it&amp;rsquo;s primary function) you may want to consider a hybrid approach where you navigate to native pages for the mapping as part of your&nbsp;application.</p>
-<p>Secondly, the web control for Google Maps (and this probably applies to other mapping controls) likes to &amp;ldquo;own&amp;rdquo; the page &amp;ndash; which can put it into conflict with <span class="caps">UI</span> frameworks such as jQuery Mobile.  For example, when you change pages in jQuery Mobile, the DIV element of your current page is set to hidden, and the DIV element of the new page to block.  If your map control is embedded on a page that gets set to hidden this can cause Google maps to have a hard time.  We&#39;ve experienced random behavior such as the map control not updating or repainting correctly when it is brought back into focus.  This can be overcome by an event on the page load to refresh the map canvas (example below), but it&amp;rsquo;s one of those bugs that takes a lot longer to find than it does to&nbsp;fix.</p>
-<p><code>$(&amp;amp;lsquo;#mappage&amp;amp;rsquo;).live(&amp;amp;lsquo;pageshow&amp;amp;rsquo;, function() { google.maps.event.trigger(map, &amp;amp;lsquo;resize&amp;amp;rsquo;); });</code></p>
-<p><strong>Think ahead for non-standard <span class="caps">UI</span> elements you are likely to&nbsp;need
-</strong></p>
-<p>While frameworks such as jQuery Mobile will provide standard controls such as buttons, lists, labels, and radio boxes, your application will likely have a need for elements and controls that are non-standard.  These can include tables, grids, and image carousels to name a few.  Many of these can be created using custom controls, but before going down that path, I always try and ask myself two&nbsp;questions:</p>
-<p>Firstly, if the control does not exist, does that mean a better <span class="caps">UI</span> nuance is available for the device?  For example, there are few mobile web controls for displaying datagrids on mobile devices.  Rather than force-fitting a solution that might not work well on a 3.2&quot; screen, think about what alternative solutions could be used instead.  For example, maybe a series of cascading list controls would actually provide for a better user experience over some custom hacked-together table control.  When in doubt, try to look at how other mobile applications have used controls to represent a similar data&nbsp;set.  </p>
-<p>Secondly, if the control does seem to fit, but it&amp;rsquo;s just not included in the standard <span class="caps">UI</span> framework that you&#39;ve chosen, think about searching for a third party solution before re-creating something new.  This can apply to image carousels (<a href="http:&#x2F;&#x2F;www.photoswipe.com&#x2F;">PhotoSwipe</a> is one of my favorite controls for doing this) as well as charting (there are several really good <span class="caps">JS</span> based charting controls out&nbsp;there).</p>
-<p><strong>Make your mobile web app look and feel like it belongs with native&nbsp;applications.
-</strong></p>
-<p>Why not go that extra step and have your mobile application look like it belongs with other native applications on the device?  A couple of small recommendations for this&nbsp;one:</p>
-<p>Firstly, never show the address bar in your mobile application.  Simply use a &amp;lt;viewport…&#x2F;&gt; tag to have your application run in full screen mode.  The user will still be able to get to the address bar, but it will be hidden from view by default.  (side note &amp;ndash; jQuery Mobile now performs this automatically without the need to do &amp;ldquo;scroll to&amp;rdquo; events in&nbsp;JavaScript).</p>
-<p>Secondly, if you are targeting iOS devices, consider using Cubiq&amp;rsquo;s <a href="http:&#x2F;&#x2F;cubiq.org&#x2F;add-to-home-screen">AddToHome</a> <span class="caps">JS</span> library.  This is an excellent add on that will display instructions for the user to add the application to the iOS home screen, enabling the application to have it&amp;rsquo;s own icon and run completely full screen when&nbsp;launched.</p>
-<p><strong>Don&amp;rsquo;t go creating your own username and password&nbsp;database
-</strong></p>
-<p>Have users sign on to your application can be very useful for security of the application and for storing preferences and other settings.  Unless you have a very strong reason however, I recommend that you avoid creating your own username and password database for your application.  Doing so can seem really easy at first, but as your application gets more popular you&#39;ll be left with a nightmare situation of having to deal with registration issues, password resets, and all of the other administration that comes with owning your own identity&nbsp;provider.</p>
-<p>If you are building a mobile web application for the enterprise, I suspect you&#39;ll already be thinking about this &amp;ndash; either hooking in to an existing Active Directory instance or other identity provider (although you&#39;ll likely need to consider how this will work outside the firewall when your mobile users are accessing your application via a public&nbsp;connection).</p>
-<p>If you are building a public-facing application however, an efficient solution can be to federate with an existing identity provider.  Chances are your users already have a Google, Yahoo, or Facebook account.  Why not take advantage of this and use this sign-in information to authenticate the user for your application?  This can be done in a couple of different ways &amp;ndash; either with a native <span class="caps">SDK</span> from one of the providers &amp;ndash; or using a federated service such as Microsoft Azure&amp;rsquo;s <a href="http:&#x2F;&#x2F;acs.codeplex.com&#x2F;">Access Control Service</a>.  This is a simple service to setup, which will enable you to configure a list of providers and returns a bag of claims to your application which you can use to match up with a list of settings, preferences, etc.  There are a few caveats with this approach, especially as some of the providers return the information via a post back (which can really upset your mobile application if you&#39;ve pre-fetched all of the pages in to the <span class="caps">DOM</span> beforehand).  This is something that I&#39;ve written previously about in <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;2011&#x2F;08&#x2F;13&#x2F;authenticating-with-google-facebook-and-others-from-your-jquerymobile-application&#x2F;">this post</a>.</p>
-<p><strong>Make your Mobile Web application perform&nbsp;well
-</strong></p>
-<p>It might sound obvious, but if you want your Mobile Web application to come anywhere near to the performance of a native application, you&#39;ll want to keep a keen eye on performance.  Generally, I&#39;ve found there are three main causes of bad performance in Mobile Web&nbsp;applications:</p>
-<p>First is server-side generation of the <span class="caps">UI</span> and round tripping (as discussed in the point on client-side JavaScript earlier).  If you are generating any of the UI on the server-side or making any synchronous server-side calls, you are more than likely to run in to&nbsp;trouble.</p>
-<p>Second is too many <span class="caps">CSS</span> effects&#x2F;transitions.  Many of the UI frameworks, including jQuery Mobile, include several page transitions for when the user navigates between different pages.  Unless you are exclusively targeting iOS devices, I would recommend turning all of these off.  Many of the older Android devices don&amp;rsquo;t implement a version of Webkit that supports hardware acceleration &amp;ndash; plus they are running on less capable hardware &amp;ndash; so to avoid creating an application that stutters on Android devices, it&amp;rsquo;s best to disable any transitions and&nbsp;effects.</p>
-<p>Finally, watch out for too many registered JavaScript events (especially on the class level).  The JavaScript performance on mobile browsers can be much lower than desktop equivalents, and if you are not careful you can end up where the performance of the browser is being compromised by too many registered events.  Often this will only add 100ms to various events, but combine this with specific events (such as a button tap) that must immediately navigate to another page, any delay over 100ms might be enough that your user thinks that the button wasn&amp;rsquo;t pressed correctly.  They&#39;ll press it again, and before you know it you have two JavaScript navigation events that you&#39;ll need to&nbsp;handle.</p>
-<p><strong>Wrapping&nbsp;up
-</strong></p>
-<p>A bit of a lengthy post, but I hope that this is useful if you are heading down the path of developing Mobile Web applications.  If you&#39;d like more information on this, or maybe to share with colleagues, I&#39;ve uploaded <a href="http:&#x2F;&#x2F;www.slideshare.net&#x2F;simonguest&#x2F;top-ten-tips-for-html5mobile-web-development">this presentation</a> to SlideShare that goes through the above list in some&nbsp;detail.</p>
-
+          <section class="content"><p>Over the past few months I’ve been fortunate to have worked with several customers creating Mobile Web applications for different devices.  These have included an iPad based Mobile Web app for a healthcare provider, a cross-platform Mobile Web app for a commercial real estate broker, and an Android tablet solution to allow scientists to research experiment details from the comfort of their&nbsp;lab.</p>
+<p>From these projects, I’ve come up with a list of tips, tricks, and recommendations that I wanted to share if you are looking to develop your own Mobile Web applications.  Hope you find them&nbsp;useful…</p>
+<p>
+            <p class="more"><a href="/2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -345,43 +99,9 @@ key keys&amp;#x2F;server.key</code></p>
             <p class="date"><span>11. November 2011</span></p>
             <h2><a href="/2011/11/11/extracting-and-using-facebook-oauth-token-from-acs/">Extracting and Using Facebook OAuth Token from ACS</a></h2>
           </header>
-          <section class="content"><p>A couple of my previous blog posts have shown how AppFabric <span class="caps">ACS</span> (Access Control Service) can be used as part of the Windows Azure Toolkit for iOS to enable federated authentication with Facebook, Google, Yahoo, and other&nbsp;providers.</p>
-<p>I was recently asked whether it’s possible to extract an OAuth token as part of the <span class="caps">ACS</span> sign in process that can then be presented to Facebook’s Graph API in order to access details such as friends lists, photos, etc. In this post, I&#39;ll cover how this can be&nbsp;done.</p>
-<p>The first step is of course to display the authentication page. As you&#39;ve seen in previous posts, this can be achieved using the following:
-&lt;pre&gt;WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessControlClientForNamespace:@“iostest-walkthrough”&nbsp;realm:@“uri:wazmobiletoolkit”];</p>
-<p>[acsClient showInViewController:self allowsClose:<span class="caps">NO</span> withCompletionHandler:^(BOOL authenticated) { if (!authenticated) { NSLog(@&quot;Error authenticating&quot;); } else { WACloudAccessToken <em>token = [WACloudAccessControlClient sharedToken]; NSString </em>securityToken = [token securityToken]; … }
-}];&lt;&#x2F;pre&gt;
-In the application, this will display the federated login dialog, and prompt the user to enter their Facebook&nbsp;credentials.</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;11&#x2F;myWPEdit_Image_1321045984.jpg" alt="myWPEdit Image"></p>
-<p>You&#39;ll notice that the <span class="caps">ACS</span> client returns a cloud access token, of which a security token can be extracted. This security token is a set of claims returned from ACS. Here’s an example:
-&lt;pre&gt;http:&#x2F;&#x2F;schemas.microsoft.com&#x2F;ws&#x2F;2008&#x2F;06&#x2F;identity&#x2F;claims&#x2F;expiration=2011-11-11T22:00:00.3593475Z&amp;amp;http:&#x2F;&#x2F;schemas.xmlsoap.org&#x2F;ws&#x2F;2005&#x2F;05&#x2F;identity&#x2F;claims&#x2F;emailaddress=me%40simonguest.com&amp;amp;http:&#x2F;&#x2F;schemas.xmlsoap.org&#x2F;ws&#x2F;2005&#x2F;05&#x2F;identity&#x2F;claims&#x2F;name=Simon+Guest&amp;amp;http:&#x2F;&#x2F;schemas.xmlsoap.org&#x2F;ws&#x2F;2005&#x2F;05&#x2F;identity&#x2F;claims&#x2F;nameidentifier=677830765&amp;amp;http:&#x2F;&#x2F;www.facebook.com&#x2F;claims&#x2F;AccessToken=AAADWLwgHWSUBABBXdxbhJB0ZBtA3VOfPSsqzKKwObAtW2rb8EGGTQ8EvnvAdNOcZAGpKfV2gSGbNg7f0gxk4BhI1rhzKEn17VLw343gZDZD&amp;amp;http:&#x2F;&#x2F;schemas.microsoft.com&#x2F;accesscontrolservice&#x2F;2010&#x2F;07&#x2F;claims&#x2F;identityprovider=Facebook-235497486506277&amp;amp;Audience=uri:wazmobiletoolkit&amp;amp;ExpiresOn=1321044986&amp;amp;Issuer=https:&#x2F;&#x2F;iostest-walkthrough.accesscontrol.windows.net&#x2F;&amp;amp;HMACSHA256=bnvyPmX4&#x2F;PcWhiImgVVIvSqwHpc4cfi0vI6%2b&#x2F;BSDK0Q%3d&lt;&#x2F;pre&gt;
-If we want to make follow on calls to Facebook’s Graph API, we are going to need to present the Facebook User ID and an OAuth Token. Fortunately both of these can be extracted from the&nbsp;token.</p>
-<p>To extract this, we first <span class="caps">HTTP</span> encode the token:
-&lt;pre&gt;NSMutableArray *httpEncoding = [NSMutableArray arrayWithObjects:[NSArray arrayWithObjects:@&quot;%3a&quot;,@&quot;:&quot;,nil], [NSArray arrayWithObjects:@&quot;%2f&quot;,@&quot;&#x2F;&quot;,nil],&nbsp;nil];</p>
-<p>while ([httpEncoding count] &amp;gt;= 1) { securityToken = [securityToken stringByReplacingOccurrencesOfString:[[httpEncoding objectAtIndex:0] objectAtIndex:0] withString:[[httpEncoding objectAtIndex:0] objectAtIndex:1]]; [httpEncoding removeObjectAtIndex:0];&nbsp;}</p>
-<p>NSError <em>error = <span class="caps">NULL</span>;&lt;&#x2F;pre&gt;
-Using a simple RegEx search we can extract the Facebook User ID:
-&lt;pre&gt;NSRegularExpression regex = [NSRegularExpression regularExpressionWithPattern:@“http:&#x2F;&#x2F;schemas.xmlsoap.org&#x2F;ws&#x2F;2005&#x2F;05&#x2F;identity&#x2F;claims&#x2F;nameidentifier=([0-9])” options:0 error:&amp;amp;error];
-NSTextCheckingResult </em>match = [regex firstMatchInString:securityToken options:0 range:NSMakeRange(0, [securityToken length])]; firstRange = [match rangeAtIndex:1]; fbuserId = [securityToken substringWithRange:firstRange];&lt;&#x2F;pre&gt;
-And the required OAuthToken:
-&lt;pre&gt;regex = [NSRegularExpression regularExpressionWithPattern:@“http:&#x2F;&#x2F;www.facebook.com&#x2F;claims&#x2F;AccessToken=([A-Za-z0-9]*)” options:0&nbsp;error:&amp;amp;error];</p>
-<p>match = [regex firstMatchInString:securityToken options:0 range:NSMakeRange(0, [securityToken length])];
-NSRange firstRange = [match rangeAtIndex:1];
-oauthToken = [securityToken substringWithRange:firstRange];
-&lt;&#x2F;pre&gt;
-Now it’s just a case of calling the Graph <span class="caps">API</span> using these credentials:
-&lt;pre&gt;NSString <em>graphURL = [NSString stringWithFormat:@“https:&#x2F;&#x2F;graph.facebook.com&#x2F;%@&#x2F;friends?access_token=%@”,fbuserId,oauthToken];&lt;&#x2F;pre&gt;
-For the purposes of this post, let’s take a quick look at my list of friends.
-&lt;pre&gt;NSURLRequest </em>request = [NSURLRequest requestWithURL:[<span class="caps">NSURL</span> URLWithString:graphURL]];
-NSURLResponse <em>response = <span class="caps">NULL</span>;
-NSData </em>data = [NSURLConnection sendSynchronousRequest:request returningResponse:&amp;amp;response error:&amp;amp;error];
-NSString *friendsList = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-regex = [NSRegularExpression regularExpressionWithPattern:@“id” options:0 error:&amp;amp;error];
-NSUInteger friendCount = [regex numberOfMatchesInString:friendsList options:0 range:NSMakeRange(0, [friendsList length])];&lt;&#x2F;pre&gt;
-Displaying the friend count in a UIAlertView on the screen shows how popular (or not!) I&nbsp;am:</p>
-<p><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;11&#x2F;myWPEdit_Image_1321046009.jpg" alt="myWPEdit Image"></p>
-<p>A simple example, but hopefully this shows not only that you can authenticate against Facebook using AppFabric <span class="caps">ACS</span>, but also how the returned Facebook User ID and OAuth Token can be used to make further calls to Facebook using the user’s&nbsp;credentials.</p>
-
+          <section class="content"><p>A couple of my previous blog posts have shown how AppFabric <span class="caps">ACS</span> (Access Control Service) can be used as part of the Windows Azure Toolkit for iOS to enable federated authentication with Facebook, Google, Yahoo, and other providers. I was recently asked whether it’s possible to extract an OAuth token as part of the ACS sign in process that can then be presented to Facebook’s Graph API in order to access details such as friends lists, photos, etc. In this post, I’ll cover how this can be&nbsp;done.</p>
+<p>
+            <p class="more"><a href="/2011/11/11/extracting-and-using-facebook-oauth-token-from-acs/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -389,133 +109,19 @@ Displaying the friend count in a UIAlertView on the screen shows how popular (or
             <p class="date"><span>21. October 2011</span></p>
             <h2><a href="/2011/10/21/working-with-the-windows-azure-toolkit-for-android/">Working with the Windows Azure Toolkit for Android</a></h2>
           </header>
-          <section class="content"><p>&lt;small&gt;At the end of August, Microsoft &lt;&#x2F;small&gt;<a href="http:&#x2F;&#x2F;www.zdnet.com&#x2F;blog&#x2F;microsoft&#x2F;microsoft-rolls-out-windows-azure-toolkit-for-android&#x2F;10503">&lt;small&gt;published&lt;&#x2F;small&gt;</a>&lt;small&gt; the Windows Azure Toolkit for Android. At Neudesic, the partner behind developing the both toolkits for iOS and Android, we&#39;ve been working with customers that use the toolkit to connect mobile applications to the cloud. One of the recent requests however has been to provide a walkthrough of getting started with the toolkit. The current build on &lt;&#x2F;small&gt;<a href="http:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe">&lt;small&gt;GitHub&lt;&#x2F;small&gt;</a>&lt;small&gt; was released for a specific version of Eclipse and the Android tools, and as a result, can be a little challenging getting the library and sample code up and running.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;In this post, I&#39;ll explain what it takes to download the toolkit, create a brand new environment in Eclipse, and get started quickly with the toolkit.
-&lt;&#x2F;small&gt; <strong>&lt;small&gt; &lt;&#x2F;small&gt;</strong>
-<strong>&lt;small&gt;Getting Started – What You&#39;ll Need&lt;&#x2F;small&gt;</strong>&lt;small&gt;
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Firstly, there is a list of tools that you&#39;ll need to download.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;1. &lt;&#x2F;small&gt;<strong>&lt;small&gt;Eclipse.&lt;&#x2F;small&gt;</strong>&lt;small&gt; Download from http:&#x2F;&#x2F;eclipse.org – we&#39;ll be using Helios in this tutorial.
-&lt;&#x2F;small&gt;
-&lt;small&gt;2. &lt;&#x2F;small&gt;<strong>&lt;small&gt;<span class="caps">JDK</span>. &lt;&#x2F;small&gt;</strong>&lt;small&gt; We&#39;ll be using the default that ships with Mac <span class="caps">OSX</span>, but if you are on a PC, you&#39;ll need JDK 1.6 or higher.
-&lt;&#x2F;small&gt;
-&lt;small&gt;3. &lt;&#x2F;small&gt;<strong>&lt;small&gt;Android <span class="caps">SDK</span> and Eclipse Tooling.&lt;&#x2F;small&gt;</strong>&lt;small&gt; Download the Android <span class="caps">SDK</span> from http:&#x2F;&#x2F;developer.android.com (we are using r14 for this walkthrough). Also follow the instructions for configuring the Android tooling within Eclipse. After you have installed everything, use the AVD manager to setup a new AVD for an Android 2.3.3 device.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-<strong>&lt;small&gt;Setting Up the Library in Eclipse
-&lt;&#x2F;small&gt;</strong> <strong>&lt;small&gt; &lt;&#x2F;small&gt;</strong>
-&lt;small&gt;To import and build the library in Eclipse, perform the following steps.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;1. Download the Windows Azure Toolkit for Android from GitHub. If you have the Git client installed, you can use this command:
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;git clone https:&#x2F;&#x2F;github.com&#x2F;microsoft-dpe&#x2F;wa-toolkit-android
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;Otherwise, go to the site and pull down the zip file of the repo.
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;2. Create a new directory for your Eclipse workspace:
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;mkdir wa-toolkit-android-workspace
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;3. Launch Eclipse, and point the default workspace to this newly created directory:
-&lt;&#x2F;small&gt; &lt;small&gt; &lt;&#x2F;small&gt;
-&lt;small&gt;<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234031.jpg" alt="myWPEdit Image">&lt;&#x2F;small&gt;&lt;small&gt;￼&lt;&#x2F;small&gt;</p>
-<ol>
-<li><p>Create a new Android project called <strong>AzureLibrary</strong>, set the target to Android 2.3.3, use <strong>com.microsoft.cloud.android</strong> as the package name, but do not create an activity or test project.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234174.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>Right click on the AzureLibrary project and select <strong>Import</strong>. Choose <strong>General</strong> &#x2F; <strong>File System</strong> as the import source, and click on <strong>Next</strong>.</p>
-</li>
-<li>Browse to the &#x2F;library&#x2F;src&#x2F;com folder in the toolkit folder that you downloaded from&nbsp;GitHub.</li>
-<li><p>Click on the <strong>Browse (into folder) </strong>button and select the src folder under your project. Expand the <strong>src</strong> folder, and check the <strong>com </strong>folder as shown in this screenshot:
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234318.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>Click on the Finish button. The import will complete.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234368.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>Right click on the project, select properties, and change the Java compiler version from 1.5 to 1.6. (The default is 1.5, yet the toolkit uses many constructs only supported in 1.6)
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234440.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>Click <span class="caps">OK</span>, and say <strong>yes</strong> to rebuilding the project. The project should now build with no&nbsp;errors.</p>
-</li>
-<li>Assuming everything builds correctly, right click on the project, and select Properties again. Go to the Android setting, and click on the <strong>Is Library</strong> check box.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234507.jpg" alt="myWPEdit Image"></li>
-</ol>
-<p><strong>Setting Up the Sample Application in&nbsp;Eclipse
-</strong></p>
-<p>To import and build the sample application in Eclipse, perform the following&nbsp;steps:</p>
-<ol>
-<li><p>Create a new Android project called <strong>AzureSample</strong>. Select Android 2.3.3, set the namespace to <strong>com.windowsazure.samples.sample</strong>, and choose not to create an activity.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234644.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>As you did with the library, right click on the project, and select <strong>Import</strong>. Select the <strong>&#x2F;samples&#x2F;simple&#x2F;src</strong> as the source and import into the <strong>AzureSample&#x2F;src</strong> folder.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234748.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>Right click on the project, select <strong>Properties</strong>, select <strong>Android</strong> and add a reference to the <strong>AzureLibrary</strong> project:
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234806.jpg" alt="myWPEdit Image"></p>
-</li>
-<li><p>Right click on the project, select <strong>Import</strong>. Import from the <strong>&#x2F;samples&#x2F;simple&#x2F;res</strong> folder into the <strong>AzureSample&#x2F;res</strong> folder. This will import the resources required for the sample application.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234884.jpg" alt="myWPEdit Image"></p>
-</li>
-</ol>
-<p>Answer <strong>yes </strong>when prompted to overwrite the <strong>main.xml</strong>&nbsp;file.</p>
-<ol>
-<li>Right click on project, select <strong>Import</strong> and select the file system again. Select the <strong>AndroidManifest.xml</strong> from the root of the source directory and import into the root of the destination project.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319234988.jpg" alt="myWPEdit Image"></li>
-</ol>
-<p>The Sample project should now build with no&nbsp;errors.</p>
-<p><strong>
-</strong>
-<strong>Configuring your Windows Azure Account Name and&nbsp;Key
-</strong></p>
-<p>In order to setup the sample project, you need to supply your account name and key, as provided by Windows Azure. You can obtain this by logging into the Windows Azure Portal (http:&#x2F;&#x2F;windows.azure.com) and navigating to Storage Accounts to obtain the&nbsp;details.</p>
-<p>When you have the name and key, perform the&nbsp;following:</p>
-<ol>
-<li>In the sample project, open <strong>ProxySelector.java</strong> from the <strong>src&#x2F;com.windowsazure.samples.sample</strong>&nbsp;package.</li>
-<li>At the top of the file replace the <strong><span class="caps">ACCOUNT</span></strong> and <strong>ACCESS_KEY</strong> values with the account name and access key for your Azure storage account.&nbsp;&amp;nbsp;</li>
-</ol>
-<p><strong>Running the Sample**</strong>
-<strong>
-1. To run the sample, right click on the sample project, select </strong>Run As &#x2F; Android&nbsp;Application.**</p>
-<ol>
-<li>Once the emulator is up and running, unlock the&nbsp;device.</li>
-<li>Refer to the LogCat&#x2F;Console window in Eclipse if there are any&nbsp;errors.</li>
-<li>Click on the Start button in the sample&nbsp;application.</li>
-<li>Select either table, blob, or queue storage and browse the storage associated with your Windows Azure account.
-<img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;10&#x2F;myWPEdit_Image_1319235204.jpg" alt="myWPEdit Image"></li>
-</ol>
-<p>That’s it! Your sample application is now up and running, and you are able to browse Windows Azure&nbsp;storage!</p>
-
+          <section class="content"><p>At the end of August, Microsoft <a href="http://www.zdnet.com/blog/microsoft/microsoft-rolls-out-windows-azure-toolkit-for-android/10503">published</a> the Windows Azure Toolkit for Android. At Neudesic, the partner behind developing the both toolkits for iOS and Android, we’ve been working with customers that use the toolkit to connect mobile applications to the cloud. One of the recent requests however has been to provide a walkthrough of getting started with the toolkit. The current build on <a href="http://github.com/microsoft-dpe">GitHub</a> was released for a specific version of Eclipse and the Android tools, and as a result, can be a little challenging getting the library and sample code up and running. In this post, I’ll explain what it takes to download the toolkit, create a brand new environment in Eclipse, and get started quickly with the&nbsp;toolkit.</p>
+<p> 
+            <p class="more"><a href="/2011/10/21/working-with-the-windows-azure-toolkit-for-android/">more</a></p>
           </section>
         </article>
         <article class="article intro">
           <header>
-            <p class="date"><span>23. August 2011</span></p>
-            <h2><a href="/2011/08/23/upgrading-your-windows-phone-7-to-mango-rc/">Upgrading your Windows Phone 7 to Mango RC</a></h2>
+            <p class="date"><span>13. August 2011</span></p>
+            <h2><a href="/2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/">Authenticating with Google, Facebook, and others from your jQueryMobile Application</a></h2>
           </header>
-          <section class="content"><p>In late July, Microsoft <a href="http:&#x2F;&#x2F;windowsteamblog.com&#x2F;windows_phone&#x2F;b&#x2F;wpdev&#x2F;archive&#x2F;2011&#x2F;07&#x2F;27&#x2F;wpsdk-beta-2-refresh-for-mango-devs.aspx">announced</a> availability of a new build of Mango, build 7712 – also commonly known as the <span class="caps">RC</span> Build.  Given that we are close to RTM, yet it may still take carriers some time before deploying Mango to your device, you might be itching to try out the new bits.  If you are, but don’t know where to start, I’ve put together this quick guide based on my own experience of updating my phone, an AT&amp;amp;T Samsung Focus.  Note: As you would expect, if you do decide to upgrade your phone, this is entirely at your own&nbsp;risk.</p>
-<p>Before you begin, you’ll need a few&nbsp;things:</p>
-<ol>
-<li><p>A Windows Phone 7 device with all of the current updates (a.k.a. NoDo) installed.  Double check the updates in the Zune application to make sure everything is up to date.  You should see that your <span class="caps">WP7</span> build number is&nbsp;7390.</p>
-</li>
-<li><p>Zune Software 4.7.1404.  Although 4.8 was released yesterday, you won’t be able to do the update with this version (yet).  Download 4.7.1404 from <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;download&#x2F;en&#x2F;details.aspx?id=23771">here</a> if&nbsp;needed.</p>
-</li>
-<li><p>Windows Phone 7 Support Tools.  You can download this from here (<a href="http:&#x2F;&#x2F;download.microsoft.com&#x2F;download&#x2F;1&#x2F;5&#x2F;4&#x2F;15427EAF-AD42-4E4A-8179-9A3C5483E366&#x2F;WPSupportTool-x86.msi">32bit</a>, <a href="http:&#x2F;&#x2F;download.microsoft.com&#x2F;download&#x2F;1&#x2F;5&#x2F;4&#x2F;15427EAF-AD42-4E4A-8179-9A3C5483E366&#x2F;WPSupportTool-amd64.msi">64bit</a>).  Run the installer, but you don’t need to run the&nbsp;application.</p>
-</li>
-<li><p>Enough battery power to get you through several updates (when the phone is updating, your device isn’t being charged).  I would avoid trying this with anything less than 50%&nbsp;charge.</p>
-</li>
-<li><p>The mango update tools.  If you are a registered Windows Phone 7 developer, you can supposedly download these from the Microsoft Connect site.  If you are not (or like me you are, but couldn’t find the tools on Connect), you can find a version of the tools on <a href="http:&#x2F;&#x2F;windowsphonehacker.com&#x2F;articles&#x2F;how_to_get_mango_beta_2_for_nondevelopers-07-31-11">this site</a>.  (Note:  Follow Step 1, and yes, you have to wait for 45 seconds for the download link to&nbsp;work).</p>
-</li>
-</ol>
-<p>With all of the above in place, run the <strong>Update.bat</strong> from the Mango update tool download.  Assuming there are no errors, you should see something similar to the&nbsp;following.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a></p>
-<p>Firstly, the tool will make a backup of your device to the c:PreMangoState2 directory, and install the updates necessary for your device to receive the pre-release Mango bits.  The time this will take may vary, but on my machine it took 112 seconds to backup, and 70 seconds to update the&nbsp;device.</p>
-<p>Once the batch file completes, and the device reboots, the Zune software should automatically launch.  You’ll be shown that an update is available (likely build&nbsp;7403).</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2011&#x2F;08&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a></p>
-<p>Choose to install this, which will then download the Zune 4.8 software.  After the Zune software has been updated, the phone will be updated to 7403, which should be a fairly quick&nbsp;update.</p>
-<p>As the phone reboots once more, the Zune software will do another check – and this time will pick up the 7712 build, which is Mango <span class="caps">RC</span>.  Choose to download and install this one.  This is where the battery power is important, as this install can take quite a bit of time to complete (let’s just say that I’ve been able to pen this blog post, and it’s still not 75% of the way&nbsp;there!).</p>
-<p>Be patient though – one final reboot, and you’ll be running the latest Mango <span class="caps">RC</span> (Build 7712) bits!&nbsp;Enjoy!</p>
-
+          <section class="content"><p>In my last post, I showed how to implement authentication using Google, Facebook, etc. for your iOS application – using the <a href="http://github.com/microsoft-dpe">Windows Azure Toolkit for iOS</a>.  This works well for iPhone applications written in Objective C, but what if you are developing a Web based mobile applications that span multiple platforms?  Given that everything is using Web pages, you would hope that it would be a little easier, but things can get tricky - especially if you are using&nbsp;jQueryMobile. </p>
+<p>
+            <p class="more"><a href="/2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/">more</a></p>
           </section>
         </article>
       </div>

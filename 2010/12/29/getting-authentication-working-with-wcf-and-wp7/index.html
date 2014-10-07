@@ -14,36 +14,41 @@
     <header class="header">
       <div class="content-wrap">
         <h1>Getting Authentication Working with WCF and WP7</h1>
-        <p class="author">Written by <span class="author"></span>
+        <p class="author">Written by <span class="author">Simon Guest</span>
         </p>
       </div>
     </header>
     <div id="content">
       <div class="content-wrap">
         <article class="article">
-          <section class="content"><p>Although Windows Phone 7 (<span class="caps">WP7</span>) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little&nbsp;quirky.&amp;#160; </p>
-<p>After working on a project over the holidays putting together a <span class="caps">WP7</span> client to connect to a Web service requiring authentication, this is what I&nbsp;found:</p>
-<p>1.&amp;#160; <span class="caps">NTLM</span>&#x2F;Kerberos is a no&nbsp;go…</p>
-<p>As of today, the <span class="caps">WCF</span> client on WP7 does not support NTLM or Kerberos authentication.&amp;#160; If you are accessing Web services from a device, you’ll want to make sure that the your server&amp;#160; is setup to handle Basic authentication (preferably over&nbsp;SSL).</p>
-<p>2.&amp;#160; And even Basic authentication needs a helping&nbsp;hand…</p>
-<p>Even with Basic authentication enabled on the server, I was noticing that the client was still not sending the right <span class="caps">HTTP</span> headers – even when setting the <strong>ClientCredentials</strong> property on the client and playing with the config file.&amp;#160; No matter what I tried, I couldn’t get it to&nbsp;work.</p>
-<p>To overcome this however, you can force the Basic authentication details to be written as part of the request header.&amp;#160; To do this, first create a method that generates a <span class="caps">UTF8</span> encoded string for your domain, username, and password:
-  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>public static string GetCredentials(string domain, string username, string&nbsp;password)</p>
-<p>{&amp;#160;&amp;#160;&amp;#160;&amp;#160; </p>
-<pre><code>return Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format(@&amp;amp;quot;{0}{1}:{2}&amp;amp;quot;,domain,username,password)));&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; 
-</code></pre><p>}&nbsp;&lt;&#x2F;pre&gt;</p>
+          <section class="content"><p>Although Windows Phone 7 (<span class="caps">WP7</span>) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little&nbsp;quirky. </p>
+<p>After working on a project over the holidays putting together a <span class="caps">WP7</span> client to connect to a Web service requiring authentication, this is what I&nbsp;found…</p>
+<p><span class="more"></span></p>
+<ol>
+<li><p><span class="caps">NTLM</span>/Kerberos is a no&nbsp;go…</p>
+<p>As of today, the <span class="caps">WCF</span> client on WP7 does not support NTLM or Kerberos authentication.  If you are accessing Web services from a device, you’ll want to make sure that the your server  is setup to handle Basic authentication (preferably over&nbsp;SSL).</p>
+</li>
+<li><p>And even Basic authentication needs a helping&nbsp;hand…</p>
+<p>Even with Basic authentication enabled on the server, I was noticing that the client was still not sending the right <span class="caps">HTTP</span> headers – even when setting the <strong>ClientCredentials</strong> property on the client and playing with the config file.  No matter what I tried, I couldn’t get it to&nbsp;work.</p>
+</li>
+</ol>
+<p>To overcome this however, you can force the Basic authentication details to be written as part of the request header.  To do this, first create a method that generates a <span class="caps">UTF8</span> encoded string for your domain, username, and&nbsp;password:</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">GetCredentials</span>(<span class="keyword">string</span> domain, <span class="keyword">string</span> username, <span class="keyword">string</span> password)
+{    
+    <span class="keyword">return</span> Convert.ToBase64String(Encoding.<span class="caps">UTF8</span>.GetBytes(String.Format(<span class="string">@"{0}{1}:{2}"</span>,domain,username,password)));      
+}
+</code></pre>
 <p>Then, you’ll need to create a new property with your&nbsp;credentials:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>HttpRequestMessageProperty request = new HttpRequestMessageProperty();
-request.Headers[System.Net.HttpRequestHeader.Authorization] = &amp;quot;Basic &amp;quot; + GetCredentials;&nbsp;&lt;&#x2F;pre&gt;</p>
+<pre><code class="lang-cs">HttpRequestMessageProperty request = <span class="keyword">new</span> HttpRequestMessageProperty();
+request.Headers[System.Net.HttpRequestHeader.Authorization] = <span class="string">"Basic "</span> + GetCredentials;
+</code></pre>
 <p>Finally, add the header to your outgoing&nbsp;request:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>OperationContextScope clientScope = new OperationContextScope(client.InnerChannel);
-OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessageProperty.Name, request);&nbsp;&lt;&#x2F;pre&gt;</p>
+<pre><code class="lang-cs">OperationContextScope clientScope = <span class="keyword">new</span> OperationContextScope(client.InnerChannel);
+OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessageProperty.Name, request);
+</code></pre>
 <p>(in the above client is your service&nbsp;reference)</p>
-<p>And voila!&amp;#160; You should now have Basic authentication headers as part of your client requests, and you can access username&#x2F;password protected Web services from your <span class="caps">WP7</span>&nbsp;device!</p>
-<p>One final tip - during all of this you will likely need to use a tool like Fiddler to trace your requests and responses from the device.&amp;#160; If you are having troubles getting Fiddler working with the <span class="caps">WP7</span> emulator, <a href="http:&#x2F;&#x2F;phone7.wordpress.com&#x2F;2010&#x2F;10&#x2F;17&#x2F;fiddler-and-wp7-emulator-working&#x2F;">here</a> is a great post that outlines what to&nbsp;do.</p>
+<p>And voila!  You should now have Basic authentication headers as part of your client requests, and you can access username/password protected Web services from your <span class="caps">WP7</span>&nbsp;device!</p>
+<p>One final tip - during all of this you will likely need to use a tool like Fiddler to trace your requests and responses from the device.  If you are having troubles getting Fiddler working with the <span class="caps">WP7</span> emulator, <a href="http://phone7.wordpress.com/2010/10/17/fiddler-and-wp7-emulator-working/">here</a> is a great post that outlines what to&nbsp;do.</p>
 </section>
         </article>
       </div>

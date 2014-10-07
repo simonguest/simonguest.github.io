@@ -21,8 +21,8 @@
     <div id="content">
       <div class="content-wrap">
         <article class="article">
-          <section class="content"><p>At Neudesic, almost every mobile project that we’ve been involved in has had some dependency on a Web <span class="caps">API</span>.  This has included APIs that we’ve had to create from scratch, as well as ones that already exist that the app has to&nbsp;consume.</p>
-<p>As you can imagine, over the past few years, we’ve seen a fair share of good and bad <span class="caps">API</span> design.  In this blog post, I wanted to share some of my observations, thoughts, and questions that I ask of a well designed Web API, especially one that will be called from a mobile&nbsp;app.</p>
+          <section class="content"><p>As you can imagine, over the past few years, we’ve seen a fair share of good and bad <span class="caps">API</span> design.  In this blog post, I wanted to share some of my observations, thoughts, and questions that I ask of a well designed Web API, especially one that will be called from a mobile&nbsp;app.</p>
+<p><span class="more"></span></p>
 <p><strong>1. Are the basics being&nbsp;met?</strong></p>
 <p>First, the basics.  Without question, every Web <span class="caps">API</span> should be stateless.  There should be no session state, cookies, or server-side values used to hold any state of any kind.  Adding state adds complexity, and limits the ability for the API to scale, which for a mobile application that could reach millions of users is something that we want to&nbsp;avoid.</p>
 <p>Also, endpoints of the <span class="caps">API</span> should be exposed through SSL by default.  SSL is easy to setup, performant, and should be enabled for any API that we either consume or create.  As you may have observed, using SSL as default seems to be a direction in which many other APIs are&nbsp;heading.</p>
