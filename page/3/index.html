@@ -79,41 +79,9 @@
             <p class="date"><span>18. September 2010</span></p>
             <h2><a href="/2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/">JavaOne Tutorial Apache Tomcat on Windows Azure</a></h2>
           </header>
-          <section class="content"><p>&lt;html xmlns=&quot;&quot;&gt;As I mentioned in <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;2010&#x2F;09&#x2F;08&#x2F;speaking-at-javaone-2010&#x2F;">my previous post</a>, I’ll be participating in a <a href="http:&#x2F;&#x2F;www.eventreg.com&#x2F;cc250&#x2F;sessionDetail.jsp?SID=313962">panel</a> at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1&nbsp;request.</p>
-<p>Here is an overview of what I will be&nbsp;showing:</p>
-<p><strong>Step 1 – What you’ll need to get&nbsp;started</strong></p>
-<p>As you might imagine, you are going to first need a Windows Azure account.  I would recommend going to <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;windowsazure&#x2F;offers">www.microsoft.com&#x2F;windowsazure&#x2F;offers</a> and signing up for the introductory special, which will allow you to test your application for free.  The introductory offer gives you the first 25 hours at no cost, which should be more than enough time to get up and&nbsp;running.</p>
-<p><strong>I**</strong>f you are at JavaOne however, **I have a limited quantity (100) of tokens that give you 30 days worth of access with no need to submit any registration or credit card information.  See me at the end of the panel session or throughout the conference, and in exchange for a business card, I’ll be happy to give you one at no&nbsp;cost!</p>
-<p>After you have your account, you’ll want to download and install the <a href="http:&#x2F;&#x2F;go.microsoft.com&#x2F;fwlink&#x2F;?LinkID=130232">Windows Azure <span class="caps">SDK</span></a>.  After installation, set your <span class="caps">PATH</span> environment to include the location of the SDK binaries (typically <em>C:Program FilesWindows Azure SDKv1.1bin</em>).  This is important to ensure that the <span class="caps">SDK</span> is accessible from the command&nbsp;line.</p>
-<p>Finally, you’ll need to install the <a href="http:&#x2F;&#x2F;code.msdn.microsoft.com&#x2F;winazuretomcat">Windows Azure Tomcat Solution Accelerator</a>.  Feel free to install this in any directory you’d like – I’m using <em>c:devjavaone2010tomcatazure</em> for the purposes of this&nbsp;tutorial.</p>
-<p>&lt;p$1$2$3$4$5$6&gt;</p>
-<p><strong>Step 2 – Building and running your&nbsp;site</strong></p>
-<p>With all of the pre-requisites downloaded and installed, it’s time to build and test your site.  To do this, open a command prompt, and navigate to the directory that you chose for the solution accelerator.  From this directory, run <strong>buildme.cmd</strong>.  You’ll be prompted to provide the installation path of your Tomcat installation and a <span class="caps">JRE</span> on your&nbsp;machine.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a></p>
-<p>After a successful build, run the <strong>runme.cmd</strong> file. This will run Tomcat using the Windows Azure Desktop Execution Tool – also known as the local development&nbsp;fabric.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a></p>
-<p>This is a great way to test that your application is going to work when deployed to production.  Navigate to the <span class="caps">URL</span> provided at the end  (replace the tcp with http) to ensure that the Tomcat instance is working correctly on your local&nbsp;machine.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a></p>
-<p>You can open the development fabric tool (found running in your system tray) if you want to stop and&#x2F;or investigate the&nbsp;service.</p>
-<p>&lt;p$1$2$3$4$5$6&gt;</p>
-<p><strong>Step 3 – Packaging and deploying your&nbsp;site</strong></p>
-<p>Once you are satisfied that everything looks good, it’s time to package the application ready for deployment to the cloud.  To do this, run the <strong>packme.cmd </strong>script.  This will invoke the Windows Azure Packaging Tool, and pull together everything needed into one package file for&nbsp;deployment.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a></p>
-<p>When this has completed, you should see a <strong>Tomcat.cspkg </strong>file and a <strong>ServiceConfiguration.cscfg </strong>file in the directory.  The .cspkg file is quite large as it contains your application, the Tomcat instance, and <span class="caps">JRE</span> binaries.  Despite the size, this format makes it convenient if you prefer to use a different version of Tomcat or a different JRE in the&nbsp;future.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a></p>
-<p>To deploy to the cloud, log on to the portal (<a href="http:&#x2F;&#x2F;windows.azure.com">http:&#x2F;&#x2F;windows.azure.com</a>) and create a new hosted service.  Walk through the wizard to specify the name, description, <span class="caps">URL</span>, and location where you want the service to be deployed.  Next, hit the “Deploy” button and specify the location of the previous package and configuration&nbsp;file.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a></p>
-<p>You have two options when it comes to deploying – either a file from your local storage (i.e. your local disk) or a file from an Azure storage account (blob storage).  If you have issues with the local storage (many http connections timeout before the package can be uploaded in time), I would recommend using <a href="http:&#x2F;&#x2F;azurestorageexplorer.codeplex.com&#x2F;">Neudesic’s Azure Storage Explorer</a> to upload your files to a blob storage&nbsp;container.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a></p>
-<p>Hit <em>Deploy</em>, and your package will be uploaded to Windows Azure – this will likely take a few minutes because of the size of the&nbsp;deployment.</p>
-<p>Once this has been completed, hit the <em>Run</em> button to bring your site to&nbsp;life.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a></p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;09&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a></p>
-<p>Once you have a site up and running, feel free to explore some of the ways that you can either scale your application to multiple nodes or explore some of the <a href="http:&#x2F;&#x2F;www.windowsazure4j.org">other features</a> on Windows Azure available to Java&nbsp;developers.</p>
-<p>&lt;p$1$2$3$4$5$6&gt;</p>
-<p>There are many ways that this could be improved by integrating with existing build environments (I think Maven integration would be fascinating), but hopefully this short tutorial gives you a starting point for getting a simple Tomcat site up and running on Windows&nbsp;Azure.</p>
-
+          <section class="content"><p>As I mentioned in my previous post, I’ll be participating in a <a href="http://www.eventreg.com/cc250/sessionDetail.jsp?SID=313962">panel</a> at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1 request. Here is an overview of what I will be&nbsp;showing:</p>
+<p>
+            <p class="more"><a href="/2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -121,29 +89,9 @@
             <p class="date"><span>04. August 2010</span></p>
             <h2><a href="/2010/08/04/easy-event-logging-on-windows-azure/">Easy Event Logging on Windows Azure</a></h2>
           </header>
-          <section class="content"><p>I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.&amp;#160;&amp;#160; Effective logging can be difficult to setup.&amp;#160; Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs,&nbsp;etc.&amp;#160; </p>
-<p>Instead, I wanted an easy way to log custom events and exceptions in my application.&amp;#160; This is how to do&nbsp;it:</p>
-<p>1. Create a class that inherits from System.Diagnostics.TraceListener.&amp;#160; 
-  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>public class AzureTraceListener :&nbsp;TraceListener   </p>
-<p>{    </p>
-<p>public static List&amp;lt;String&amp;gt; Events = new&nbsp;List&amp;lt;String&amp;gt;(); </p>
-<p>&amp;#160;&amp;#160;&amp;#160; public override void Write(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;} </p>
-<p>&amp;#160;&amp;#160;&amp;#160; public override void WriteLine(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;}  </p>
-<p>} 
-&lt;&#x2F;pre&gt;
-2.&amp;#160; In your web role, add a reference to your custom trace listener.&amp;#160; This is done by adding the following two lines in your OnStart()&nbsp;method.</p>
-<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>AzureTraceListener atl = new AzureTraceListener();<br>Trace.Listeners.Add(atl);</p>
-<p>&amp;#160;
-&lt;&#x2F;pre&gt;
-3.&amp;#160; In your application, log your events using the Trace.Write(string)&nbsp;method.</p>
-<p>4.&amp;#160; To display your events, create a new page called Traceviewer.aspx with the following block of&nbsp;<span class="caps">HTML</span>:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:html&quot;&gt;</p>
-<p>&amp;lt;h1&amp;gt;Trace Log&amp;lt;&#x2F;h1&amp;gt;<br>&amp;lt;% foreach (String eventitem in WebRole1.AzureTraceListener.Events)<br>&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Response.Write(&amp;quot;&amp;lt;h4&amp;gt;&amp;quot;+eventitem+&amp;quot;&amp;lt;&#x2F;h4&amp;gt;&amp;quot;);<br>&amp;#160;&amp;#160; } 
-%&amp;gt;&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>That’s it.&amp;#160; Deploy your application and simply call Traceviewer.aspx to look at all of your generated&nbsp;events.</p>
-
+          <section class="content"><p>I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.   Effective logging can be difficult to setup.  Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs, etc. Instead, I wanted an easy way to log custom events and exceptions in my application.  This is how to do&nbsp;it:</p>
+<p>
+            <p class="more"><a href="/2010/08/04/easy-event-logging-on-windows-azure/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -151,26 +99,9 @@
             <p class="date"><span>02. August 2010</span></p>
             <h2><a href="/2010/08/02/cita-p-certified-it-architect/">CITA-P – Certified IT Architect</a></h2>
           </header>
-          <section class="content"><p>Last week I took (and passed!) my <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;web&#x2F;home&#x2F;certification&#x2F;professional"><span class="caps">CITA</span>-P</a> examination.&amp;#160; <span class="caps">CITA</span>-P (Certified IT Architect) is a new certification, offered through <a href="http:&#x2F;&#x2F;www.iasahome.org"><span class="caps">IASA</span></a> (the International Association of Software Architects).&amp;#160; I wanted to share some thoughts on the certification, the process, and why you might want to consider applying&nbsp;yourself.</p>
-<p><strong>The&nbsp;Certification</strong></p>
-<p>The <span class="caps">CITA</span>-P certification evaluates an IT Architect across six core&nbsp;areas:</p>
-<ul>
-<li>Business &#x2F; Technology Mapping<em>   Design Skills</em>   Human Dynamics<em>   <span class="caps">IT</span> Environment</em>   Quality Attributes*   Software Architecture or Infrastructure Architecture (you pick one of the&nbsp;two)  </li>
-</ul>
-<p>Each of the above six areas has around ten or so subcategories which go into some detail.&amp;#160; There is a worksheet available <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;c&#x2F;document_library&#x2F;get_file?uuid=a05a964c-8662-4df7-a3c0-a7fe99b6b771&amp;amp;groupId=25692">here</a> on the <span class="caps">IASA</span> site that covers all six, and can be very useful to reflect on your own strengths and weaknesses, even if you are not planning on taking the&nbsp;exam.</p>
-<p>The goal of the certification is to gauge your level of competency across each of these six areas.&amp;#160; The majority of this will of course be based on your knowledge, experience, and personal&nbsp;reflections.&amp;#160; </p>
-<p><strong>The&nbsp;Process</strong></p>
-<p>Because it would be impossible (and indeed, wrong) to certify <span class="caps">IT</span> Architects through a multiple choice examination, the process of certification is an involved process, although very well&nbsp;structured.</p>
-<p>The first part requires submitting a set of documentation.&amp;#160; The details of what is required can be found in the <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;c&#x2F;document_library&#x2F;get_file?uuid=79c2a82d-eea7-4d5a-bfea-0dab221f3563&amp;amp;groupId=25692">application guide</a>, and for my submission I decided to offer my perspectives and thoughts across the six certification areas.&amp;#160; I wrote a story about each, reflecting my experience, views, and examples of projects that I’ve been involved&nbsp;in.</p>
-<p>After submission, I received my date for the in-person board review, which is split into three parts:&amp;#160; The first part is a 30 minute presentation of your choosing.&amp;#160; The board is looking for experience across the certification areas, and also for communication skills.&amp;#160; Staying within the 30 minute timeslot and having a presentation that is both engaging and covers all of the areas is difficult, but important if you are going to be&nbsp;successful. </p>
-<p>Following the presentation comes a line of questioning, with each of the four board members given ten minutes to question you about your presentation.&amp;#160; The idea here is not to pick holes in the presentation or play <a href="http:&#x2F;&#x2F;speakfearlessly.net&#x2F;how-to-deal-with-the-stump-the-chump-dynamic-in-presentations&#x2F;">stump the chump</a>, but merely to validate experience in areas that you may not have shown in the presentation.&amp;#160; A large amount of my presentation was based on a framework around cloud computing, so while I had many questions related to this, I also saw the board trying to relate the material to other areas which I didn’t mention in the&nbsp;material.</p>
-<p>After the first round of questioning, you are given a 15 minute break.&amp;#160; This is a great opportunity to get some water and gather your thoughts while the board compares notes to look for areas they might have missed.&amp;#160; Another round of questioning follows (4 x 10 minutes) on various topics and it’s all over.&amp;#160; After the board review concludes, the board members meet and you are given their decision together with helpful advice in a couple of&nbsp;days.</p>
-<p><strong>A Good&nbsp;Thing?</strong></p>
-<p>Although this is my first experience, I’ve been a strong supporter of <span class="caps">IT</span> Architect certification since my time in the Platform Architecture Team here at Microsoft, and I believe it’s a good thing for the&nbsp;industry.</p>
-<p>We see many <span class="caps">IT</span> Architects in our industry today.&amp;#160; Most inherit that role during the natural evolution of their career.&amp;#160; Many of these are indeed valid IT Architects, but I have the impression that other are also riding on the cache of the title.&amp;#160; If we are going to grow this profession, it’s important that we standardize the areas and level of experience we expect from this&nbsp;role.</p>
-<p><strong>More&nbsp;Information?</strong></p>
-<p>For more information about <span class="caps">CITA</span>-P certification in your area, I would recommend getting in <a href="http:&#x2F;&#x2F;www.iasahome.org&#x2F;web&#x2F;home&#x2F;about&#x2F;contact">contact with <span class="caps">IASA</span></a> for more&nbsp;information.</p>
-
+          <section class="content"><p>Last week I took (and passed!) my <a href="http://www.iasahome.org/web/home/certification/professional"><span class="caps">CITA</span>-P</a> examination.  <span class="caps">CITA</span>-P (Certified IT Architect) is a new certification, offered through <a href="http://www.iasahome.org"><span class="caps">IASA</span></a> (the International Association of Software Architects).  I wanted to share some thoughts on the certification, the process, and why you might want to consider applying&nbsp;yourself.</p>
+<p>
+            <p class="more"><a href="/2010/08/02/cita-p-certified-it-architect/">more</a></p>
           </section>
         </article>
         <article class="article intro">
@@ -178,159 +109,27 @@
             <p class="date"><span>22. April 2010</span></p>
             <h2><a href="/2010/04/22/moving-vhds-to-the-cloud/">Moving VHDs to the Cloud</a></h2>
           </header>
-          <section class="content"><p>When I speak with customers about cloud computing, a common question is often “how do I migrate an application to the cloud?&quot;  While this is a multi-part answer, one of the hurdles for migration is often&nbsp;storage. </p>
-<p>Many applications store data using the file system (e.g. read &#x2F; write a file to d:dataconfig.xml).  Moving these types of applications to the cloud can be difficult as the storage mechanisms in the cloud are somewhat&nbsp;different. </p>
-<p>To help address this problem, in Feb 2010 we released v1.1 of the <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;downloads&#x2F;details.aspx?FamilyID=5664019e-6860-4c33-9843-4eb40b297ab6&amp;amp;DisplayLang=en">Windows Azure <span class="caps">SDK</span></a> which supports a new feature call Cloud Drives.  A Cloud Drive is the ability to mount a virtual drive in the cloud so that applications can write to it as they would a local drive.  This cloud drive is persisted so that even if the machine goes down, the data is not&nbsp;lost.</p>
-<p>What many people don’t realize however is that the format that the Cloud Drive uses is interchangeable with the <span class="caps">VHD</span> (Virtual Hard Drive) format used by virtualization products such as Hyper-V, Virtual PC, Windows Server, and Windows 7.  What this means is that you can create a single VHD, use it locally on a Windows PC, attach it to a virtualized image, and now copy it to the cloud and access it there also.  As you can imagine, for anyone looking to migrate applications to the cloud, this opens up a world of&nbsp;possibilities.</p>
-<p>In this post, I’ll walk through a series of steps that show creating a <span class="caps">VHD</span> from scratch, copying it to the cloud, and accessing it from a web role running in&nbsp;Azure.</p>
-<p><strong>Before you&nbsp;begin</strong></p>
-<p>You’ll of course need an Azure account.  If you don’t have one, you can go <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;windowsazure&#x2F;account&#x2F;">here</a> to sign&nbsp;up.</p>
-<p>Once you have your account, you’ll need to setup two new&nbsp;services. </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a> </p>
-<p>You’ll need to create a storage account – this is where the VHDs will be stored – and a hosted service to run your application from.  When you set them up, make sure that they are created in the same geography (i.e. don’t have your storage account in Asia, and your hosted service in the <span class="caps">US</span> as the drive mounting has to be in the same&nbsp;region).</p>
-<p>Once you have your storage account and service created, you are ready to create and upload your&nbsp;<span class="caps">VHD</span>. </p>
-<p><strong>Step 1.  You’ll need a&nbsp;<span class="caps">VHD</span></strong></p>
-<p>If you already have a <span class="caps">VHD</span> file that you would like to use, you can skip to Step 2.  You’ll be copying this VHD to the cloud, so you may want to choose a smaller VHD file for test&nbsp;purposes.</p>
-<p>If you are running Windows 7, creating a new <span class="caps">VHD</span> is&nbsp;easy. </p>
-<p>Firstly, go to the start menu and type <strong>disk management</strong>. </p>
-<p>From the start menu click on <strong>Create and format hard disk&nbsp;partitions</strong></p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image1.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb1.png &quot;image&quot;" alt="image"></a></p>
-<p>This will open up the disk management tool.  From the <strong>Action</strong> menu, select <strong>Create <span class="caps">VHD</span></strong>.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image2.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb2.png &quot;image&quot;" alt="image"></a></p>
-<p>Enter a location for the <span class="caps">VHD</span> file and a size.  The minimum is 16Mb and the maximum is likely the amount of free disk space on your&nbsp;machine. </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image3.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb3.png &quot;image&quot;" alt="image"></a> </p>
-<p>When your disk appears in the management tool, right click on the disk name and select <strong>Initialize Disk</strong>.  Select the default (<span class="caps">MBR</span>) and select&nbsp;OK.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image4.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb4.png &quot;image&quot;" alt="image"></a></p>
-<p>After initialization, right click on the disk and create a <strong>New Simple Volume</strong>.  Walk through the wizard, accepting the defaults and assign a drive letter to the <span class="caps">VHD</span>.  Finally, format the disk using NTFS (a quick format is fine).  If a dialog box appears asking you to format the disk (sometimes the disk gets detected just before formatting has begun), just hit&nbsp;cancel.</p>
-<p>After this is done, you can open the drive and access it as you would any other drive. Add some files and folders,&nbsp;etc.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image5.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb5.png &quot;image&quot;" alt="image"></a> </p>
-<p>When you are ready to upload to the cloud, you’ll need to detach the drive.  To do this, go back in to the disk management tool, right click on the disk name and select <strong>Detach <span class="caps">VHD</span></strong>.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image6.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb6.png &quot;image&quot;" alt="image"></a></p>
-<p>(Do not select the Delete the virtual hard disk file checkbox – otherwise, they’ll be nothing to&nbsp;upload!)</p>
-<p><strong>Step 2.  Upload it to Azure&nbsp;Storage</strong></p>
-<p>The next step is to upload the <span class="caps">VHD</span> to the cloud.  The VHD will be stored in something called Blob (Binary Large OBject) storage.  You may have heard of blob storage if you’ve seen any of the introductory Azure presentations.  It’s the type of storage that is used for binary data such as images, videos, and the&nbsp;like.</p>
-<p>In February we enabled support for Page Blobs.  Page Blobs are binary objects stored in the cloud that support random read&#x2F;writes through pages.  This makes them ideal for dealing with <span class="caps">VHD</span> type of access, and this is the format that we’ll be using to upload our VHD to the&nbsp;cloud.</p>
-<p>The one caveat of this is that you must use a tool that supports page blobs (most of the tools available today only support regular blobs).  The tool I would recommend is <a href="http:&#x2F;&#x2F;www.cerebrata.com&#x2F;Products&#x2F;CloudStorageStudio&#x2F;Default.aspx">Cloud Storage Studio</a> by Cerebrata as it supports page blobs through a nice&nbsp;interface.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image7.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb7.png &quot;image&quot;" alt="image"></a></p>
-<p>Open the tool and access the storage account that you created in the “Before you begin” section earlier in this&nbsp;post. </p>
-<p>I would recommend creating a new container for your <span class="caps">VHD</span> images to keep them separate from other content.  As shown in the screenshot above, I’ve created a container called&nbsp;vhd.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image8.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb8.png &quot;image&quot;" alt="image"></a></p>
-<p>Select the container, and click on the <strong>Upload Page Blob</strong> button.  There are two upload buttons – you need the one with the icon that includes the page and the up&nbsp;arrow.</p>
-<p>Point to the location of your <span class="caps">VHD</span> file and click on the <strong>Upload</strong>&nbsp;button.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image9.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb9.png &quot;image&quot;" alt="image"></a></p>
-<p>This might take a little way depending on the size of your <span class="caps">VHD</span> and the speed of your&nbsp;network.</p>
-<p>Once you have uploaded the file, validate that it exists by hitting the refresh&nbsp;button.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image10.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb10.png &quot;image&quot;" alt="image"></a></p>
-<p>With the <span class="caps">VHD</span> uploaded, we can now move on to creating the cloud application that accesses&nbsp;it.</p>
-<p><strong>Step 3.  Accessing the <span class="caps">VHD</span> from Windows&nbsp;Azure </strong></p>
-<p>I’m going to assume that you have some knowledge of creating an <span class="caps">ASP</span>.NET application and uploading it to Windows Azure.  If you haven’t done this before, I would recommend checking out the <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;downloads&#x2F;details.aspx?FamilyID=413E88F8-5966-4A83-B309-53B7B77EDF78&amp;amp;displaylang=en">Windows Azure Training Kit</a>.</p>
-<p>To access the <span class="caps">VHD</span> in the cloud, we create a webrole and use the following&nbsp;code.</p>
-<p>Add reference to the <strong>Microsoft.WindowsAzure.CloudDrive </strong><span class="caps">DLL</span> that can be found in the GAC (assuming that you have the <a href="http:&#x2F;&#x2F;www.microsoft.com&#x2F;downloads&#x2F;details.aspx?FamilyID=dba6a576-468d-4ef6-877e-b14e3c865d3a&amp;amp;displaylang=en">v1.1 <span class="caps">SDK</span></a> installed).  Then, in your webrole, you’ll need to add the following using&nbsp;statements:</p>
-<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.StorageClient;&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>Here is the code that you should run in your web role.  (You can place this behind a button or&nbsp;something…)</p>
-<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;
-&#x2F;&#x2F; Setup the account details
-String accountName = &quot;&quot;;  &#x2F;&#x2F; insert your storage account name here
-String accountKey = &quot;”;  &#x2F;&#x2F; insert your storage account primary key&nbsp;here</p>
-<p>StorageCredentialsAccountAndKey credentials = new StorageCredentialsAccountAndKey(accountName,&nbsp;accountKey);</p>
-<p>CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, new Uri(String.Format(&quot;http:&#x2F;&#x2F;{0}.blob.core.windows.net&quot;,accountName)),
-                                                                            new Uri(String.Format(&quot;http:&#x2F;&#x2F;{0}.queue.core.windows.net&quot;, accountName)),
-                                                                            new Uri(String.Format(&quot;http:&#x2F;&#x2F;{0}.table.core.windows.net&quot;, accountName))&nbsp;);</p>
-<p>&#x2F;&#x2F; initialize the local cache - need to trim the end backslash otherwise, <span class="caps">HRESULT</span>=D0000033
-LocalResource localCache = RoleEnvironment.GetLocalResource(&quot;LocalCache&quot;);
-CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&#39;&#39;),&nbsp;localCache.MaximumSizeInMegabytes);</p>
-<p>&#x2F;&#x2F; Create and mount the drive
-CloudDrive c = storageAccount.CreateCloudDrive(&quot;vhd&#x2F;myvhd.vhd&quot;);
-String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes,&nbsp;DriveMountOptions.None);</p>
-<p>&#x2F;&#x2F; do regular System.<span class="caps">IO</span>.File and System.IO.Directory operations here against driveLetter
-Response.Write(System.IO.Directory.GetFiles(driveLetter + &quot;&quot;).Count() + &quot; files found on the root of the mounted&nbsp;drive.&quot;);</p>
-<p>&#x2F;&#x2F; unmount the drive
-c.Unmount();&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>There are five main pieces to the&nbsp;code.</p>
-<p>Firstly, the storage account reference is created using the account name and key that you retrieve when you setup your Azure&nbsp;account.</p>
-<p>After that we need to initialize a local cache used by the cloud drive.  To create this, insert the following code into your ServiceDefinition.csdef file on your&nbsp;webrole.</p>
-<p>&lt;pre class=&quot;brush:xml&quot;&gt;
-&amp;lt;LocalResources&amp;gt;
-  &amp;lt;LocalStorage name=&quot;LocalCache&quot; cleanOnRoleRecycle=&quot;false&quot; sizeInMB=&quot;100&quot; &#x2F;&amp;gt;
-&amp;lt;&#x2F;LocalResources&amp;gt;
-&lt;&#x2F;pre&gt;
-We then create and mount the drive using the <strong>CreateCloudDrive</strong> and <strong>Mount</strong> methods.  Make sure that the path and name to your <span class="caps">VHD</span> matches what you uploaded in Step&nbsp;2.</p>
-<p>Once the drive is mounted we get a drive letter (as a string – e.g. “f:”).  You can then make calls to that drive letter using the regular calls (e.g. <strong>System.<span class="caps">IO</span>.File</strong> and <strong>System.<span class="caps">IO</span>.Directory</strong>).  In a worker role you can even launch applications from the <span class="caps">VHD</span> by spawning a new&nbsp;process. </p>
-<p>Finally, to unmount the drive, just call the <strong>Unmount</strong> method to release the <span class="caps">VHD</span>&nbsp;image.</p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image11.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;wp-content&#x2F;uploads&#x2F;2010&#x2F;04&#x2F;image_thumb11.png &quot;image&quot;" alt="image"></a> </p>
-<p>There are a lot of details behind the scenes that I’m not going to go into here (e.g. read and read&#x2F;write access to the <span class="caps">VHD</span>)  - if you want to learn more, I would recommend checking out <a href="http:&#x2F;&#x2F;microsoftpdc.com&#x2F;Sessions&#x2F;SVC14">this <span class="caps">PDC</span> session</a> by Brad&nbsp;Calder</p>
-<p><strong>Appendix.  Running this in a local development&nbsp;environment.</strong></p>
-<p>You should note that uploading a <span class="caps">VHD</span> only works using a live deployment in the cloud.  In the local development fabric, you’ll find that you cannot access a remote VHD (you’ll get a HRESULT = 80070003 error).  Also, you can’t upload a page blob to local development&nbsp;storage.</p>
-<p>However, you can still duplicate the same functionality in the local development environment by using this&nbsp;code:</p>
-<p>&lt;pre class=&quot;brush:c-sharp&quot;&gt;
-&#x2F;&#x2F; Setup the account details
-CloudStorageAccount storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
-&#x2F;&#x2F; initialize the local cache - need to trim the end backslash otherwise, <span class="caps">HRESULT</span>=D0000033
-LocalResource localCache = RoleEnvironment.GetLocalResource(&quot;LocalCache&quot;);
-CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&#39;&#39;),&nbsp;localCache.MaximumSizeInMegabytes);</p>
-<p>&#x2F;&#x2F; Create and mount the drive
-CloudDrive c =&nbsp;storageAccount.CreateCloudDrive(&quot;vhd&#x2F;myvhd.vhd&quot;);</p>
-<p>&#x2F;&#x2F; try creating the drive if it doesn&#39;t exist
-try
-{
-        c.Create(16);
-}
-        catch (Exception)
-{
-         &#x2F;&#x2F; ignore - <span class="caps">VHD</span> folder already exists&nbsp;}</p>
-<p>String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes,&nbsp;DriveMountOptions.None);</p>
-<p>&#x2F;&#x2F; do regular System.<span class="caps">IO</span>.File and System.IO.Directory operations here against driveLetter
-Response.Write(System.IO.Directory.GetFiles(driveLetter + &quot;&quot;).Count() + &quot; files found on the root of the mounted&nbsp;drive.&quot;);</p>
-<p>&#x2F;&#x2F; unmount the drive
-c.Unmount();&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>There are a couple of differences from the live&nbsp;environment.</p>
-<p>Firstly, instead of using the public account details, we can just make a call to <strong>CloudStorageAccount.DevelopmentStorageAccount</strong>. </p>
-<p>Secondly, just before we mount the drive we actually try to create it using the <strong>c.Create(16)</strong> command.  If it already exists, then it throws an exception that we just&nbsp;ignore.</p>
-<p>It’s important to know that this doesn’t actually create a <span class="caps">VHD</span> file. Instead, it creates a new directory in this&nbsp;folder:</p>
-<p><strong>c:users[username]AppDataLocaldftmpwadddevstoreaccount1vhd</strong></p>
-<p>You can now access this folder through Windows Explorer, go into the .vhd folder and add&#x2F;remove files as you wish.  Once you are ready to move to a production environment you simply copy the files from this directory in to a new <span class="caps">VHD</span> (as created in Step 1), upload, and switch to the production&nbsp;code.</p>
-
+          <section class="content"><p>When I speak with customers about cloud computing, a common question is often “how do I migrate an application to the cloud?”  While this is a multi-part answer, one of the hurdles for migration is often&nbsp;storage. </p>
+<p>Many applications store data using the file system (e.g. read / write a file to d:dataconfig.xml).  Moving these types of applications to the cloud can be difficult as the storage mechanisms in the cloud are somewhat&nbsp;different. </p>
+<p>
+            <p class="more"><a href="/2010/04/22/moving-vhds-to-the-cloud/">more</a></p>
           </section>
         </article>
         <article class="article intro">
           <header>
-            <p class="date"><span>21. April 2009</span></p>
-            <h2><a href="/2009/04/20/displaying-xps-documents-in-silverlight/">Displaying XPS Documents in Silverlight</a></h2>
+            <p class="date"><span>09. March 2009</span></p>
+            <h2><a href="/2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/">Using Windows 7 to host PHP applications in 5 easy steps!</a></h2>
           </header>
-          <section class="content"><p>I’ve recently been involved on a project that has a requirement to create and view <span class="caps">XPS</span> documents in Silverlight.&amp;#160; The application needs to display the XPS file in a full screen window together with zoom and navigation&nbsp;features.</p>
-<p>After a little searching on how to do this, I was able to get a head start with <a href="http:&#x2F;&#x2F;blogs.msdn.com&#x2F;delay&#x2F;archive&#x2F;2007&#x2F;05&#x2F;22&#x2F;lighting-up-the-xml-paper-specification-proof-of-concept-xps-reader-for-silverlight.aspx">this great post</a> from David Anson, which includes sample code for viewing <span class="caps">XPS</span> files in Silverlight 2 beta 2.&amp;#160; As his <a href="http:&#x2F;&#x2F;blogs.msdn.com&#x2F;delay&#x2F;archive&#x2F;2008&#x2F;10&#x2F;18&#x2F;roadblock-in-the-way-of-migrating-the-proof-of-concept-silverlight-xps-reader-simplesilverlightxpsviewer-sample-does-not-work-on-silverlight-2-rtw.aspx">updated post</a> attests to however, there were a few issues with Silverlight 2 due to a breaking change with the ways that font resources could be referenced from within a Silverlight assembly.&amp;#160; Fortunately, <a href="http:&#x2F;&#x2F;www.dotneteer.com&#x2F;Weblog&#x2F;post&#x2F;2008&#x2F;11&#x2F;Fix-for-Simple-XPS-Silverlight-Viewer-for-Silverlight-2.aspx">this post</a> from Li Chen pointed me in the right direction, separating out the <span class="caps">ODTTF</span> fonts into separate XAP files which can be referenced at&nbsp;runtime.&amp;#160; </p>
-<p>The sample code provided by Li Chen works well with the sample <span class="caps">XPS</span> files provided, but I couldn’t get it working with an XPS file generated using Microsoft Word.&amp;#160; After a little debugging this weekend, I found a few subtleties with how the code dealt with XPS files geneated from Microsoft&nbsp;Word:</p>
-<p>Firstly, the root document of the <span class="caps">XPS</span> file is called FixedDoc.fdoc instead of FixedDocument.fdoc (which is the name when using the XPS Printer Driver).&amp;#160; This was fairly easy to correct using a simple check:
-  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
-<p>&#x2F;&#x2F; Added to support &amp;quot;Save as <span class="caps">XPS</span>&amp;quot; from Microsoft Word<br>if (resourceInfo == null)<br>{<br>&amp;#160;&amp;#160;&amp;#160; resourceInfo = Application.GetResourceStream(_streamResourceInfo, ConvertPartName(&amp;quot;&#x2F;Documents&#x2F;1&#x2F;FixedDoc.fdoc&amp;quot;));<br>}&nbsp;&lt;&#x2F;div&gt;  </p>
-<p>Secondly, the .fdoc file refers to pages using relative links.&amp;#160; Instead of the absolute link (e.g. &#x2F;Documents&#x2F;1&#x2F;Pages&#x2F;1.page), a relative link (e.g. &#x2F;Page&#x2F;1.page) was causing the sample to be unable to find the pages.&amp;#160; A small piece of code to append the full path quickly fixes this also.
-  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
-<p>&#x2F;&#x2F; Update the page names for &amp;quot;Save as <span class="caps">XPS</span>&amp;quot; from Microsoft Word<br>List&amp;lt;string&amp;gt; _newPageNames = new List&amp;lt;string&amp;gt;();<br>foreach (String pageName in _pageNames)<br>{<br>&amp;#160;&amp;#160;&amp;#160; if (pageName.StartsWith(&amp;quot;Page&amp;quot;))<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; _newPageNames.Add(&amp;quot;&#x2F;Documents&#x2F;1&#x2F;&amp;quot; + pageName);<br>&amp;#160;&amp;#160;&amp;#160; }<br>}&nbsp;&lt;&#x2F;div&gt;  </p>
-<p>Finally, it looks like Word includes a page attribute called BidiLevel, which isn’t recognized by the Canvas element.&amp;#160; Adding an additional exclusion line into the sample code quickly fixed it.
-  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
-<p>_elementAttributesToRemove.Add(&amp;quot;Glyphs&amp;quot;, new List&amp;lt;string&amp;gt; { &amp;quot;BidiLevel&amp;quot; });&nbsp;&lt;&#x2F;div&gt;  </p>
-<p>The result seems to work quite well, with an <span class="caps">XPS</span> file saved from Microsoft Word viewable within&nbsp;Silverlight.&amp;#160;&amp;#160; </p>
-<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;DisplayingXPSDocumentsinSilverlight_9130&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;DisplayingXPSDocumentsinSilverlight_9130&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a> </p>
-<p>If you are interested in trying this yourself, I’ve posted a version of the sample code <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;downloads&#x2F;SimpleSilverlightXpsViewer.zip">here</a> which contains the above modifications.&amp;#160; To use the modified sample with your own <span class="caps">XPS</span> file, do the&nbsp;following:&amp;#160; </p>
-<p>1.&amp;#160; Go into Microsoft Word and “Save as &#x2F; <span class="caps">XPS</span>” to create a new XPS&nbsp;file.</p>
-<p>2.&amp;#160; Download and compile the sample (note: only works in Visual Studio&nbsp;2008).&amp;#160; </p>
-<p>3.&amp;#160; Copy the <span class="caps">XPS</span> into your Visual Studio project, in the <strong>SimpleSilverlightXpsViewer_Web </strong>project.&amp;#160; </p>
-<p>4.&amp;#160; In Windows Explorer, rename the original <span class="caps">XPS</span> file to a ZIP file.&amp;#160; Ignore the warning about changing the file&nbsp;extension.</p>
-<p>5.&amp;#160; Open the zip file and go into the &#x2F;Resources directory.&amp;#160; Look for font files ending in <span class="caps">ODTTF</span> - these are embedded font files for the XPS file and must be referenced separately in the Silverlight project.&amp;#160; Copy all of these ODTTF files to the <strong>SampleWordGenerated </strong>project in the solution.&amp;#160; Also note that the <span class="caps">ODTTF</span> files are dynamically named when the XPS file is generated.&amp;#160; This means that although you may have already imported the correct ODTTF files for previous XPS file that use the same fonts, you’ll still need to re-import the fonts again to handle a new XPS&nbsp;file.&amp;#160; </p>
-<p>6.&amp;#160; Edit <strong>default.html </strong>in <strong>SimpleSilverlightXpsViewer_Web </strong>and on line 70 change the <strong>xpsDocument=SampleWordGenerated.xps </strong>to the correct name of your <span class="caps">XPS</span>&nbsp;file.&amp;#160; </p>
-<p>7.&amp;#160; F5 to run and you should see your <span class="caps">XPS</span> document displayed within a Silverlight&nbsp;control!</p>
-<p>There is still a bit of work to do with the sample code, which I think would be worth taking into a CodePlex project.&amp;#160; For example, the code should initially read the <span class="caps">XPS</span> root file (FixedDocSeq.fdseq) instead of looking or FixedDoc.fdoc or FixedDocument.fdoc directly.&amp;#160; It would also be great to figure out a better way of extracting the fonts more dynamically at runtime.&amp;#160; Other than that though I found this to be a good solution to display XPS files in Silverlight applications, especially useful as Silverlight doesn’t support the FlowDocument element (which is commonly used in WPF applications for creating documents and report&nbsp;generation).</p>
-
+          <section class="content"><p>A few people have asked me recently whether it’s possible to setup Windows 7 as a <span class="caps">PHP</span> server (for development purposes).  The answer is absolutely yes, and it’s a breeze to setup.  Follow these five simple steps to get PHP up and running in&nbsp;minutes.</p>
+<p>
+            <p class="more"><a href="/2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/">more</a></p>
           </section>
         </article>
       </div>
     </div>
     <footer>
       <div class="content-wrap">
-        <div class="nav"><a href="/page/2/">« Newer</a><a href="/page/4/">Next page »</a>
+        <div class="nav"><a href="/page/2/">« Newer</a>
         </div>
         <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
 <p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>

@@ -14,35 +14,45 @@
     <header class="header">
       <div class="content-wrap">
         <h1>Easy Event Logging on Windows Azure</h1>
-        <p class="author">Written by <span class="author"></span>
+        <p class="author">Written by <span class="author">Simon Guest</span>
         </p>
       </div>
     </header>
     <div id="content">
       <div class="content-wrap">
         <article class="article">
-          <section class="content"><p>I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.&amp;#160;&amp;#160; Effective logging can be difficult to setup.&amp;#160; Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs,&nbsp;etc.&amp;#160; </p>
-<p>Instead, I wanted an easy way to log custom events and exceptions in my application.&amp;#160; This is how to do&nbsp;it:</p>
-<p>1. Create a class that inherits from System.Diagnostics.TraceListener.&amp;#160; 
-  &lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>public class AzureTraceListener :&nbsp;TraceListener   </p>
-<p>{    </p>
-<p>public static List&amp;lt;String&amp;gt; Events = new&nbsp;List&amp;lt;String&amp;gt;(); </p>
-<p>&amp;#160;&amp;#160;&amp;#160; public override void Write(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;} </p>
-<p>&amp;#160;&amp;#160;&amp;#160; public override void WriteLine(string message)<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Events.Add(message);<br>&amp;#160;&amp;#160;&amp;#160;&nbsp;}  </p>
-<p>} 
-&lt;&#x2F;pre&gt;
-2.&amp;#160; In your web role, add a reference to your custom trace listener.&amp;#160; This is done by adding the following two lines in your OnStart()&nbsp;method.</p>
-<p>&lt;pre&nbsp;class=&quot;brush:c-sharp&quot;&gt;</p>
-<p>AzureTraceListener atl = new AzureTraceListener();<br>Trace.Listeners.Add(atl);</p>
-<p>&amp;#160;
-&lt;&#x2F;pre&gt;
-3.&amp;#160; In your application, log your events using the Trace.Write(string)&nbsp;method.</p>
-<p>4.&amp;#160; To display your events, create a new page called Traceviewer.aspx with the following block of&nbsp;<span class="caps">HTML</span>:</p>
-<p>&lt;pre&nbsp;class=&quot;brush:html&quot;&gt;</p>
-<p>&amp;lt;h1&amp;gt;Trace Log&amp;lt;&#x2F;h1&amp;gt;<br>&amp;lt;% foreach (String eventitem in WebRole1.AzureTraceListener.Events)<br>&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; Response.Write(&amp;quot;&amp;lt;h4&amp;gt;&amp;quot;+eventitem+&amp;quot;&amp;lt;&#x2F;h4&amp;gt;&amp;quot;);<br>&amp;#160;&amp;#160; } 
-%&amp;gt;&nbsp;&lt;&#x2F;pre&gt;</p>
-<p>That’s it.&amp;#160; Deploy your application and simply call Traceviewer.aspx to look at all of your generated&nbsp;events.</p>
+          <section class="content"><p>I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.   Effective logging can be difficult to setup.  Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs, etc. Instead, I wanted an easy way to log custom events and exceptions in my application.  This is how to do&nbsp;it:</p>
+<p><span class="more"></span></p>
+<p>Create a class that inherits from&nbsp;System.Diagnostics.TraceListener. </p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">class</span> AzureTraceListener : TraceListener
+{
+<span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; Events = <span class="keyword">new</span> List&lt;String&gt;();
+
+    <span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Write</span>(<span class="keyword">string</span> message)
+    {
+        Events.Add(message);
+    }
+
+    <span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">WriteLine</span>(<span class="keyword">string</span> message)
+    {
+        Events.Add(message);
+    }
+}
+</code></pre>
+<p>In your web role, add a reference to your custom trace listener.  This is done by adding the following two lines in your OnStart()&nbsp;method.</p>
+<pre><code class="lang-cs">AzureTraceListener atl = <span class="keyword">new</span> AzureTraceListener();
+Trace.Listeners.Add(atl);
+</code></pre>
+<p>In your application, log your events using the Trace.Write(string)&nbsp;method.</p>
+<p>To display your events, create a new page called Traceviewer.aspx with the following block of&nbsp;<span class="caps">HTML</span>:</p>
+<pre><code class="lang-html"><span class="tag">&lt;<span class="title">h1</span>&gt;</span>Trace Log<span class="tag">&lt;/<span class="title">h1</span>&gt;</span>
+<span class="vbscript">&lt;% foreach (<span class="built_in">String</span> eventitem <span class="keyword">in</span> WebRole1.AzureTraceListener.Events)
+   {
+       <span class="built_in">Response</span>.Write(<span class="string">"&lt;h4&gt;"</span>+eventitem+<span class="string">"&lt;/h4&gt;"</span>);
+   }
+%&gt;</span>
+</code></pre>
+<p>That’s it.  Deploy your application and simply call Traceviewer.aspx to look at all of your generated&nbsp;events.</p>
 </section>
         </article>
       </div>

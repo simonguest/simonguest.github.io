@@ -1437,39 +1437,36 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
       <pubDate>Sat, 18 Sep 2010 08:00:00 -0700</pubDate>
       <guid isPermaLink="true">http://localhost:8080/2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/</guid>
       <author></author>
-      <description>&lt;p&gt;&amp;lt;html xmlns=&amp;quot;&amp;quot;&amp;gt;As I mentioned in &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;08&amp;#x2F;speaking-at-javaone-2010&amp;#x2F;&quot;&gt;my previous post&lt;/a&gt;, I’ll be participating in a &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.eventreg.com&amp;#x2F;cc250&amp;#x2F;sessionDetail.jsp?SID=313962&quot;&gt;panel&lt;/a&gt; at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1 request.&lt;/p&gt;
-&lt;p&gt;Here is an overview of what I will be showing:&lt;/p&gt;
+      <description>&lt;p&gt;As I mentioned in my previous post, I’ll be participating in a &lt;a href=&quot;http://www.eventreg.com/cc250/sessionDetail.jsp?SID=313962&quot;&gt;panel&lt;/a&gt; at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1 request. Here is an overview of what I will be showing:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 1 – What you’ll need to get started&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;As you might imagine, you are going to first need a Windows Azure account.  I would recommend going to &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.microsoft.com&amp;#x2F;windowsazure&amp;#x2F;offers&quot;&gt;www.microsoft.com&amp;#x2F;windowsazure&amp;#x2F;offers&lt;/a&gt; and signing up for the introductory special, which will allow you to test your application for free.  The introductory offer gives you the first 25 hours at no cost, which should be more than enough time to get up and running.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;I**&lt;/strong&gt;f you are at JavaOne however, **I have a limited quantity (100) of tokens that give you 30 days worth of access with no need to submit any registration or credit card information.  See me at the end of the panel session or throughout the conference, and in exchange for a business card, I’ll be happy to give you one at no cost!&lt;/p&gt;
-&lt;p&gt;After you have your account, you’ll want to download and install the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;go.microsoft.com&amp;#x2F;fwlink&amp;#x2F;?LinkID=130232&quot;&gt;Windows Azure SDK&lt;/a&gt;.  After installation, set your PATH environment to include the location of the SDK binaries (typically &lt;em&gt;C:Program FilesWindows Azure SDKv1.1bin&lt;/em&gt;).  This is important to ensure that the SDK is accessible from the command line.&lt;/p&gt;
-&lt;p&gt;Finally, you’ll need to install the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;code.msdn.microsoft.com&amp;#x2F;winazuretomcat&quot;&gt;Windows Azure Tomcat Solution Accelerator&lt;/a&gt;.  Feel free to install this in any directory you’d like – I’m using &lt;em&gt;c:devjavaone2010tomcatazure&lt;/em&gt; for the purposes of this tutorial.&lt;/p&gt;
-&lt;p&gt;&amp;lt;p$1$2$3$4$5$6&amp;gt;&lt;/p&gt;
+&lt;p&gt;As you might imagine, you are going to first need a Windows Azure account.  I would recommend going to &lt;a href=&quot;http://www.microsoft.com/windowsazure/offers&quot;&gt;www.microsoft.com/windowsazure/offers&lt;/a&gt; and signing up for the introductory special, which will allow you to test your application for free.  The introductory offer gives you the first 25 hours at no cost, which should be more than enough time to get up and running.&lt;/p&gt;
+&lt;p&gt;If you are at JavaOne however, I have a limited quantity (100) of tokens that give you 30 days worth of access with no need to submit any registration or credit card information.  See me at the end of the panel session or throughout the conference, and in exchange for a business card, I’ll be happy to give you one at no cost!&lt;/p&gt;
+&lt;p&gt;After you have your account, you’ll want to download and install the &lt;a href=&quot;http://go.microsoft.com/fwlink/?LinkID=130232&quot;&gt;Windows Azure SDK&lt;/a&gt;.  After installation, set your PATH environment to include the location of the SDK binaries (typically &lt;em&gt;C:/Program Files/Windows Azure SDK/v1.1/bin&lt;/em&gt;).  This is important to ensure that the SDK is accessible from the command line.&lt;/p&gt;
+&lt;p&gt;Finally, you’ll need to install the &lt;a href=&quot;http://code.msdn.microsoft.com/winazuretomcat&quot;&gt;Windows Azure Tomcat Solution Accelerator&lt;/a&gt;.  Feel free to install this in any directory you’d like – I’m using &lt;em&gt;c:/dev/javaone2010/tomcat/azure&lt;/em&gt; for the purposes of this tutorial.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 2 – Building and running your site&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;With all of the pre-requisites downloaded and installed, it’s time to build and test your site.  To do this, open a command prompt, and navigate to the directory that you chose for the solution accelerator.  From this directory, run &lt;strong&gt;buildme.cmd&lt;/strong&gt;.  You’ll be prompted to provide the installation path of your Tomcat installation and a JRE on your machine.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;After a successful build, run the &lt;strong&gt;runme.cmd&lt;/strong&gt; file. This will run Tomcat using the Windows Azure Desktop Execution Tool – also known as the local development fabric.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image1.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb1.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image2.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb2.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;This is a great way to test that your application is going to work when deployed to production.  Navigate to the URL provided at the end  (replace the tcp with http) to ensure that the Tomcat instance is working correctly on your local machine.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image3.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb3.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You can open the development fabric tool (found running in your system tray) if you want to stop and&amp;#x2F;or investigate the service.&lt;/p&gt;
-&lt;p&gt;&amp;lt;p$1$2$3$4$5$6&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image1.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image2.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;This is a great way to test that your application is going to work when deployed to production.  Navigate to the URL provided at the end (replace the tcp with http) to ensure that the Tomcat instance is working correctly on your local machine.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image3.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;You can open the development fabric tool (found running in your system tray) if you want to stop and/or investigate the service.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 3 – Packaging and deploying your site&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Once you are satisfied that everything looks good, it’s time to package the application ready for deployment to the cloud.  To do this, run the &lt;strong&gt;packme.cmd &lt;/strong&gt;script.  This will invoke the Windows Azure Packaging Tool, and pull together everything needed into one package file for deployment.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image4.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb4.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image4.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;When this has completed, you should see a &lt;strong&gt;Tomcat.cspkg &lt;/strong&gt;file and a &lt;strong&gt;ServiceConfiguration.cscfg &lt;/strong&gt;file in the directory.  The .cspkg file is quite large as it contains your application, the Tomcat instance, and JRE binaries.  Despite the size, this format makes it convenient if you prefer to use a different version of Tomcat or a different JRE in the future.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image5.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb5.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;To deploy to the cloud, log on to the portal (&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;windows.azure.com&quot;&gt;http:&amp;#x2F;&amp;#x2F;windows.azure.com&lt;/a&gt;) and create a new hosted service.  Walk through the wizard to specify the name, description, URL, and location where you want the service to be deployed.  Next, hit the “Deploy” button and specify the location of the previous package and configuration file.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image6.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb6.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You have two options when it comes to deploying – either a file from your local storage (i.e. your local disk) or a file from an Azure storage account (blob storage).  If you have issues with the local storage (many http connections timeout before the package can be uploaded in time), I would recommend using &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;azurestorageexplorer.codeplex.com&amp;#x2F;&quot;&gt;Neudesic’s Azure Storage Explorer&lt;/a&gt; to upload your files to a blob storage container.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image7.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb7.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image5.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;To deploy to the cloud, log on to the portal (&lt;a href=&quot;http://windows.azure.com&quot;&gt;http://windows.azure.com&lt;/a&gt;) and create a new hosted service.  Walk through the wizard to specify the name, description, URL, and location where you want the service to be deployed.  Next, hit the “Deploy” button and specify the location of the previous package and configuration file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image6.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;You have two options when it comes to deploying – either a file from your local storage (i.e. your local disk) or a file from an Azure storage account (blob storage).  If you have issues with the local storage (many http connections timeout before the package can be uploaded in time), I would recommend using &lt;a href=&quot;http://azurestorageexplorer.codeplex.com/&quot;&gt;Neudesic’s Azure Storage Explorer&lt;/a&gt; to upload your files to a blob storage container.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image7.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Hit &lt;em&gt;Deploy&lt;/em&gt;, and your package will be uploaded to Windows Azure – this will likely take a few minutes because of the size of the deployment.&lt;/p&gt;
 &lt;p&gt;Once this has been completed, hit the &lt;em&gt;Run&lt;/em&gt; button to bring your site to life.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image8.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb8.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image9.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;09&amp;#x2F;image_thumb9.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Once you have a site up and running, feel free to explore some of the ways that you can either scale your application to multiple nodes or explore some of the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.windowsazure4j.org&quot;&gt;other features&lt;/a&gt; on Windows Azure available to Java developers.&lt;/p&gt;
-&lt;p&gt;&amp;lt;p$1$2$3$4$5$6&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image8.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/javaone-tutorial-apache-tomcat-on-windows-azure/image9.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Once you have a site up and running, feel free to explore some of the ways that you can either scale your application to multiple nodes or explore some of the &lt;a href=&quot;http://www.windowsazure4j.org&quot;&gt;other features&lt;/a&gt; on Windows Azure available to Java developers.&lt;/p&gt;
 &lt;p&gt;There are many ways that this could be improved by integrating with existing build environments (I think Maven integration would be fascinating), but hopefully this short tutorial gives you a starting point for getting a simple Tomcat site up and running on Windows Azure.&lt;/p&gt;
 </description>
     </item>
@@ -1479,29 +1476,38 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
       <pubDate>Wed, 04  Aug 2010 16:42:45 -0700</pubDate>
       <guid isPermaLink="true">http://localhost:8080/2010/08/04/easy-event-logging-on-windows-azure/</guid>
       <author></author>
-      <description>&lt;p&gt;I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.&amp;amp;#160;&amp;amp;#160; Effective logging can be difficult to setup.&amp;amp;#160; Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs, etc.&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;Instead, I wanted an easy way to log custom events and exceptions in my application.&amp;amp;#160; This is how to do it:&lt;/p&gt;
-&lt;p&gt;1. Create a class that inherits from System.Diagnostics.TraceListener.&amp;amp;#160; 
-  &amp;lt;pre class=&amp;quot;brush:c-sharp&amp;quot;&amp;gt;&lt;/p&gt;
-&lt;p&gt;public class AzureTraceListener : TraceListener   &lt;/p&gt;
-&lt;p&gt;{    &lt;/p&gt;
-&lt;p&gt;public static List&amp;amp;lt;String&amp;amp;gt; Events = new List&amp;amp;lt;String&amp;amp;gt;(); &lt;/p&gt;
-&lt;p&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; public override void Write(string message)&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; {&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; Events.Add(message);&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; } &lt;/p&gt;
-&lt;p&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; public override void WriteLine(string message)&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; {&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; Events.Add(message);&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; }  &lt;/p&gt;
-&lt;p&gt;} 
-&amp;lt;&amp;#x2F;pre&amp;gt;
-2.&amp;amp;#160; In your web role, add a reference to your custom trace listener.&amp;amp;#160; This is done by adding the following two lines in your OnStart() method.&lt;/p&gt;
-&lt;p&gt;&amp;lt;pre class=&amp;quot;brush:c-sharp&amp;quot;&amp;gt;&lt;/p&gt;
-&lt;p&gt;AzureTraceListener atl = new AzureTraceListener();&lt;br&gt;Trace.Listeners.Add(atl);&lt;/p&gt;
-&lt;p&gt;&amp;amp;#160;
-&amp;lt;&amp;#x2F;pre&amp;gt;
-3.&amp;amp;#160; In your application, log your events using the Trace.Write(string) method.&lt;/p&gt;
-&lt;p&gt;4.&amp;amp;#160; To display your events, create a new page called Traceviewer.aspx with the following block of HTML:&lt;/p&gt;
-&lt;p&gt;&amp;lt;pre class=&amp;quot;brush:html&amp;quot;&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;amp;lt;h1&amp;amp;gt;Trace Log&amp;amp;lt;&amp;#x2F;h1&amp;amp;gt;&lt;br&gt;&amp;amp;lt;% foreach (String eventitem in WebRole1.AzureTraceListener.Events)&lt;br&gt;&amp;amp;#160;&amp;amp;#160; {&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; Response.Write(&amp;amp;quot;&amp;amp;lt;h4&amp;amp;gt;&amp;amp;quot;+eventitem+&amp;amp;quot;&amp;amp;lt;&amp;#x2F;h4&amp;amp;gt;&amp;amp;quot;);&lt;br&gt;&amp;amp;#160;&amp;amp;#160; } 
-%&amp;amp;gt;
-&amp;lt;&amp;#x2F;pre&amp;gt;&lt;/p&gt;
-&lt;p&gt;That’s it.&amp;amp;#160; Deploy your application and simply call Traceviewer.aspx to look at all of your generated events.&lt;/p&gt;
+      <description>&lt;p&gt;I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.   Effective logging can be difficult to setup.  Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs, etc. Instead, I wanted an easy way to log custom events and exceptions in my application.  This is how to do it:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Create a class that inherits from System.Diagnostics.TraceListener. &lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-cs&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; AzureTraceListener : TraceListener
+{
+&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; List&amp;lt;String&amp;gt; Events = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; List&amp;lt;String&amp;gt;();
+
+    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Write&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt; message)
+    {
+        Events.Add(message);
+    }
+
+    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;WriteLine&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt; message)
+    {
+        Events.Add(message);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In your web role, add a reference to your custom trace listener.  This is done by adding the following two lines in your OnStart() method.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-cs&quot;&gt;AzureTraceListener atl = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; AzureTraceListener();
+Trace.Listeners.Add(atl);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In your application, log your events using the Trace.Write(string) method.&lt;/p&gt;
+&lt;p&gt;To display your events, create a new page called Traceviewer.aspx with the following block of HTML:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-html&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;title&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;Trace Log&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;title&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;vbscript&quot;&gt;&amp;lt;% foreach (&lt;span class=&quot;built_in&quot;&gt;String&lt;/span&gt; eventitem &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; WebRole1.AzureTraceListener.Events)
+   {
+       &lt;span class=&quot;built_in&quot;&gt;Response&lt;/span&gt;.Write(&lt;span class=&quot;string&quot;&gt;&quot;&amp;lt;h4&amp;gt;&quot;&lt;/span&gt;+eventitem+&lt;span class=&quot;string&quot;&gt;&quot;&amp;lt;/h4&amp;gt;&quot;&lt;/span&gt;);
+   }
+%&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That’s it.  Deploy your application and simply call Traceviewer.aspx to look at all of your generated events.&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -1510,25 +1516,31 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
       <pubDate>Mon, 02  Aug 2010 15:41:30 -0700</pubDate>
       <guid isPermaLink="true">http://localhost:8080/2010/08/02/cita-p-certified-it-architect/</guid>
       <author></author>
-      <description>&lt;p&gt;Last week I took (and passed!) my &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.iasahome.org&amp;#x2F;web&amp;#x2F;home&amp;#x2F;certification&amp;#x2F;professional&quot;&gt;CITA-P&lt;/a&gt; examination.&amp;amp;#160; CITA-P (Certified IT Architect) is a new certification, offered through &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.iasahome.org&quot;&gt;IASA&lt;/a&gt; (the International Association of Software Architects).&amp;amp;#160; I wanted to share some thoughts on the certification, the process, and why you might want to consider applying yourself.&lt;/p&gt;
+      <description>&lt;p&gt;Last week I took (and passed!) my &lt;a href=&quot;http://www.iasahome.org/web/home/certification/professional&quot;&gt;CITA-P&lt;/a&gt; examination.  CITA-P (Certified IT Architect) is a new certification, offered through &lt;a href=&quot;http://www.iasahome.org&quot;&gt;IASA&lt;/a&gt; (the International Association of Software Architects).  I wanted to share some thoughts on the certification, the process, and why you might want to consider applying yourself.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;The Certification&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;The CITA-P certification evaluates an IT Architect across six core areas:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Business &amp;#x2F; Technology Mapping&lt;em&gt;   Design Skills&lt;/em&gt;   Human Dynamics&lt;em&gt;   IT Environment&lt;/em&gt;   Quality Attributes*   Software Architecture or Infrastructure Architecture (you pick one of the two)  &lt;/li&gt;
+&lt;li&gt;Business / Technology Mapping&lt;/li&gt;
+&lt;li&gt;Design Skills&lt;/li&gt;
+&lt;li&gt;Human Dynamics&lt;/li&gt;
+&lt;li&gt;IT Environment&lt;/li&gt;
+&lt;li&gt;Quality Attributes&lt;/li&gt;
+&lt;li&gt;Software Architecture or Infrastructure Architecture (you pick one of the two)  &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Each of the above six areas has around ten or so subcategories which go into some detail.&amp;amp;#160; There is a worksheet available &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.iasahome.org&amp;#x2F;c&amp;#x2F;document_library&amp;#x2F;get_file?uuid=a05a964c-8662-4df7-a3c0-a7fe99b6b771&amp;amp;amp;groupId=25692&quot;&gt;here&lt;/a&gt; on the IASA site that covers all six, and can be very useful to reflect on your own strengths and weaknesses, even if you are not planning on taking the exam.&lt;/p&gt;
-&lt;p&gt;The goal of the certification is to gauge your level of competency across each of these six areas.&amp;amp;#160; The majority of this will of course be based on your knowledge, experience, and personal reflections.&amp;amp;#160; &lt;/p&gt;
+&lt;p&gt;Each of the above six areas has around ten or so subcategories which go into some detail.  There is a worksheet available &lt;a href=&quot;http://www.iasahome.org/c/document_library/get_file?uuid=a05a964c-8662-4df7-a3c0-a7fe99b6b771&amp;amp;groupId=25692&quot;&gt;here&lt;/a&gt; on the IASA site that covers all six, and can be very useful to reflect on your own strengths and weaknesses, even if you are not planning on taking the exam.&lt;/p&gt;
+&lt;p&gt;The goal of the certification is to gauge your level of competency across each of these six areas.  The majority of this will of course be based on your knowledge, experience, and personal reflections.  &lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;The Process&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Because it would be impossible (and indeed, wrong) to certify IT Architects through a multiple choice examination, the process of certification is an involved process, although very well structured.&lt;/p&gt;
-&lt;p&gt;The first part requires submitting a set of documentation.&amp;amp;#160; The details of what is required can be found in the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.iasahome.org&amp;#x2F;c&amp;#x2F;document_library&amp;#x2F;get_file?uuid=79c2a82d-eea7-4d5a-bfea-0dab221f3563&amp;amp;amp;groupId=25692&quot;&gt;application guide&lt;/a&gt;, and for my submission I decided to offer my perspectives and thoughts across the six certification areas.&amp;amp;#160; I wrote a story about each, reflecting my experience, views, and examples of projects that I’ve been involved in.&lt;/p&gt;
-&lt;p&gt;After submission, I received my date for the in-person board review, which is split into three parts:&amp;amp;#160; The first part is a 30 minute presentation of your choosing.&amp;amp;#160; The board is looking for experience across the certification areas, and also for communication skills.&amp;amp;#160; Staying within the 30 minute timeslot and having a presentation that is both engaging and covers all of the areas is difficult, but important if you are going to be successful. &lt;/p&gt;
-&lt;p&gt;Following the presentation comes a line of questioning, with each of the four board members given ten minutes to question you about your presentation.&amp;amp;#160; The idea here is not to pick holes in the presentation or play &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;speakfearlessly.net&amp;#x2F;how-to-deal-with-the-stump-the-chump-dynamic-in-presentations&amp;#x2F;&quot;&gt;stump the chump&lt;/a&gt;, but merely to validate experience in areas that you may not have shown in the presentation.&amp;amp;#160; A large amount of my presentation was based on a framework around cloud computing, so while I had many questions related to this, I also saw the board trying to relate the material to other areas which I didn’t mention in the material.&lt;/p&gt;
-&lt;p&gt;After the first round of questioning, you are given a 15 minute break.&amp;amp;#160; This is a great opportunity to get some water and gather your thoughts while the board compares notes to look for areas they might have missed.&amp;amp;#160; Another round of questioning follows (4 x 10 minutes) on various topics and it’s all over.&amp;amp;#160; After the board review concludes, the board members meet and you are given their decision together with helpful advice in a couple of days.&lt;/p&gt;
+&lt;p&gt;The first part requires submitting a set of documentation.  The details of what is required can be found in the &lt;a href=&quot;http://www.iasahome.org/c/document_library/get_file?uuid=79c2a82d-eea7-4d5a-bfea-0dab221f3563&amp;amp;groupId=25692&quot;&gt;application guide&lt;/a&gt;, and for my submission I decided to offer my perspectives and thoughts across the six certification areas.  I wrote a story about each, reflecting my experience, views, and examples of projects that I’ve been involved in.&lt;/p&gt;
+&lt;p&gt;After submission, I received my date for the in-person board review, which is split into three parts:  The first part is a 30 minute presentation of your choosing.  The board is looking for experience across the certification areas, and also for communication skills.  Staying within the 30 minute timeslot and having a presentation that is both engaging and covers all of the areas is difficult, but important if you are going to be successful. &lt;/p&gt;
+&lt;p&gt;Following the presentation comes a line of questioning, with each of the four board members given ten minutes to question you about your presentation.  The idea here is not to pick holes in the presentation or play &lt;a href=&quot;http://speakfearlessly.net/how-to-deal-with-the-stump-the-chump-dynamic-in-presentations/&quot;&gt;stump the chump&lt;/a&gt;, but merely to validate experience in areas that you may not have shown in the presentation.  A large amount of my presentation was based on a framework around cloud computing, so while I had many questions related to this, I also saw the board trying to relate the material to other areas which I didn’t mention in the material.&lt;/p&gt;
+&lt;p&gt;After the first round of questioning, you are given a 15 minute break.  This is a great opportunity to get some water and gather your thoughts while the board compares notes to look for areas they might have missed.  Another round of questioning follows (4 x 10 minutes) on various topics and it’s all over.  After the board review concludes, the board members meet and you are given their decision together with helpful advice in a couple of days.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A Good Thing?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Although this is my first experience, I’ve been a strong supporter of IT Architect certification since my time in the Platform Architecture Team here at Microsoft, and I believe it’s a good thing for the industry.&lt;/p&gt;
-&lt;p&gt;We see many IT Architects in our industry today.&amp;amp;#160; Most inherit that role during the natural evolution of their career.&amp;amp;#160; Many of these are indeed valid IT Architects, but I have the impression that other are also riding on the cache of the title.&amp;amp;#160; If we are going to grow this profession, it’s important that we standardize the areas and level of experience we expect from this role.&lt;/p&gt;
+&lt;p&gt;We see many IT Architects in our industry today.  Most inherit that role during the natural evolution of their career.  Many of these are indeed valid IT Architects, but I have the impression that other are also riding on the cache of the title.  If we are going to grow this profession, it’s important that we standardize the areas and level of experience we expect from this role.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;More Information?&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;For more information about CITA-P certification in your area, I would recommend getting in &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.iasahome.org&amp;#x2F;web&amp;#x2F;home&amp;#x2F;about&amp;#x2F;contact&quot;&gt;contact with IASA&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;p&gt;For more information about CITA-P certification in your area, I would recommend getting in &lt;a href=&quot;http://www.iasahome.org/web/home/about/contact&quot;&gt;contact with IASA&lt;/a&gt; for more information.&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -1537,15 +1549,16 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
       <pubDate>Thu, 22 Apr 2010 15:25:49 -0700</pubDate>
       <guid isPermaLink="true">http://localhost:8080/2010/04/22/moving-vhds-to-the-cloud/</guid>
       <author></author>
-      <description>&lt;p&gt;When I speak with customers about cloud computing, a common question is often “how do I migrate an application to the cloud?&amp;quot;  While this is a multi-part answer, one of the hurdles for migration is often storage. &lt;/p&gt;
-&lt;p&gt;Many applications store data using the file system (e.g. read &amp;#x2F; write a file to d:dataconfig.xml).  Moving these types of applications to the cloud can be difficult as the storage mechanisms in the cloud are somewhat different. &lt;/p&gt;
-&lt;p&gt;To help address this problem, in Feb 2010 we released v1.1 of the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.microsoft.com&amp;#x2F;downloads&amp;#x2F;details.aspx?FamilyID=5664019e-6860-4c33-9843-4eb40b297ab6&amp;amp;amp;DisplayLang=en&quot;&gt;Windows Azure SDK&lt;/a&gt; which supports a new feature call Cloud Drives.  A Cloud Drive is the ability to mount a virtual drive in the cloud so that applications can write to it as they would a local drive.  This cloud drive is persisted so that even if the machine goes down, the data is not lost.&lt;/p&gt;
+      <description>&lt;p&gt;When I speak with customers about cloud computing, a common question is often “how do I migrate an application to the cloud?”  While this is a multi-part answer, one of the hurdles for migration is often storage. &lt;/p&gt;
+&lt;p&gt;Many applications store data using the file system (e.g. read / write a file to d:dataconfig.xml).  Moving these types of applications to the cloud can be difficult as the storage mechanisms in the cloud are somewhat different. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;To help address this problem, in Feb 2010 we released v1.1 of the &lt;a href=&quot;http://www.microsoft.com/downloads/details.aspx?FamilyID=5664019e-6860-4c33-9843-4eb40b297ab6&amp;amp;DisplayLang=en&quot;&gt;Windows Azure SDK&lt;/a&gt; which supports a new feature call Cloud Drives.  A Cloud Drive is the ability to mount a virtual drive in the cloud so that applications can write to it as they would a local drive.  This cloud drive is persisted so that even if the machine goes down, the data is not lost.&lt;/p&gt;
 &lt;p&gt;What many people don’t realize however is that the format that the Cloud Drive uses is interchangeable with the VHD (Virtual Hard Drive) format used by virtualization products such as Hyper-V, Virtual PC, Windows Server, and Windows 7.  What this means is that you can create a single VHD, use it locally on a Windows PC, attach it to a virtualized image, and now copy it to the cloud and access it there also.  As you can imagine, for anyone looking to migrate applications to the cloud, this opens up a world of possibilities.&lt;/p&gt;
 &lt;p&gt;In this post, I’ll walk through a series of steps that show creating a VHD from scratch, copying it to the cloud, and accessing it from a web role running in Azure.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Before you begin&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;You’ll of course need an Azure account.  If you don’t have one, you can go &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.microsoft.com&amp;#x2F;windowsazure&amp;#x2F;account&amp;#x2F;&quot;&gt;here&lt;/a&gt; to sign up.&lt;/p&gt;
+&lt;p&gt;You’ll of course need an Azure account.  If you don’t have one, you can go &lt;a href=&quot;http://www.microsoft.com/windowsazure/account/&quot;&gt;here&lt;/a&gt; to sign up.&lt;/p&gt;
 &lt;p&gt;Once you have your account, you’ll need to setup two new services. &lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image.png&quot; alt=&quot;image&quot;&gt; &lt;/p&gt;
 &lt;p&gt;You’ll need to create a storage account – this is where the VHDs will be stored – and a hosted service to run your application from.  When you set them up, make sure that they are created in the same geography (i.e. don’t have your storage account in Asia, and your hosted service in the US as the drive mounting has to be in the same region).&lt;/p&gt;
 &lt;p&gt;Once you have your storage account and service created, you are ready to create and upload your VHD. &lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 1.  You’ll need a VHD&lt;/strong&gt;&lt;/p&gt;
@@ -1553,143 +1566,111 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
 &lt;p&gt;If you are running Windows 7, creating a new VHD is easy. &lt;/p&gt;
 &lt;p&gt;Firstly, go to the start menu and type &lt;strong&gt;disk management&lt;/strong&gt;. &lt;/p&gt;
 &lt;p&gt;From the start menu click on &lt;strong&gt;Create and format hard disk partitions&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image1.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb1.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image1.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;This will open up the disk management tool.  From the &lt;strong&gt;Action&lt;/strong&gt; menu, select &lt;strong&gt;Create VHD&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image2.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb2.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image2.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Enter a location for the VHD file and a size.  The minimum is 16Mb and the maximum is likely the amount of free disk space on your machine. &lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image3.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb3.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image3.png&quot; alt=&quot;image&quot;&gt; &lt;/p&gt;
 &lt;p&gt;When your disk appears in the management tool, right click on the disk name and select &lt;strong&gt;Initialize Disk&lt;/strong&gt;.  Select the default (MBR) and select OK.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image4.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb4.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image4.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;After initialization, right click on the disk and create a &lt;strong&gt;New Simple Volume&lt;/strong&gt;.  Walk through the wizard, accepting the defaults and assign a drive letter to the VHD.  Finally, format the disk using NTFS (a quick format is fine).  If a dialog box appears asking you to format the disk (sometimes the disk gets detected just before formatting has begun), just hit cancel.&lt;/p&gt;
 &lt;p&gt;After this is done, you can open the drive and access it as you would any other drive. Add some files and folders, etc.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image5.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb5.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image5.png&quot; alt=&quot;image&quot;&gt; &lt;/p&gt;
 &lt;p&gt;When you are ready to upload to the cloud, you’ll need to detach the drive.  To do this, go back in to the disk management tool, right click on the disk name and select &lt;strong&gt;Detach VHD&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image6.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb6.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image6.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;(Do not select the Delete the virtual hard disk file checkbox – otherwise, they’ll be nothing to upload!)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 2.  Upload it to Azure Storage&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;The next step is to upload the VHD to the cloud.  The VHD will be stored in something called Blob (Binary Large OBject) storage.  You may have heard of blob storage if you’ve seen any of the introductory Azure presentations.  It’s the type of storage that is used for binary data such as images, videos, and the like.&lt;/p&gt;
-&lt;p&gt;In February we enabled support for Page Blobs.  Page Blobs are binary objects stored in the cloud that support random read&amp;#x2F;writes through pages.  This makes them ideal for dealing with VHD type of access, and this is the format that we’ll be using to upload our VHD to the cloud.&lt;/p&gt;
-&lt;p&gt;The one caveat of this is that you must use a tool that supports page blobs (most of the tools available today only support regular blobs).  The tool I would recommend is &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.cerebrata.com&amp;#x2F;Products&amp;#x2F;CloudStorageStudio&amp;#x2F;Default.aspx&quot;&gt;Cloud Storage Studio&lt;/a&gt; by Cerebrata as it supports page blobs through a nice interface.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image7.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb7.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In February we enabled support for Page Blobs.  Page Blobs are binary objects stored in the cloud that support random read/writes through pages.  This makes them ideal for dealing with VHD type of access, and this is the format that we’ll be using to upload our VHD to the cloud.&lt;/p&gt;
+&lt;p&gt;The one caveat of this is that you must use a tool that supports page blobs (most of the tools available today only support regular blobs).  The tool I would recommend is &lt;a href=&quot;http://www.cerebrata.com/Products/CloudStorageStudio/Default.aspx&quot;&gt;Cloud Storage Studio&lt;/a&gt; by Cerebrata as it supports page blobs through a nice interface.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image7.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Open the tool and access the storage account that you created in the “Before you begin” section earlier in this post. &lt;/p&gt;
 &lt;p&gt;I would recommend creating a new container for your VHD images to keep them separate from other content.  As shown in the screenshot above, I’ve created a container called vhd.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image8.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb8.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image8.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Select the container, and click on the &lt;strong&gt;Upload Page Blob&lt;/strong&gt; button.  There are two upload buttons – you need the one with the icon that includes the page and the up arrow.&lt;/p&gt;
 &lt;p&gt;Point to the location of your VHD file and click on the &lt;strong&gt;Upload&lt;/strong&gt; button.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image9.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb9.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image9.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;This might take a little way depending on the size of your VHD and the speed of your network.&lt;/p&gt;
 &lt;p&gt;Once you have uploaded the file, validate that it exists by hitting the refresh button.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image10.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb10.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image10.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;With the VHD uploaded, we can now move on to creating the cloud application that accesses it.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 3.  Accessing the VHD from Windows Azure &lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;I’m going to assume that you have some knowledge of creating an ASP.NET application and uploading it to Windows Azure.  If you haven’t done this before, I would recommend checking out the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.microsoft.com&amp;#x2F;downloads&amp;#x2F;details.aspx?FamilyID=413E88F8-5966-4A83-B309-53B7B77EDF78&amp;amp;amp;displaylang=en&quot;&gt;Windows Azure Training Kit&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I’m going to assume that you have some knowledge of creating an ASP.NET application and uploading it to Windows Azure.  If you haven’t done this before, I would recommend checking out the &lt;a href=&quot;http://www.microsoft.com/downloads/details.aspx?FamilyID=413E88F8-5966-4A83-B309-53B7B77EDF78&amp;amp;displaylang=en&quot;&gt;Windows Azure Training Kit&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To access the VHD in the cloud, we create a webrole and use the following code.&lt;/p&gt;
-&lt;p&gt;Add reference to the &lt;strong&gt;Microsoft.WindowsAzure.CloudDrive &lt;/strong&gt;DLL that can be found in the GAC (assuming that you have the &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.microsoft.com&amp;#x2F;downloads&amp;#x2F;details.aspx?FamilyID=dba6a576-468d-4ef6-877e-b14e3c865d3a&amp;amp;amp;displaylang=en&quot;&gt;v1.1 SDK&lt;/a&gt; installed).  Then, in your webrole, you’ll need to add the following using statements:&lt;/p&gt;
-&lt;p&gt;&amp;lt;pre class=&amp;quot;brush:c-sharp&amp;quot;&amp;gt;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.StorageClient;
-&amp;lt;&amp;#x2F;pre&amp;gt;&lt;/p&gt;
+&lt;p&gt;Add reference to the &lt;strong&gt;Microsoft.WindowsAzure.CloudDrive.DLL&lt;/strong&gt; that can be found in the GAC (assuming that you have the &lt;a href=&quot;http://www.microsoft.com/downloads/details.aspx?FamilyID=dba6a576-468d-4ef6-877e-b14e3c865d3a&amp;amp;displaylang=en&quot;&gt;v1.1 SDK&lt;/a&gt; installed).  Then, in your webrole, you’ll need to add the following using statements:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-cs&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;using&lt;/span&gt; Microsoft.WindowsAzure;
+&lt;span class=&quot;keyword&quot;&gt;using&lt;/span&gt; Microsoft.WindowsAzure.ServiceRuntime;
+&lt;span class=&quot;keyword&quot;&gt;using&lt;/span&gt; Microsoft.WindowsAzure.StorageClient;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Here is the code that you should run in your web role.  (You can place this behind a button or something…)&lt;/p&gt;
-&lt;p&gt;&amp;lt;pre class=&amp;quot;brush:c-sharp&amp;quot;&amp;gt;
-&amp;#x2F;&amp;#x2F; Setup the account details
-String accountName = &amp;quot;&amp;quot;;  &amp;#x2F;&amp;#x2F; insert your storage account name here
-String accountKey = &amp;quot;”;  &amp;#x2F;&amp;#x2F; insert your storage account primary key here&lt;/p&gt;
-&lt;p&gt;StorageCredentialsAccountAndKey credentials = new StorageCredentialsAccountAndKey(accountName, accountKey);&lt;/p&gt;
-&lt;p&gt;CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, new Uri(String.Format(&amp;quot;http:&amp;#x2F;&amp;#x2F;{0}.blob.core.windows.net&amp;quot;,accountName)),
-                                                                            new Uri(String.Format(&amp;quot;http:&amp;#x2F;&amp;#x2F;{0}.queue.core.windows.net&amp;quot;, accountName)),
-                                                                            new Uri(String.Format(&amp;quot;http:&amp;#x2F;&amp;#x2F;{0}.table.core.windows.net&amp;quot;, accountName))
-                                                                            );&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; initialize the local cache - need to trim the end backslash otherwise, HRESULT=D0000033
+&lt;pre&gt;&lt;code class=&quot;lang-cs&quot;&gt;String accountName = &amp;quot;&amp;quot;;  // insert your storage account name here
+String accountKey = &amp;quot;”;  // insert your storage account primary key here
+StorageCredentialsAccountAndKey credentials = new StorageCredentialsAccountAndKey(accountName, accountKey);
+
+CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, new Uri(String.Format(&amp;quot;http://{0}.blob.core.windows.net&amp;quot;,accountName)),new Uri(String.Format(&amp;quot;http://{0}.queue.core.windows.net&amp;quot;, accountName)),new Uri(String.Format(&amp;quot;http://{0}.table.core.windows.net&amp;quot;, accountName)));
+
+// initialize the local cache - need to trim the end backslash otherwise, HRESULT=D0000033
 LocalResource localCache = RoleEnvironment.GetLocalResource(&amp;quot;LocalCache&amp;quot;);
-CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&amp;#39;&amp;#39;), localCache.MaximumSizeInMegabytes);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; Create and mount the drive
-CloudDrive c = storageAccount.CreateCloudDrive(&amp;quot;vhd&amp;#x2F;myvhd.vhd&amp;quot;);
-String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes, DriveMountOptions.None);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; do regular System.IO.File and System.IO.Directory operations here against driveLetter
-Response.Write(System.IO.Directory.GetFiles(driveLetter + &amp;quot;&amp;quot;).Count() + &amp;quot; files found on the root of the mounted drive.&amp;quot;);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; unmount the drive
+CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&amp;#39;&amp;#39;), localCache.MaximumSizeInMegabytes);
+
+// Create and mount the drive
+CloudDrive c = storageAccount.CreateCloudDrive(&amp;quot;vhd/myvhd.vhd&amp;quot;);
+String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes, DriveMountOptions.None);
+
+// do regular System.IO.File and System.IO.Directory operations here against driveLetter
+Response.Write(System.IO.Directory.GetFiles(driveLetter + &amp;quot;&amp;quot;).Count() + &amp;quot; files found on the root of the mounted drive.&amp;quot;);
+
+// unmount the drive
 c.Unmount();
-&amp;lt;&amp;#x2F;pre&amp;gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;There are five main pieces to the code.&lt;/p&gt;
 &lt;p&gt;Firstly, the storage account reference is created using the account name and key that you retrieve when you setup your Azure account.&lt;/p&gt;
 &lt;p&gt;After that we need to initialize a local cache used by the cloud drive.  To create this, insert the following code into your ServiceDefinition.csdef file on your webrole.&lt;/p&gt;
-&lt;p&gt;&amp;lt;pre class=&amp;quot;brush:xml&amp;quot;&amp;gt;
-&amp;amp;lt;LocalResources&amp;amp;gt;
-  &amp;amp;lt;LocalStorage name=&amp;quot;LocalCache&amp;quot; cleanOnRoleRecycle=&amp;quot;false&amp;quot; sizeInMB=&amp;quot;100&amp;quot; &amp;#x2F;&amp;amp;gt;
-&amp;amp;lt;&amp;#x2F;LocalResources&amp;amp;gt;
-&amp;lt;&amp;#x2F;pre&amp;gt;
-We then create and mount the drive using the &lt;strong&gt;CreateCloudDrive&lt;/strong&gt; and &lt;strong&gt;Mount&lt;/strong&gt; methods.  Make sure that the path and name to your VHD matches what you uploaded in Step 2.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;title&quot;&gt;LocalResources&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;title&quot;&gt;LocalStorage&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;value&quot;&gt;&quot;LocalCache&quot;&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;cleanOnRoleRecycle&lt;/span&gt;=&lt;span class=&quot;value&quot;&gt;&quot;false&quot;&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;sizeInMB&lt;/span&gt;=&lt;span class=&quot;value&quot;&gt;&quot;100&quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;title&quot;&gt;LocalResources&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We then create and mount the drive using the &lt;strong&gt;CreateCloudDrive&lt;/strong&gt; and &lt;strong&gt;Mount&lt;/strong&gt; methods.  Make sure that the path and name to your VHD matches what you uploaded in Step 2.&lt;/p&gt;
 &lt;p&gt;Once the drive is mounted we get a drive letter (as a string – e.g. “f:”).  You can then make calls to that drive letter using the regular calls (e.g. &lt;strong&gt;System.IO.File&lt;/strong&gt; and &lt;strong&gt;System.IO.Directory&lt;/strong&gt;).  In a worker role you can even launch applications from the VHD by spawning a new process. &lt;/p&gt;
 &lt;p&gt;Finally, to unmount the drive, just call the &lt;strong&gt;Unmount&lt;/strong&gt; method to release the VHD image.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image11.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;wp-content&amp;#x2F;uploads&amp;#x2F;2010&amp;#x2F;04&amp;#x2F;image_thumb11.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;There are a lot of details behind the scenes that I’m not going to go into here (e.g. read and read&amp;#x2F;write access to the VHD)  - if you want to learn more, I would recommend checking out &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;microsoftpdc.com&amp;#x2F;Sessions&amp;#x2F;SVC14&quot;&gt;this PDC session&lt;/a&gt; by Brad Calder&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/moving-vhds-to-the-cloud/image11.png&quot; alt=&quot;image&quot;&gt; &lt;/p&gt;
+&lt;p&gt;There are a lot of details behind the scenes that I’m not going to go into here (e.g. read and read/write access to the VHD)  - if you want to learn more, I would recommend checking out &lt;a href=&quot;http://microsoftpdc.com/Sessions/SVC14&quot;&gt;this PDC session&lt;/a&gt; by Brad Calder&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Appendix.  Running this in a local development environment.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;You should note that uploading a VHD only works using a live deployment in the cloud.  In the local development fabric, you’ll find that you cannot access a remote VHD (you’ll get a HRESULT = 80070003 error).  Also, you can’t upload a page blob to local development storage.&lt;/p&gt;
 &lt;p&gt;However, you can still duplicate the same functionality in the local development environment by using this code:&lt;/p&gt;
-&lt;p&gt;&amp;lt;pre class=&amp;quot;brush:c-sharp&amp;quot;&amp;gt;
-&amp;#x2F;&amp;#x2F; Setup the account details
+&lt;pre&gt;&lt;code class=&quot;lang-cs&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Setup the account details&lt;/span&gt;
 CloudStorageAccount storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
-&amp;#x2F;&amp;#x2F; initialize the local cache - need to trim the end backslash otherwise, HRESULT=D0000033
-LocalResource localCache = RoleEnvironment.GetLocalResource(&amp;quot;LocalCache&amp;quot;);
-CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&amp;#39;&amp;#39;), localCache.MaximumSizeInMegabytes);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; Create and mount the drive
-CloudDrive c = storageAccount.CreateCloudDrive(&amp;quot;vhd&amp;#x2F;myvhd.vhd&amp;quot;);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; try creating the drive if it doesn&amp;#39;t exist
-try
+&lt;span class=&quot;comment&quot;&gt;// initialize the local cache - need to trim the end backslash otherwise, HRESULT=D0000033&lt;/span&gt;
+LocalResource localCache = RoleEnvironment.GetLocalResource(&lt;span class=&quot;string&quot;&gt;&quot;LocalCache&quot;&lt;/span&gt;);
+CloudDrive.InitializeCache(localCache.RootPath.TrimEnd(&lt;span class=&quot;string&quot;&gt;''&lt;/span&gt;), localCache.MaximumSizeInMegabytes);
+
+&lt;span class=&quot;comment&quot;&gt;// Create and mount the drive&lt;/span&gt;
+CloudDrive c = storageAccount.CreateCloudDrive(&lt;span class=&quot;string&quot;&gt;&quot;vhd/myvhd.vhd&quot;&lt;/span&gt;);
+
+&lt;span class=&quot;comment&quot;&gt;// try creating the drive if it doesn't exist&lt;/span&gt;
+&lt;span class=&quot;keyword&quot;&gt;try&lt;/span&gt;
 {
-        c.Create(16);
+        c.Create(&lt;span class=&quot;number&quot;&gt;16&lt;/span&gt;);
 }
-        catch (Exception)
+        &lt;span class=&quot;keyword&quot;&gt;catch&lt;/span&gt; (Exception)
 {
-         &amp;#x2F;&amp;#x2F; ignore - VHD folder already exists
-}&lt;/p&gt;
-&lt;p&gt;String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes, DriveMountOptions.None);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; do regular System.IO.File and System.IO.Directory operations here against driveLetter
-Response.Write(System.IO.Directory.GetFiles(driveLetter + &amp;quot;&amp;quot;).Count() + &amp;quot; files found on the root of the mounted drive.&amp;quot;);&lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; unmount the drive
+         &lt;span class=&quot;comment&quot;&gt;// ignore - VHD folder already exists&lt;/span&gt;
+}
+
+String driveLetter = c.Mount(localCache.MaximumSizeInMegabytes, DriveMountOptions.None);
+
+&lt;span class=&quot;comment&quot;&gt;// do regular System.IO.File and System.IO.Directory operations here against driveLetter&lt;/span&gt;
+Response.Write(System.IO.Directory.GetFiles(driveLetter + &lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt;).Count() + &lt;span class=&quot;string&quot;&gt;&quot; files found on the root of the mounted drive.&quot;&lt;/span&gt;);
+
+&lt;span class=&quot;comment&quot;&gt;// unmount the drive&lt;/span&gt;
 c.Unmount();
-&amp;lt;&amp;#x2F;pre&amp;gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;There are a couple of differences from the live environment.&lt;/p&gt;
 &lt;p&gt;Firstly, instead of using the public account details, we can just make a call to &lt;strong&gt;CloudStorageAccount.DevelopmentStorageAccount&lt;/strong&gt;. &lt;/p&gt;
 &lt;p&gt;Secondly, just before we mount the drive we actually try to create it using the &lt;strong&gt;c.Create(16)&lt;/strong&gt; command.  If it already exists, then it throws an exception that we just ignore.&lt;/p&gt;
 &lt;p&gt;It’s important to know that this doesn’t actually create a VHD file. Instead, it creates a new directory in this folder:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;c:users[username]AppDataLocaldftmpwadddevstoreaccount1vhd&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;You can now access this folder through Windows Explorer, go into the .vhd folder and add&amp;#x2F;remove files as you wish.  Once you are ready to move to a production environment you simply copy the files from this directory in to a new VHD (as created in Step 1), upload, and switch to the production code.&lt;/p&gt;
-</description>
-    </item>
-    <item>
-      <title>Displaying XPS Documents in Silverlight</title>
-      <link>http://localhost:8080/2009/04/20/displaying-xps-documents-in-silverlight/</link>
-      <pubDate>Mon, 20 Apr 2009 17:10:39 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2009/04/20/displaying-xps-documents-in-silverlight/</guid>
-      <author></author>
-      <description>&lt;p&gt;I’ve recently been involved on a project that has a requirement to create and view XPS documents in Silverlight.&amp;amp;#160; The application needs to display the XPS file in a full screen window together with zoom and navigation features.&lt;/p&gt;
-&lt;p&gt;After a little searching on how to do this, I was able to get a head start with &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;blogs.msdn.com&amp;#x2F;delay&amp;#x2F;archive&amp;#x2F;2007&amp;#x2F;05&amp;#x2F;22&amp;#x2F;lighting-up-the-xml-paper-specification-proof-of-concept-xps-reader-for-silverlight.aspx&quot;&gt;this great post&lt;/a&gt; from David Anson, which includes sample code for viewing XPS files in Silverlight 2 beta 2.&amp;amp;#160; As his &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;blogs.msdn.com&amp;#x2F;delay&amp;#x2F;archive&amp;#x2F;2008&amp;#x2F;10&amp;#x2F;18&amp;#x2F;roadblock-in-the-way-of-migrating-the-proof-of-concept-silverlight-xps-reader-simplesilverlightxpsviewer-sample-does-not-work-on-silverlight-2-rtw.aspx&quot;&gt;updated post&lt;/a&gt; attests to however, there were a few issues with Silverlight 2 due to a breaking change with the ways that font resources could be referenced from within a Silverlight assembly.&amp;amp;#160; Fortunately, &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.dotneteer.com&amp;#x2F;Weblog&amp;#x2F;post&amp;#x2F;2008&amp;#x2F;11&amp;#x2F;Fix-for-Simple-XPS-Silverlight-Viewer-for-Silverlight-2.aspx&quot;&gt;this post&lt;/a&gt; from Li Chen pointed me in the right direction, separating out the ODTTF fonts into separate XAP files which can be referenced at runtime.&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;The sample code provided by Li Chen works well with the sample XPS files provided, but I couldn’t get it working with an XPS file generated using Microsoft Word.&amp;amp;#160; After a little debugging this weekend, I found a few subtleties with how the code dealt with XPS files geneated from Microsoft Word:&lt;/p&gt;
-&lt;p&gt;Firstly, the root document of the XPS file is called FixedDoc.fdoc instead of FixedDocument.fdoc (which is the name when using the XPS Printer Driver).&amp;amp;#160; This was fairly easy to correct using a simple check:
-  &amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;   &lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; Added to support &amp;amp;quot;Save as XPS&amp;amp;quot; from Microsoft Word&lt;br&gt;if (resourceInfo == null)&lt;br&gt;{&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; resourceInfo = Application.GetResourceStream(_streamResourceInfo, ConvertPartName(&amp;amp;quot;&amp;#x2F;Documents&amp;#x2F;1&amp;#x2F;FixedDoc.fdoc&amp;amp;quot;));&lt;br&gt;}
- &amp;lt;&amp;#x2F;div&amp;gt;  &lt;/p&gt;
-&lt;p&gt;Secondly, the .fdoc file refers to pages using relative links.&amp;amp;#160; Instead of the absolute link (e.g. &amp;#x2F;Documents&amp;#x2F;1&amp;#x2F;Pages&amp;#x2F;1.page), a relative link (e.g. &amp;#x2F;Page&amp;#x2F;1.page) was causing the sample to be unable to find the pages.&amp;amp;#160; A small piece of code to append the full path quickly fixes this also.
-  &amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;   &lt;/p&gt;
-&lt;p&gt;&amp;#x2F;&amp;#x2F; Update the page names for &amp;amp;quot;Save as XPS&amp;amp;quot; from Microsoft Word&lt;br&gt;List&amp;amp;lt;string&amp;amp;gt; _newPageNames = new List&amp;amp;lt;string&amp;amp;gt;();&lt;br&gt;foreach (String pageName in _pageNames)&lt;br&gt;{&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; if (pageName.StartsWith(&amp;amp;quot;Page&amp;amp;quot;))&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; {&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; _newPageNames.Add(&amp;amp;quot;&amp;#x2F;Documents&amp;#x2F;1&amp;#x2F;&amp;amp;quot; + pageName);&lt;br&gt;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160; }&lt;br&gt;} 
- &amp;lt;&amp;#x2F;div&amp;gt;  &lt;/p&gt;
-&lt;p&gt;Finally, it looks like Word includes a page attribute called BidiLevel, which isn’t recognized by the Canvas element.&amp;amp;#160; Adding an additional exclusion line into the sample code quickly fixed it.
-  &amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;   &lt;/p&gt;
-&lt;p&gt;_elementAttributesToRemove.Add(&amp;amp;quot;Glyphs&amp;amp;quot;, new List&amp;amp;lt;string&amp;amp;gt; { &amp;amp;quot;BidiLevel&amp;amp;quot; });
- &amp;lt;&amp;#x2F;div&amp;gt;  &lt;/p&gt;
-&lt;p&gt;The result seems to work quite well, with an XPS file saved from Microsoft Word viewable within Silverlight.&amp;amp;#160;&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;DisplayingXPSDocumentsinSilverlight_9130&amp;#x2F;image.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;DisplayingXPSDocumentsinSilverlight_9130&amp;#x2F;image_thumb.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;If you are interested in trying this yourself, I’ve posted a version of the sample code &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;downloads&amp;#x2F;SimpleSilverlightXpsViewer.zip&quot;&gt;here&lt;/a&gt; which contains the above modifications.&amp;amp;#160; To use the modified sample with your own XPS file, do the following:&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;1.&amp;amp;#160; Go into Microsoft Word and “Save as &amp;#x2F; XPS” to create a new XPS file.&lt;/p&gt;
-&lt;p&gt;2.&amp;amp;#160; Download and compile the sample (note: only works in Visual Studio 2008).&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;3.&amp;amp;#160; Copy the XPS into your Visual Studio project, in the &lt;strong&gt;SimpleSilverlightXpsViewer_Web &lt;/strong&gt;project.&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;4.&amp;amp;#160; In Windows Explorer, rename the original XPS file to a ZIP file.&amp;amp;#160; Ignore the warning about changing the file extension.&lt;/p&gt;
-&lt;p&gt;5.&amp;amp;#160; Open the zip file and go into the &amp;#x2F;Resources directory.&amp;amp;#160; Look for font files ending in ODTTF - these are embedded font files for the XPS file and must be referenced separately in the Silverlight project.&amp;amp;#160; Copy all of these ODTTF files to the &lt;strong&gt;SampleWordGenerated &lt;/strong&gt;project in the solution.&amp;amp;#160; Also note that the ODTTF files are dynamically named when the XPS file is generated.&amp;amp;#160; This means that although you may have already imported the correct ODTTF files for previous XPS file that use the same fonts, you’ll still need to re-import the fonts again to handle a new XPS file.&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;6.&amp;amp;#160; Edit &lt;strong&gt;default.html &lt;/strong&gt;in &lt;strong&gt;SimpleSilverlightXpsViewer_Web &lt;/strong&gt;and on line 70 change the &lt;strong&gt;xpsDocument=SampleWordGenerated.xps &lt;/strong&gt;to the correct name of your XPS file.&amp;amp;#160; &lt;/p&gt;
-&lt;p&gt;7.&amp;amp;#160; F5 to run and you should see your XPS document displayed within a Silverlight control!&lt;/p&gt;
-&lt;p&gt;There is still a bit of work to do with the sample code, which I think would be worth taking into a CodePlex project.&amp;amp;#160; For example, the code should initially read the XPS root file (FixedDocSeq.fdseq) instead of looking or FixedDoc.fdoc or FixedDocument.fdoc directly.&amp;amp;#160; It would also be great to figure out a better way of extracting the fonts more dynamically at runtime.&amp;amp;#160; Other than that though I found this to be a good solution to display XPS files in Silverlight applications, especially useful as Silverlight doesn’t support the FlowDocument element (which is commonly used in WPF applications for creating documents and report generation).&lt;/p&gt;
+&lt;p&gt;You can now access this folder through Windows Explorer, go into the .vhd folder and add/remove files as you wish.  Once you are ready to move to a production environment you simply copy the files from this directory in to a new VHD (as created in Step 1), upload, and switch to the production code.&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -1698,148 +1679,26 @@ c.Unmount();
       <pubDate>Sun, 08 Mar 2009 17:24:55 -0700</pubDate>
       <guid isPermaLink="true">http://localhost:8080/2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/</guid>
       <author></author>
-      <description>&lt;p&gt;A few people have asked me recently whether it’s possible to setup Windows 7 as a PHP server (for development purposes).  The answer is absolutely yes, and it’s a breeze to setup.  Follow these five simple steps to get PHP up and running in minutes:&lt;/p&gt;
+      <description>&lt;p&gt;A few people have asked me recently whether it’s possible to setup Windows 7 as a PHP server (for development purposes).  The answer is absolutely yes, and it’s a breeze to setup.  Follow these five simple steps to get PHP up and running in minutes.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;In the &lt;strong&gt;Programs and Features &lt;/strong&gt;control panel, click on the &lt;strong&gt;Turn Windows features on or off&lt;/strong&gt; link:&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_thumb.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;In the list of Windows Features, expand&lt;strong&gt; Internet Information Services&lt;/strong&gt;, &lt;strong&gt;World Wide Web Services&lt;/strong&gt;, and the &lt;strong&gt;Application Deployment Features&lt;/strong&gt;.  If it’s not already, select the &lt;strong&gt;CGI&lt;/strong&gt; checkbox and click OK.  (The most reliable way of hosting PHP applications on Windows 7 is to use the built in FastCGI interface for IIS – checking this box installs it together with any pre-requisites.)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_3.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_thumb_3.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Download the &lt;strong&gt;non-thread-safe&lt;/strong&gt; &lt;strong&gt;(NTS) &lt;/strong&gt;version of PHP from &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.php.net&amp;#x2F;downloads.php&quot;&gt;http:&amp;#x2F;&amp;#x2F;www.php.net&amp;#x2F;downloads.php&lt;/a&gt;.  The current version (as of time of writing is 5.2.9).  (The thread safe (TS) version will also work, but generally NTS is faster, and thread safety is not an issue under FastCGI).  Expand the zip to an installation directory of your choice – e.g. c:devphp&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;In the &lt;strong&gt;Programs and Features &lt;/strong&gt;control panel, click on the &lt;strong&gt;Turn Windows features on or off&lt;/strong&gt; link:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the list of Windows Features, expand&lt;strong&gt; Internet Information Services&lt;/strong&gt;, &lt;strong&gt;World Wide Web Services&lt;/strong&gt;, and the &lt;strong&gt;Application Deployment Features&lt;/strong&gt;.  If it’s not already, select the &lt;strong&gt;CGI&lt;/strong&gt; checkbox and click OK.  (The most reliable way of hosting PHP applications on Windows 7 is to use the built in FastCGI interface for IIS – checking this box installs it together with any pre-requisites.)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Download the &lt;strong&gt;non-thread-safe&lt;/strong&gt; &lt;strong&gt;(NTS) &lt;/strong&gt;version of PHP from &lt;a href=&quot;http://www.php.net/downloads.php&quot;&gt;http://www.php.net/downloads.php&lt;/a&gt;.  The current version (as of time of writing is 5.2.9).  (The thread safe (TS) version will also work, but generally NTS is faster, and thread safety is not an issue under FastCGI).  Expand the zip to an installation directory of your choice – e.g. c:devphp&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Copy the &lt;strong&gt;php.ini-recommended &lt;/strong&gt;file to &lt;strong&gt;php.ini &lt;/strong&gt;in the PHP directory.  Edit the php.ini file and add correctly configure &lt;strong&gt;extension_dir&lt;/strong&gt;, pointing to the PHP extensions directory (normally the .ext folder of the PHP installation – e.g c:devphpext).  You can also configure other php.ini options and modules here if required.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Run &lt;strong&gt;Internet Information Services Manager&lt;/strong&gt; by typing &lt;strong&gt;inetmgr&lt;/strong&gt; in the Start menu.  You can either set the global settings of the server, or (recommended) add a new web site to run the PHP applications.  Once you’ve done this, double click on the &lt;strong&gt;Handler Mappings &lt;/strong&gt;for the site and add a new module mapping with the following settings:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_4.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_thumb_4.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Request path &lt;/strong&gt;should be set to &lt;em&gt;.php.  &lt;strong&gt;Module&lt;/strong&gt; should be FastCgiModule.  &lt;strong&gt;Executable&lt;/strong&gt; should be {php_install_dir}php-cgi.exe.  &lt;em&gt;*Name&lt;/em&gt;&lt;/em&gt; can be anything – I use “PHP via Fast CGI”.&lt;/p&gt;
-&lt;p&gt;That’s it! Simply start&amp;#x2F;restart IIS and you are ready to go.  The easiest way to test that everything is working is to create a simple info.php file with a single line:
-&amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;amp;lt;?php phpinfo(); ?&amp;amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;&amp;#x2F;div&amp;gt;
-When you access this page from a browser (e.g. &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;localhost:8081&amp;#x2F;info.php&quot;&gt;http:&amp;#x2F;&amp;#x2F;localhost:8081&amp;#x2F;info.php&lt;/a&gt;), you should see the PHP info screen:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_5.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;UsingPHPonWindows7_BFFB&amp;#x2F;image_thumb_5.png &amp;quot;image&amp;quot;&quot; alt=&quot;image&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Validate that the server API is using CGI&amp;#x2F;FastCGI and that the loaded configuration file is the one in your installation directory.&lt;/p&gt;
-</description>
-    </item>
-    <item>
-      <title>User Interface (UI) vs. User Experience (UX)</title>
-      <link>http://localhost:8080/2007/11/16/user-interface-ui-vs-user-experience-ux/</link>
-      <pubDate>Fri, 16 Nov 2007 11:15:54 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2007/11/16/user-interface-ui-vs-user-experience-ux/</guid>
-      <author></author>
-      <description>&lt;p&gt;I often get asked the difference between User Interface (UI) and User Experience (UX). Although the original intent and definition of UI started out in the right direction, too many times I&amp;#39;ve heard it used to explain just the visual aspects (or cool factor) of an interface.&amp;amp;nbsp; To give you a non-technology related example, let me show you the hotel room that I recently stayed at in Dublin.&amp;amp;nbsp;&amp;amp;nbsp;The hotel is&amp;amp;nbsp;one of the more boutique, modern style ones that we see in large cities (imagine Morcheeba playing in the lobby, contrasting black and white furniture&amp;amp;nbsp;etc. - you get the idea).&lt;/p&gt;
-&lt;p&gt;As I got to my room late at night, I of course wanted to switch on the lights.&amp;amp;nbsp; In front of me (in semi-darkness)&amp;amp;nbsp;I found&amp;amp;nbsp;the panel for the lights:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_thumb.png&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;As you can see, on first glance, a relatively nice&amp;amp;nbsp;looking &amp;quot;interface&amp;quot; (stainless steel finish, clean, elegant etc.).&amp;amp;nbsp;&amp;amp;nbsp;The&amp;amp;nbsp;experience however was a different story.&amp;amp;nbsp; Firstly, there&amp;amp;nbsp;is no indication&amp;amp;nbsp;of what each switch does.&amp;amp;nbsp; After playing around for a minute, I was able to work out that&amp;amp;nbsp;the left dial is for the main lights, the right dial is for the bathroom lights, the main switch seems to be like a master switch for both.&amp;amp;nbsp; Seems simple enough, however you can also push the dials to turn them on&amp;#x2F;off individually, with no feedback or indication of what state they are in.&amp;amp;nbsp; To add more confusion, there is a 3 second delay after pushing the dial before the lights come on.&amp;amp;nbsp; Of course, what happens is the following:&amp;amp;nbsp; Hit the master switch - nothing happens.&amp;amp;nbsp; Turn the dial - nothing happens.&amp;amp;nbsp; Push the dial, nothing happens.&amp;amp;nbsp; Push the dial again (within 3 seconds of pushing the dial last time).&amp;amp;nbsp; Nothing happens.&amp;amp;nbsp; Hit the master switch again - nothing happens.&amp;amp;nbsp; Sigh.&amp;amp;nbsp; Repeat.&lt;/p&gt;
-&lt;p&gt;Once I did get the lights working in the bathroom,&amp;amp;nbsp;I came across the following sink:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_3.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_thumb_3.png&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;Again, very nice looking - a&amp;amp;nbsp;modern, open design with elegant lines and faucets.&amp;amp;nbsp;&amp;amp;nbsp; Question for you: How do I release the water in the bowl?&amp;amp;nbsp; Looking around the basin, there is no stopper for the plug, no chain, no indication of how to release the plug.&amp;amp;nbsp; Also, notice how the plug is flat to the surface of the bowl - there is no affordance&amp;amp;nbsp;indicating that it might be possible to push or pull the plug in any way to release the water.&amp;amp;nbsp; The answer?&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_4.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_thumb_4.png&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;Ah, of course - who wouldn&amp;#39;t have thought about tipping the plug 45&amp;#39; to the left and having it swivel in the middle?&amp;amp;nbsp; Sigh (again).&amp;amp;nbsp; Having been humiliated with the sink, I thought I would take a shower instead.&amp;amp;nbsp; I was greeted with this shower head.&amp;amp;nbsp; &lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_5.png&quot;&gt;&lt;img src=&quot;http:&amp;#x2F;&amp;#x2F;simonguest.com&amp;#x2F;images&amp;#x2F;ThedifferencebetweenUserInterfaceUIandUs_426C&amp;#x2F;image_thumb_5.png&quot; alt=&quot;image&quot;&gt;&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;Again, the pencil design looks very elegant, and unique - but just try moving the direction of the shower head when the water is running.&amp;amp;nbsp; Impossible.&amp;amp;nbsp; Because of the slim design and texture, you can&amp;#39;t redirect the shower head in any direction (which can be annoying if it&amp;#39;s aiming toward the door as you get in).&amp;amp;nbsp; Also, the design results in a powerful, but very directed spray of water - certainly refreshing, but not as comfortable as you may like.&lt;/p&gt;
-&lt;p&gt;The difference between&amp;amp;nbsp;&amp;quot;cool&amp;amp;nbsp;looking UI&amp;quot;&amp;amp;nbsp;and UX?&amp;amp;nbsp; You could argue that the items in the hotel room look as if they have a great design, but ultimately&amp;amp;nbsp;result in&amp;amp;nbsp;a poor user experience.&amp;amp;nbsp;I like unique&amp;amp;nbsp;designs - but don&amp;#39;t let this come at the expense of a frustrating experience.&amp;amp;nbsp; I just hope we don&amp;#39;t see the same thing with new UI technologies.&amp;amp;nbsp; There are a lot of new UI advances that can create&amp;amp;nbsp;unique looking interfaces, but without an understanding of true user experience, it&amp;#39;s going to be as bad as my hotel room…&lt;/p&gt;
-</description>
-    </item>
-    <item>
-      <title>Building Browser Helper Objects using Managed Code</title>
-      <link>http://localhost:8080/2006/11/19/building-browser-helper-objects-using-managed-code/</link>
-      <pubDate>Sun, 19 Nov 2006 17:35:39 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2006/11/19/building-browser-helper-objects-using-managed-code/</guid>
-      <author></author>
-      <description>&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;Over the past&amp;amp;nbsp;few days I&amp;#39;ve been&amp;amp;nbsp;exploring the&amp;amp;nbsp;extensibility of IE7 from a user experience perspective.&amp;amp;nbsp; One of the options for creating an Add-On for IE is something called the Browser Helper Object (BHO for short).&amp;amp;nbsp; With&amp;amp;nbsp;a BHO you can trap a variety of events in Internet Explorer (such as browsing for a page, or when the user quits the browser), examine the results and take actions as required.&amp;amp;nbsp; This powerful feature allows you to build UIs that really integrate with the browsing experience.&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;&lt;strong&gt;How do I write one in .NET?&lt;/strong&gt;&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;BHOs sound great, but the question is - how do I write one in .NET?&amp;amp;nbsp; Although the BHO interface is COM-based, it&amp;#39;s not as hard as it sounds.&amp;amp;nbsp; Firstly, you must create a class library in .NET and add the following COM references:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;&amp;lt;&amp;#x2F;font&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;
-[ComImport(), Guid(&amp;quot;fc4801a3-2ba9-11cf-a229-00aa003d7352&amp;quot;)]
-[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-public interface IObjectWithSite
-{
-void SetSite([In ,MarshalAs(UnmanagedType.IUnknown)] object pUnkSite);
-void GetSite(ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] out object ppvSite);
-}&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;This interface provides the GetSite and SetSite for hooking into events within IE.&amp;amp;nbsp; After you have these defined, create a class that overrides IObjectWithSite:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;[ClassInterfaceAttribute(ClassInterfaceType.None)]
-[GuidAttribute(MyGuid)]
-[ProgIdAttribute(&amp;quot;MyNamespace.MyBHO&amp;quot;)]
-public class MyBHO: IObserver, IObjectWithSite
-{&amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;}&amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;In this class you&amp;#39;ll need to define a browser class object and browser events object from the Internet Controls library (VS.NET will create an Interop assembly called Interop.SHDocVw when you import this):&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;protected SHDocVw.IWebBrowser2 m_pIWebBrowser2;
-protected SHDocVw.DWebBrowserEvents2_Event m_pDWebBrowserEvents2; &amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;With these defined, you now override GetSite and SetSite, initializing the Internet Controls and enabling the events:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;public void SetSite(object pUnkSite)
-{ &amp;lt;&amp;#x2F;font&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;
-if (m_pIWebBrowser2!=null)
-Release(); &amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;if (pUnkSite==null)
-return; &amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;m_pIWebBrowser2 = pUnkSite as SHDocVw.IWebBrowser2;&amp;amp;nbsp; &amp;#x2F;&amp;#x2F; set the reference&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;if (!(m_pIWebBrowser2.FullName.ToUpper().EndsWith(&amp;quot;IEXPLORE.EXE&amp;quot;)))&amp;amp;nbsp; &amp;#x2F;&amp;#x2F;make sure only runs on IE
-{
-Release();
-return;
-} &amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;m_pDWebBrowserEvents2 = m_pIWebBrowser2 as SHDocVw.DWebBrowserEvents2_Event ; &amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;if (m_pDWebBrowserEvents2 != null)
-{
-m_pDWebBrowserEvents2.BeforeNavigate2 += new SHDocVw.DWebBrowserEvents2_BeforeNavigate2EventHandler(BeforeNavigate);
-m_pDWebBrowserEvents2.OnQuit += new SHDocVw.DWebBrowserEvents2_OnQuitEventHandler(OnQuit);
-} 
-else
-{&lt;/p&gt;
-&lt;p&gt;Release();
-return;
-}
-}&amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;&amp;lt;&amp;#x2F;font&amp;gt;&amp;amp;nbsp; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;public void GetSite(ref System.Guid riid, out object ppvSite)
-{
-ppvSite=null;
-if (m_pIWebBrowser2 != null)
-{
-IntPtr pSite = IntPtr.Zero;
-IntPtr pUnk = Marshal.GetIUnknownForObject(m_pIWebBrowser2); 
-Marshal.QueryInterface(pUnk, ref riid, out pSite); &lt;/p&gt;
-&lt;p&gt;Marshal.Release(pUnk); 
-if (!pSite.Equals(IntPtr.Zero))
-{
-ppvSite = pSite; 
-}
-else
-{
-Release();
-Marshal.ThrowExceptionForHR(E_NOINTERFACE);
-}
-}
-else
-{
-Release();
-Marshal.ThrowExceptionForHR(E_FAIL); 
-}
-}&amp;lt;&amp;#x2F;font&amp;gt; &amp;lt;p&amp;gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;As you can see in the SetSite method, you can now define the hooks within Internet Explorer:&amp;lt;&amp;#x2F;font&amp;gt;
-&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;m_pDWebBrowserEvents2.BeforeNavigate2 += new SHDocVw.DWebBrowserEvents2_BeforeNavigate2EventHandler(BeforeNavigate);
-m_pDWebBrowserEvents2.OnQuit += new SHDocVw.DWebBrowserEvents2_OnQuitEventHandler(OnQuit);
-&amp;lt;&amp;#x2F;font&amp;gt; &lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;These can&amp;amp;nbsp;point to&amp;amp;nbsp;your own methods that can act on these events accordingly (e.g. launch a particular process with a given URL, rewrite URLs etc.)&amp;lt;&amp;#x2F;font&amp;gt;&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;How to install a BHO using an MSI&amp;lt;&amp;#x2F;font&amp;gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;One of the challenges is not building a BHO, but getting it to install&amp;#x2F;uninstall reliably through an MSI.&amp;amp;nbsp; To run correctly,&amp;amp;nbsp;a BHO requires registration via COM interop, but setting the vsdrpCOM property in the MSI isn&amp;#39;t enough (this results in a successful registration most of the time, but the add-in won&amp;#39;t remove itself at uninstall).&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;My recommendation is to set the MSI property to vsdrpNoDotRegister and instead create your own registration component.&amp;amp;nbsp; This can be a simple command prompt executable that you run as a custom action (for both install and uninstall) in the MSI.&amp;amp;nbsp; &amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;To register the assembly, use the following code within your registration code:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;System.Runtime.InteropServices.RegistrationServices r = new System.Runtime.InteropServices.RegistrationServices();
-r.RegisterAssembly(System.Reflection.Assembly.LoadFile(bhoDll), System.Runtime.InteropServices.AssemblyRegistrationFlags.SetCodeBase);&amp;lt;&amp;#x2F;font&amp;gt;
-&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;To unregister the assembly, you use the UnregisterAssembly method:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;System.Runtime.InteropServices.RegistrationServices r = new System.Runtime.InteropServices.RegistrationServices();
-r.UnregisterAssembly(System.Reflection.Assembly.LoadFile(bhoDll));
-&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;UAC Considerations for Vista&amp;lt;&amp;#x2F;font&amp;gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;This approach works all very well for XP, but if you are installing your BHO on Vista you&amp;#39;ll need to set the user access control correctly.&amp;amp;nbsp; One of the problems is that custom actions in MSIs run as an non-elevated user, which means that unless you are running the MSI as elevated your custom action won&amp;#39;t have the permissions required to register the BHO.&amp;amp;nbsp; I haven&amp;#39;t found a way to elevate a user manually from a piece of managed code, but you can overcome this using one of two ways:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;1.&amp;amp;nbsp; Write a batch file that contains the following:&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Courier&amp;quot;&amp;gt;msiexec &amp;#x2F;i MyMSI.msi&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;…and right click on the batch file, and select &amp;quot;Run as Administrator&amp;quot;&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;2.&amp;amp;nbsp; Use the ORCA tool (part of the Windows SDK) to set the custom actions to run as SYSTEM.&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;To do this, download the SDK, install and run ORCA and open your MSI.&amp;amp;nbsp; Open the custom action from the left hand pane, select your custom action and set the type to 3090.&amp;amp;nbsp; This will cause the custom action to run as the SYSTEM account and registration will be successful.&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;&lt;strong&gt;Examples&lt;/strong&gt;&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
-&lt;p&gt;&amp;lt;font face=&amp;quot;Verdana&amp;quot;&amp;gt;Finally, if you are looking for a great example of a managed BHO (and more details of how one works), check out &lt;a href=&quot;http:&amp;#x2F;&amp;#x2F;www.15seconds.com&amp;#x2F;issue&amp;#x2F;040331.htm&quot;&gt;this post&lt;/a&gt; from Michele Leroux Bustamante.&amp;amp;nbsp; Here, Michele shows how to use a BHO for observing user behavior in IE, with downloadable code that you can build your own from.&amp;lt;&amp;#x2F;font&amp;gt;&lt;/p&gt;
+&lt;p&gt;That’s it! Simply start/restart IIS and you are ready to go.  The easiest way to test that everything is working is to create a simple info.php file with a single line:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-html&quot;&gt;&lt;span class=&quot;php&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;&amp;lt;?php&lt;/span&gt; phpinfo(); &lt;span class=&quot;preprocessor&quot;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;When you access this page from a browser (e.g. &lt;a href=&quot;http://localhost:8081/info.php&quot;&gt;http://localhost:8081/info.php&lt;/a&gt;), you should see the PHP info screen.&lt;/p&gt;
+&lt;p&gt;Validate that the server API is using CGI/FastCGI and that the loaded configuration file is the one in your installation directory.&lt;/p&gt;
 </description>
     </item>
   </channel>
