@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Using Apple Push Notifications from Windows Azure - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Using Apple Push Notifications from Windows Azure</h1>
+        <p class="author">Written by <span class="author">Simon Guest</span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>In my <a href="http://channel9.msdn.com/events/MIX/MIX11/EXT18"><span class="caps">MIX11</span> session</a> last week I demonstrated how to create push notifications to iPhone and iPad devices from Wndows Azure.  I’ve put together this blog post to share more detail and the source code for how this&nbsp;works.</p>
+<p><span class="more"></span></p>
+<p>Firstly, if you haven’t already, you will need to register your iPhone/iPad application for push notifications.  To do this, log into the iOS developer center (you’ll need to be a registered Apple Developer) and in the provisioning portal setup a new App <span class="caps">ID</span>, enabling it for push notifications.  Here’s the App ID for my MIX&nbsp;demo:</p>
+<p><img src="/articles/using-apple-push-notifications-from-windows-azure/status.png" alt="Status"></p>
+<p>With the development certificate that you downloaded during this process, create a new Azure worker role and import the certificate into a folder called “certs”:  In addition, you’ll need to configure the properties of the certificate file such that the build action is set to&nbsp;“Content”.</p>
+<p><img src="/articles/using-apple-push-notifications-from-windows-azure/project.png" alt="Project"></p>
+<p>(I’ve deliberately skimmed over the previous points of creating and App <span class="caps">ID</span> and Azure Worker role as they are both well documented by Apple and&nbsp;Microsoft).</p>
+<p>To start configuring the worker role for push notifications, first add a reference to the Windows Azure Storage Client (Microsoft.WindowsAzure.StorageClient) library.  In the OnRun section of the worker role, access the Azure queue that messages are going to be placed&nbsp;in.  </p>
+<pre><code class="lang-cs">StorageCredentials creds = <span class="keyword">new</span> StorageCredentialsAccountAndKey(<span class="string">"<span class="caps">YOUR</span> ACCOUNT NAME"</span>, <span class="string">"<span class="caps">YOUR</span> ACCOUNT KEY"</span>);
+CloudQueueClient cqc = <span class="keyword">new</span> CloudQueueClient(<span class="string">""</span><span class="caps">YOUR</span> QUEUE URL”, creds);
+<span class="keyword">var</span> testQueue = cqc.ListQueues().First(q =&gt; q.Name.StartsWith(<span class="string">"<span class="caps">YOUR</span> QUEUE NAME"</span>));
+</code></pre>
+<p>Then, still within the OnRun method, create a routine that checks the queue for incoming messages and sets up the connection to the <span class="caps">APN</span> (Apple Push Notification)&nbsp;service.</p>
+<pre><code class="lang-cs"><span class="keyword">while</span> (<span class="keyword">true</span>)
+            {
+                Thread.Sleep(<span class="number">10000</span>);
+                <span class="keyword">if</span> (testQueue.RetrieveApproximateMessageCount() != <span class="number">0</span>)
+                {
+                    List&lt;cloudqueuemessage&gt; messages = testQueue.GetMessages(testQueue.RetrieveApproximateMessageCount()).ToList();
+                    <span class="keyword">foreach</span> (CloudQueueMessage message <span class="keyword">in</span> messages)
+                    {
+                        Trace.WriteLine(<span class="string">"Retrieved message from Queue: "</span> + message.AsString);
+                        <span class="comment">// open the <span class="caps">APN</span> connection</span>
+                        InitializeAPN();
+                        <span class="comment">// send message</span>
+                        <span class="keyword">string</span> session = message.AsString.Substring(<span class="number">0</span>, message.AsString.IndexOf(<span class="string">':'</span>));
+                        SendAPNMessage(message.AsString, session);
+                        <span class="comment">// tear down the <span class="caps">APN</span> connection</span>
+                        CloseAPN();
+                        testQueue.DeleteMessage(message);
+                    }
+                }
+            }
+</code></pre>
+<p>You’ll probably want to do something a little more elegant than “while (true)” but this works for the purposes of this post.  Also, as I mentioned in the talk, you may or may not want to setup and tear down the connection to the <span class="caps">APN</span> for each message that you send.  If you are planning to send a large volume of messages to a large number of devices, Apple may view this as a denial of service attack and refuse your connection.  A more prescriptive approach in this scenario would be to instead open the connection in the OnStart method and keep it alive during&nbsp;OnRun.</p>
+<p>Within the worker role, setup the following declarations.  Most of these should be straightforward, and you’ll need to replace a number of them with your own&nbsp;details.  </p>
+<pre><code class="lang-cs"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="caps">HOST</span> = <span class="string">"gateway.sandbox.push.apple.com"</span>;
+<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="caps">PORT</span> = <span class="number">2195</span>;
+<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> CERT_PASSWORD = <span class="string">"<span class="caps">YOUR</span> PASSWORD"</span>;
+<span class="keyword">private</span> <span class="keyword">static</span> X509Certificate2 CLIENT_CERT = <span class="keyword">new</span> X509Certificate2(Environment.GetEnvironmentVariable(<span class="string">"RoleRoot"</span>) + <span class="string">@"approotcertsmix11_dev_cert.p12"</span>, CERT_PASSWORD);
+<span class="keyword">private</span> <span class="keyword">static</span> X509Certificate2Collection CLIENT_CERT_COLLECTION = <span class="keyword">new</span> X509Certificate2Collection(CLIENT_CERT);
+<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> DEVICE_TOKEN = <span class="string">"<span class="caps">YOUR</span> DEVICE TOKEN"</span>;  <span class="comment">//Replace this with the Device token we obtain later on in this example</span>
+<span class="keyword">private</span> TcpClient client;
+<span class="keyword">private</span> SslStream sslStream;
+</code></pre>
+<p>With these declarations in place, we can now start writing the <span class="caps">APN</span> code.  First, create an IntializeAPN method, responsible for setting up the connection to the&nbsp;APN.</p>
+<pre><code class="lang-cs"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">InitializeAPN</span>()
+{
+    client = <span class="keyword">new</span> TcpClient(<span class="caps">HOST</span>, PORT);
+    sslStream = <span class="keyword">new</span> SslStream(client.GetStream(), <span class="keyword">false</span>);
+    <span class="keyword">try</span>
+    {
+        sslStream.AuthenticateAsClient(<span class="caps">HOST</span>, CLIENT_CERT_COLLECTION, SslProtocols.Tls, <span class="keyword">false</span>);
+    }
+    <span class="keyword">catch</span> (AuthenticationException ex)
+    {
+        Trace.WriteLine(<span class="string">"Could not open <span class="caps">APN</span> connection: "</span> + ex.ToString());
+    }
+    Trace.WriteLine(<span class="string">"<span class="caps">APN</span> connection opened successfully."</span>);
+}
+</code></pre>
+<p>Then, create a method called SendAPNMessage which will construct and sent the push notification message in the correct&nbsp;format.  </p>
+<pre><code class="lang-cs"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">SendAPNMessage</span>(<span class="keyword">string</span> message, <span class="keyword">string</span> session)
+        {
+            <span class="keyword">try</span>
+            {
+                MemoryStream memoryStream = <span class="keyword">new</span> MemoryStream();
+                BinaryWriter binaryWriter = <span class="keyword">new</span> BinaryWriter(memoryStream);
+
+                <span class="comment">// construct the message</span>
+                binaryWriter.Write((<span class="keyword">byte</span>)<span class="number">0</span>); 
+                binaryWriter.Write((<span class="keyword">byte</span>)<span class="number">0</span>);  
+                binaryWriter.Write((<span class="keyword">byte</span>)<span class="number">32</span>); 
+
+                <span class="comment">// convert to hex and write</span>
+                <span class="keyword">byte</span>[] deviceToken = <span class="keyword">new</span> <span class="keyword">byte</span>[DEVICE_TOKEN.Length / <span class="number">2</span>];
+                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; deviceToken.Length; i++)
+                    deviceToken[i] = <span class="keyword">byte</span>.Parse(DEVICE_TOKEN.Substring(i * <span class="number">2</span>, <span class="number">2</span>), System.Globalization.NumberStyles.HexNumber);
+                binaryWriter.Write(deviceToken);
+
+                <span class="comment">// construct payload within <span class="caps">JSON</span> message framework</span>
+                String payload = <span class="string">"{"</span>aps<span class="string">":{"</span>alert<span class="string">":"</span><span class="string">" + message + "</span><span class="string">","</span>session<span class="string">":"</span><span class="string">"+session+"</span><span class="string">","</span>badge<span class="string">":1}}"</span>;
+
+                <span class="comment">// write payload data</span>
+                binaryWriter.Write((<span class="keyword">byte</span>)<span class="number">0</span>);                 
+                binaryWriter.Write((<span class="keyword">byte</span>)payload.Length);     
+                <span class="keyword">byte</span>[] payloadBytes = System.Text.Encoding.<span class="caps">UTF8</span>.GetBytes(payload);
+                binaryWriter.Write(payloadBytes);
+                binaryWriter.Flush();
+
+                <span class="comment">// send across the wire</span>
+                <span class="keyword">byte</span>[] array = memoryStream.ToArray();
+                sslStream.Write(array);
+                sslStream.Flush();
+            }
+            <span class="keyword">catch</span> (Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+            }
+            Trace.WriteLine(<span class="string">"Message successfully sent."</span>);
+        }
+</code></pre>
+<p>You’ll notice that my SendAPNMessage method signature contains a “session” value.  For the purposes of the demo, I was sending across the session code that had changed as an explicit value in the notification message.  Feel free to change or remove this as you&nbsp;need.</p>
+<p>Finally, the close method is called to close the&nbsp;connection.</p>
+<pre><code class="lang-cs"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">CloseAPN</span>()
+{
+    client.Close();
+}
+</code></pre>
+<p>At this point, you might be wondering how you obtain the DEVICE_TOKEN value for the above.  This is not the <span class="caps">UDID</span> of the device, but instead a separate token that is generated by the phone itself.  To get this token, and to handle incoming push notifications, let’s turn our attention to the XCode project.  For my demo I was receiving push notifications within a <a href="http://www.phonegap.com">PhoneGap</a> application, but this code will work equally in a regular native client&nbsp;application.</p>
+<p>First, we need to instruct the application to register for <span class="caps">APN</span> messages.  This is done using the registerForRemoteNotificationTypes method.  You’ll need to call this method when the application first starts up (for PhoneGap projects, this can be in the init method of the&nbsp;AppDelegate).</p>
+<pre><code class="lang-objectivec"><span class="built_in">NSLog</span>(@<span class="string">"Registering for <span class="caps">APN</span>"</span>);
+[[<span class="built_in">UIApplication</span> sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
+</code></pre>
+<p>This method has three callbacks that it can take advantage of.  One to indicate that registration was successful (we also get the Device <span class="caps">ID</span> from here), one to indicate that something went wrong (e.g. if we are running in the simulator, which doesn’t support push notifications), and one for when we actually receive a&nbsp;message).</p>
+<p>The first two are easy to&nbsp;handle:</p>
+<pre><code class="lang-objectivec">- (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    <span class="built_in">NSString</span> *str = [<span class="built_in">NSString</span> stringWithFormat:@<span class="string">"Device Token=%@"</span>,deviceToken];
+    <span class="built_in">NSLog</span>(@<span class="string">"%@"</span>,str);
+}
+
+- (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)app didFailToRegisterForRemoteNotificationsWithError:(<span class="built_in">NSError</span> *)err {
+    <span class="built_in">NSString</span> *str = [<span class="built_in">NSString</span> stringWithFormat: @<span class="string">"Error: %@"</span>, err];
+    <span class="built_in">NSLog</span>(@<span class="string">"%@"</span>,str);   
+}
+</code></pre>
+<p>Note how the first method (didRegisterForRemoteNotificationsWithDeviceToken) is where we actually extract the DEVICE_TOKEN string required in the worker role.  You’ll have to run this once, and copy and paste appropriately.  Of course, in a production environment, we would likely pass this value to the service via a separate&nbsp;call.  </p>
+<p>The third callback gets called when the device actually receives a&nbsp;message.</p>
+<pre><code class="lang-objectivec">- (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)application didReceiveRemoteNotification:(<span class="built_in">NSDictionary</span> *)userInfo {
+    <span class="keyword">for</span> (<span class="keyword">id</span> key in userInfo) {
+        <span class="built_in">NSLog</span>(@<span class="string">"key: %@, value: %@"</span>, key, [userInfo objectForKey:key]);
+        <span class="built_in">NSString</span> *payload = [<span class="built_in">NSString</span> stringWithFormat:@<span class="string">"%@"</span>,[userInfo objectForKey:key]];
+
+        <span class="comment">// work out the session code from the <span class="caps">JSON</span> payload</span>
+        NSRegularExpression* regex;
+        NSTextCheckingResult* result;
+        <span class="built_in">NSError</span>* error = <span class="literal">nil</span>;
+        <span class="built_in">NSString</span>* regexStr = @<span class="string">"session = ([^']*);"</span>;
+        <span class="built_in">NSString</span>* value = <span class="literal">nil</span>;
+        regex = [NSRegularExpression regularExpressionWithPattern:regexStr options:NSRegularExpressionCaseInsensitive error:&amp;error];
+        result = [regex firstMatchInString:payload options:<span class="number">0</span> range:NSMakeRange(<span class="number">0</span>, payload<span class="variable">.length</span>)];
+
+        <span class="keyword">if</span>(result &amp;&amp; [result numberOfRanges] == <span class="number">2</span>)
+        {
+            <span class="built_in">NSRange</span> r = [result rangeAtIndex:<span class="number">1</span>];
+            value = [payload substringWithRange:r];
+        }
+
+        <span class="keyword">if</span>(value)
+        {
+            <span class="built_in">NSLog</span>(@<span class="string">"Found session value in payload: %@"</span>,value);
+            <span class="built_in">NSString</span>* jsString = [<span class="built_in">NSString</span> stringWithFormat:@<span class="string">"handleOpenURL("</span>[http:<span class="comment">//<span class="caps">URLHERE</span>.cloudapp.net/Session/Lookup?session=%@");",value];](http://URLHERE.cloudapp.net/Session/Lookup?session=%@");",value];)</span>
+            [webView stringByEvaluatingJavaScriptFromString:jsString];
+        }
+    }       
+}
+</code></pre>
+<p>As you can see above, this method parses the payload of the message, tries to work out the session code, and if one is found, creates a new javascript call to a method called handleOpenURL which instructs PhoneGap to call the method of the same name.  Of course, you are going to want to configure this for your own scenario, but hopefully this gives you a sense of how to pass a value as part of the message, and then take an action on that&nbsp;accordingly.  </p>
+<p>Well, that wraps up this post.  I hope you enjoyed the talk at <span class="caps">MIX</span>, and that this code is useful if you have services in Windows Azure that have a need to push notification messages to iPhone and iPad&nbsp;devices.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

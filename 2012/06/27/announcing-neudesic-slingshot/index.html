@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Announcing Neudesic Slingshot! - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Announcing Neudesic Slingshot!</h1>
+        <p class="author">Written by <span class="author">Simon Guest</span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Getting SharePoint working on a mobile device can be hard. The “out of the box” experience, even with SharePoint 2010, is very basic and doesn’t take advantage of the device. Solutions on the AppStore are a step in the right direction, but many don’t do anything over providing the ability to browse a SharePoint site. At Neudesic, we are hoping to change all this through a project we call <a href="http://neudesic.github.com/slingshot">Slingshot</a>.</p>
+<p><span class="more"></span></p>
+<p>Slingshot is an open source mobile client and library for SharePoint. Built upon the jQuery Mobile and Apache Cordova frameworks, Slingshot makes it ridiculously easy to expose tasks, announcements, documents, and virtually any other object directly from SharePoint to any mobile&nbsp;device.</p>
+<p><img src="/articles/announcing-neudesic-slingshot/screens.jpg" alt="Screenshots">￼</p>
+<p>We demonstrated Slingshot for the first time in public at the SharePointFest in Denver this week, and the response has been tremendous. For those that didn’t make it to the event, I wanted to use this blog post to expand on what the framework can&nbsp;do.</p>
+<p>Slingshot is very lightweight, and can be deployed in one of two ways: The code can run on the SharePoint server, and users access it using their mobile browser. Alternatively the same code can run on the mobile device in a native application, with no changes required on the SharePoint&nbsp;server.</p>
+<p>Here’s a quick run through of what Slingshot supports&nbsp;today:</p>
+<p><strong>SharePoint Lists and&nbsp;Items</strong></p>
+<p>Slingshot uses the <span class="caps">ODATA</span> support in SharePoint 2010 to expose virtually any list or item to the mobile device. The out of the box demo shows announcements, tasks, and organizational details, and it’s easy to extend to workflows and other lists. Each of these items can be exposed through a form with touch native controls.  For example, task items have a slider control to indicate percentage&nbsp;complete.</p>
+<p><strong>Bi-Directional&nbsp;Updates</strong></p>
+<p>The sample app also demonstrates bi-directional updating. Update an item from SharePoint <span class="caps">UI</span>, and it automatically gets updated on the mobile device. Alternatively, update on the mobile device and the item is automatically updated in SharePoint. This update is seamless, so the user doesn’t have to hit “save” after making the change on the mobile&nbsp;device.</p>
+<p><strong>Document Library&nbsp;Support</strong></p>
+<p>One of the core scenarios for using Slingshot is to browse document libraries, which Slingshot handles really well. Supported file types (such as PDFs) can also be opened directly from the mobile&nbsp;app.</p>
+<p><strong>Integration with Photo&nbsp;Capture</strong></p>
+<p>Browsing and opening files from a mobile device is useful, but Slingshot also supports uploading data from the device. The majority of phones now come with a camera. The sample application shows how to take a photo on the device and upload it to a document library or attach it to an item. We find this functionality well suited for field employees who need to interact with workflows that involve taking pictures and uploading them to&nbsp;SharePoint.</p>
+<p><strong>Support for Offline&nbsp;Scenarios</strong></p>
+<p>Because Slingshot works locally on the device it enables a number of offline scenarios. Currently the application has the ability to work offline, and we are working on synchronization of SharePoint lists and items to the device, which will provide a true offline experience if no connection is&nbsp;available.</p>
+<p><strong>Authentication</strong></p>
+<p>Authentication works in one of two ways. If you are accessing Slingshot via a mobile browser, the browser will prompt for credentials (the same way as if you’d just navigated to any other SharePoint page). If you are running Slingshot locally on the device, we use a form-based mechanism that can be customized and extended as&nbsp;needed.</p>
+<p><strong>Multi Platform&nbsp;Support</strong></p>
+<p>Because we’ve developed all of this using jQuery Mobile and Cordova (PhoneGap), it is supported on multiple platforms by default. Both these frameworks support up to six platforms today, including iOS, Android, Windows Phone 7, and Blackberry. We provide default templates for iPhone and Android, and creating new templates for other devices is as simple as creating new <span class="caps">CSS</span>&nbsp;files.</p>
+<p><strong>Easy to Extend and&nbsp;Update</strong></p>
+<p>Apart from the device integration, everything in Slingshot is based on <span class="caps">HTML5</span> and JavaScript. For those coming from a web background, this makes it very simple to extend and&nbsp;update.</p>
+<p>Best of all, we’ve licensed Slingshot as an open source framework, under the <span class="caps">MIT</span> license. You can get all the bits for free, and we even have other developers that are signing up to&nbsp;contribute.</p>
+<p>Ready to see more? If you didn’t have an opportunity to stop by the booth at SharePointFest in Denver, check out the <a href="http://neudesic.github.com/slingshot">repo</a> on GitHub – or drop me a line if you’d like more information. Neudesic is actively extending this framework for many other scenarios and customers, and we’d be happy to help you extend this for your own needs&nbsp;also.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

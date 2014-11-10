@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>An Objective View of MEAPs - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>An Objective View of MEAPs</h1>
+        <p class="author">Written by <span class="author">Simon Guest</span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>I recently had the opportunity to put together some research for a customer who has been interested in the <span class="caps">MEAP</span> (Mobile Enterprise Application Platform) space.  My premise is that the market has become flooded with MEAPs (Mobile Enterprise Application Platforms, as coined by Gartner), yet most of them are fundamentally taking organizations and developers down the wrong path when it comes to developing mobile applications.  The problem is that MEAPs demo really well in front of the CIO… “Wow!  You just hit F5, and your application is compiled and deployed to iOS, Android, Blackberry devices…  Where do I sign?” – yet the reality is very&nbsp;different.</p>
+<p><span class="more"></span></p>
+<p><strong>Language Abstraction</strong> – Many MEAPs have their own language that claim to be similar to Java or a flavor of JavaScript.  Even if it is the same language, there is always something new to learn.  Also, developers tend to shy away from learning any language that’s vendor specific (<span class="caps">APEX</span> on Force.com anyone?&nbsp;;–)</p>
+<p><strong>Language Limitations</strong> – When you create a language that abstracts other languages you always end up serving only the lowest common denominator.  Often there are ways of coding styles and nuances supported in the native language that the <span class="caps">MEAP</span> won’t expose because it’s not on other&nbsp;platforms.</p>
+<p><strong>Platform Limitations</strong> – Time has shown that platform abstraction doesn’t work (do a search on Wikipedia for cross platform <span class="caps">RAD</span> tools if you don’t believe me).  Also, platforms change quickly.  What happens if/when the next version of iOS is released?  You have to wait for your MEAP vendor to catchup before you can use any of the&nbsp;features.</p>
+<p><strong><span class="caps">UI</span> Limitations</strong> – Following on from the previous point, many of the controls that MEAPs offer also follow the lowest common denominator rule.  For example, Cocoa Touch has a neat feature called a “Half Page Curl Transition”.  If you abstract your <span class="caps">UI</span> to a MEAP vendor, how is this supported on other platforms?  Either a) it’s not (so by default you can’t use it on iOS), b) you can only use it on iOS (which breaks the promise of a MEAP) or c) it’s implemented as a hack job on all&nbsp;platforms. </p>
+<p><strong>Tooling</strong> – <span class="caps">MEAP</span> tooling is often Web based, or bundled as an Eclipse add-on – but in both cases it often doesn’t fit in with the other tools that developers use today (e.g. ALM, refactoring, unit testing, etc.).  Also, many of the MEAP vendors seem to be aiming their toolsets towards business analysts.  When are we going to let this one go?  Business analysts have an important role to play in teams, but they shouldn’t be developing UI, and they shouldn’t be writing&nbsp;code.</p>
+<p><strong>Debugging</strong> – Let’s say you create your application with a <span class="caps">MEAP</span>, and then it crashes 1 time in every 10 (i.e. one of those really nasty bugs to find).  What are you going to do?   a) Reach out to Apple?  I suspect they won’t help you.  b) Search the web for other people with the same issue?  Could be difficult to find.  c) Pay the MEAP vendor even more money to investigate your issue?  Ah, that’s the&nbsp;one…</p>
+<p><strong>Data Abstraction</strong> – Many MEAPs offer connectors to databases, <span class="caps">XML</span> files, SAP, etc.  Not only are these costly, but many are just pass-through connectors, so as a developer you don’t get any control over the connection.  Want to implement synchronization?  Want to change the formatting or query for better optimization?  Probably not going to be&nbsp;possible.</p>
+<p><strong>Difficult to Extend</strong> – Many MEAPs don’t extend very easily.  Found a new JavaScript library that you want to use in your application?  How about a native control that you’d like to display?  Could be tough.  Some MEAPs do offer bridging to native code – but in which case, why not just write the whole thing in native code to start&nbsp;with?</p>
+<p><strong>Vendor Lock In</strong> – The sum of all the above leads to quite the definition of vendor lock in.  Chances are by the time you deploy your first application you’ll be signed up with an expensive support and service agreement, with your developers working on code in a language that they’ll never be able to re-use, on a platform that won’t go&nbsp;anywhere.</p>
+<p>I’ve extended this into a presentation that you can find <a href="http://slideshare.net/simonguest">here</a> – which cover the above points in more detail, plus outline some general alternative approaches to creating applications without the dependency on a <span class="caps">MEAP</span>&nbsp;framework.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

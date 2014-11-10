@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>iBeacon Demo at Gartner AADI - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>iBeacon Demo at Gartner AADI</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Last week, I joined my colleagues from Neudesic at the Gartner <span class="caps">AADI</span> (Application Architecture Development <span class="amp">&amp;</span> Integration) Summit in Las Vegas. One of the neat things that we were showing was a demo of iBeacon technology, in order to help locate and pinpoint individuals within indoor environments where <span class="caps">GPS</span> is not an&nbsp;option. </p>
+<p><span class="more"></span></p>
+<p>To achieve this, we placed a selection of iBeacons around the expo floor (for the iBeacons we used RedBear’s <span class="caps">BLE</span> Mini boards, flashed with their iBeacon&nbsp;firmware).</p>
+<p><img src="/articles/ibeacon-demo-at-gartner-aadi/redbear_blemini.png" alt="Red Bear BLE Mini"></p>
+<p>Using Bluetooth <span class="caps">LE</span> (a.k.a. Bluetooth Smart), each beacon transmits a unique ID (made up of a major and minor value) on a particular “frequency” (known as a proximity UUID). iBeacon supported mobile applications are then able to “tune in” to this proximity UUID, and based on the power signal for each beacon, determine which area of the floor a user is located closest&nbsp;to.</p>
+<p><img src="/articles/ibeacon-demo-at-gartner-aadi/gartneraadi_screenshot.png" alt="Gartner AADI screenshot"></p>
+<p>Using this information we created a mobile app that reports on all of the beacons within range on the expo floor. As you can see in the above screenshot, we have 5 iBeacons in range, listed in order of proximity, with an estimated distance calculated by the power signal. As you can likely gather from the data, we were located in the Neudesic booth at the time this screenshot was taken, with the theater, and a selection of other booths in&nbsp;range.</p>
+<p>For the show, we developed two versions of the application - one for iOS and one for Android. Both are native mobile applications written using <a href="http://xamarin.com">Xamarin</a>, using CLLocationManager for iOS, and Radius Network’s <a href="https://github.com/RadiusNetworks/android-ibeacon-service">binding</a> for supporting iBeacon on Android. The Radius implementation is especially interesting in that the beacon detection runs as a background service, polling for new iBeacons and raising intents to the <span class="caps">UI</span> as necessary (even though Bluetooth LE is a lot more responsible with power vs. regular Bluetooth, we still need to be careful not to kill the battery when using this&nbsp;however).</p>
+<p>While this is neat to show just as a mobile application, we wanted to take it one step further and demonstrate how this could be applied in the real world with <a href="http://www.neuronesb.com">Neuron</a>, an <span class="caps">ESB</span> product from Neudesic. For our expo demo, Neuron provided a backbone infrastructure to allow the mobile app to resolve a name for a beacon ID (think of his like DNS for iBeacons!) and also give a scalable way for users to “check in” to an iBeacon the same way that they would check in via Foursquare or&nbsp;Facebook.</p>
+<p><img src="/articles/ibeacon-demo-at-gartner-aadi/gartneraadi_neuron.png" alt="Neuron process flow"></p>
+<p>As shown above, we developed a process flow using Neuron to accept incoming messages from the mobile application, and then provided logic to determine whether the device was trying to acquire a name for a beacon, or whether the user had walked in to the area of a beacon and wanted to “check in”. The benefit for using Neuron in this situation vs. just propping up a single web service is that our application can now scale to hundreds of thousands of concurrent mobile clients without needing to make any major adjustments on the&nbsp;server-side.</p>
+<p>If you were able to stop by the booth at the Gartner summit, I hope you enjoyed the demo and the conversation. If you weren’t able to attend, but would like to know more about how Neudesic is working with various organizations on iBeacon technology and/or Neuron, feel free to drop me a&nbsp;line.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

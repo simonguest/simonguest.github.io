@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Working with the Windows Azure Toolkit for Android - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Working with the Windows Azure Toolkit for Android</h1>
+        <p class="author">Written by <span class="author">Simon Guest</span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>At the end of August, Microsoft <a href="http://www.zdnet.com/blog/microsoft/microsoft-rolls-out-windows-azure-toolkit-for-android/10503">published</a> the Windows Azure Toolkit for Android. At Neudesic, the partner behind developing the both toolkits for iOS and Android, we’ve been working with customers that use the toolkit to connect mobile applications to the cloud. One of the recent requests however has been to provide a walkthrough of getting started with the toolkit. The current build on <a href="http://github.com/microsoft-dpe">GitHub</a> was released for a specific version of Eclipse and the Android tools, and as a result, can be a little challenging getting the library and sample code up and running. In this post, I’ll explain what it takes to download the toolkit, create a brand new environment in Eclipse, and get started quickly with the&nbsp;toolkit.</p>
+<p> <span class="more"><span></p>
+<p><strong>Getting Started – What You’ll&nbsp;Need</strong></p>
+<p>Firstly, there is a list of tools that you’ll need to&nbsp;download.</p>
+<ol>
+<li><p><strong>Eclipse.</strong> Download from <a href="http://eclipse.org">http://eclipse.org</a> – we’ll be using Helios in this&nbsp;tutorial.</p>
+</li>
+<li><p><strong><span class="caps">JDK</span>. </strong> We’ll be using the default that ships with Mac <span class="caps">OSX</span>, but if you are on a PC, you’ll need JDK 1.6 or&nbsp;higher.</p>
+</li>
+<li><p><strong>Android <span class="caps">SDK</span> and Eclipse Tooling.</strong> Download the Android <span class="caps">SDK</span> from <a href="http://developer.android.com">http://developer.android.com</a> (we are using r14 for this walkthrough). Also follow the instructions for configuring the Android tooling within Eclipse. After you have installed everything, use the <span class="caps">AVD</span> manager to setup a new AVD for an Android 2.3.3&nbsp;device.</p>
+</li>
+</ol>
+<p><strong>Setting Up the Library in&nbsp;Eclipse</strong></p>
+<p>To import and build the library in Eclipse, perform the following&nbsp;steps.</p>
+<p>Download the Windows Azure Toolkit for Android from GitHub. If you have the Git client installed, you can use this&nbsp;command:</p>
+<pre><code>git clone https://github.com/microsoft-dpe/wa-toolkit-android
+</code></pre><p>Otherwise, go to the site and pull down the zip file of the&nbsp;repo.</p>
+<p>Create a new directory for your Eclipse&nbsp;workspace:</p>
+<pre><code>mkdir wa-toolkit-android-workspace
+</code></pre><p>Launch Eclipse, and point the default workspace to this newly created&nbsp;directory:</p>
+<p><img src="/articles/working-with-the-windows-azure-toolkit-for-android/workspace.jpg" alt="Work Space">￼</p>
+<p>Create a new Android project called <strong>AzureLibrary</strong>, set the target to Android 2.3.3, use <strong>com.microsoft.cloud.android</strong> as the package name, but do not create an activity or test project.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/newproject.jpg" alt="New Project"></p>
+<p>Right click on the AzureLibrary project and select <strong>Import</strong>. Choose <strong>General</strong> / <strong>File System</strong> as the import source, and click on <strong>Next</strong>.</p>
+<p>Browse to the /library/src/com folder in the toolkit folder that you downloaded from&nbsp;GitHub.</p>
+<p>Click on the <strong>Browse (into folder) </strong>button and select the src folder under your project. Expand the <strong>src</strong> folder, and check the <strong>com </strong>folder as shown in this screenshot:
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/import.jpg" alt="Import"></p>
+<p>Click on the Finish button. The import will complete.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/packageexplorer.jpg" alt="Package Explorer"></p>
+<p>Right click on the project, select properties, and change the Java compiler version from 1.5 to 1.6. (The default is 1.5, yet the toolkit uses many constructs only supported in 1.6)
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/properties.jpg" alt="Properties"></p>
+<p>Click <span class="caps">OK</span>, and say <strong>yes</strong> to rebuilding the project. The project should now build with no&nbsp;errors.</p>
+<p>Assuming everything builds correctly, right click on the project, and select Properties again. Go to the Android setting, and click on the <strong>Is Library</strong> check box.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/islibrary.jpg" alt="Is Library"></p>
+<p><strong>Setting Up the Sample Application in&nbsp;Eclipse</strong></p>
+<p>To import and build the sample application in Eclipse, perform the following&nbsp;steps:</p>
+<p>Create a new Android project called <strong>AzureSample</strong>. Select Android 2.3.3, set the namespace to <strong>com.windowsazure.samples.sample</strong>, and choose not to create an activity.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/sample.jpg" alt="Sample"></p>
+<p>As you did with the library, right click on the project, and select <strong>Import</strong>. Select the <strong>/samples/simple/src</strong> as the source and import into the <strong>AzureSample/src</strong> folder.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/filesystem.jpg" alt="File System"></p>
+<p>Right click on the project, select <strong>Properties</strong>, select <strong>Android</strong> and add a reference to the <strong>AzureLibrary</strong> project:
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/addrefs.jpg" alt="Add Refs"></p>
+<p>Right click on the project, select <strong>Import</strong>. Import from the <strong>/samples/simple/res</strong> folder into the <strong>AzureSample/res</strong> folder. This will import the resources required for the sample application.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/importresources.jpg" alt="Import Resources"></p>
+<p>Answer <strong>yes </strong>when prompted to overwrite the <strong>main.xml</strong>&nbsp;file.</p>
+<p>Right click on project, select <strong>Import</strong> and select the file system again. Select the <strong>AndroidManifest.xml</strong> from the root of the source directory and import into the root of the destination project.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/importresources2.jpg" alt="Import Resources 2"></p>
+<p>The Sample project should now build with no&nbsp;errors.</p>
+<p><strong>Configuring your Windows Azure Account Name and&nbsp;Key</strong></p>
+<p>In order to setup the sample project, you need to supply your account name and key, as provided by Windows Azure. You can obtain this by logging into the Windows Azure Portal (<a href="http://windows.azure.com">http://windows.azure.com</a>) and navigating to Storage Accounts to obtain the&nbsp;details.</p>
+<p>When you have the name and key, perform the&nbsp;following:</p>
+<p>In the sample project, open <strong>ProxySelector.java</strong> from the <strong>src/com.windowsazure.samples.sample</strong> package.
+At the top of the file replace the <strong><span class="caps">ACCOUNT</span></strong> and <strong>ACCESS_KEY</strong> values with the account name and access key for your Azure storage&nbsp;account.</p>
+<p><strong>Running the&nbsp;Sample</strong></p>
+<p>To run the sample, right click on the sample project, select <strong>Run As / Android&nbsp;Application.</strong></p>
+<p>Once the emulator is up and running, unlock the&nbsp;device.</p>
+<p>Refer to the LogCat/Console window in Eclipse if there are any&nbsp;errors.</p>
+<p>Click on the Start button in the sample&nbsp;application.</p>
+<p>Select either table, blob, or queue storage and browse the storage associated with your Windows Azure account.
+<img src="/articles/working-with-the-windows-azure-toolkit-for-android/demo.jpg" alt="Demo"></p>
+<p>That’s it! Your sample application is now up and running, and you are able to browse Windows Azure&nbsp;storage!</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

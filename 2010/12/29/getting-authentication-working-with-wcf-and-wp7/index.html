@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Getting Authentication Working with WCF and WP7 - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Getting Authentication Working with WCF and WP7</h1>
+        <p class="author">Written by <span class="author">Simon Guest</span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Although Windows Phone 7 (<span class="caps">WP7</span>) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little&nbsp;quirky. </p>
+<p>After working on a project over the holidays putting together a <span class="caps">WP7</span> client to connect to a Web service requiring authentication, this is what I&nbsp;found…</p>
+<p><span class="more"></span></p>
+<ol>
+<li><p><span class="caps">NTLM</span>/Kerberos is a no&nbsp;go…</p>
+<p>As of today, the <span class="caps">WCF</span> client on WP7 does not support NTLM or Kerberos authentication.  If you are accessing Web services from a device, you’ll want to make sure that the your server  is setup to handle Basic authentication (preferably over&nbsp;SSL).</p>
+</li>
+<li><p>And even Basic authentication needs a helping&nbsp;hand…</p>
+<p>Even with Basic authentication enabled on the server, I was noticing that the client was still not sending the right <span class="caps">HTTP</span> headers – even when setting the <strong>ClientCredentials</strong> property on the client and playing with the config file.  No matter what I tried, I couldn’t get it to&nbsp;work.</p>
+</li>
+</ol>
+<p>To overcome this however, you can force the Basic authentication details to be written as part of the request header.  To do this, first create a method that generates a <span class="caps">UTF8</span> encoded string for your domain, username, and&nbsp;password:</p>
+<pre><code class="lang-cs"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">GetCredentials</span>(<span class="keyword">string</span> domain, <span class="keyword">string</span> username, <span class="keyword">string</span> password)
+{    
+    <span class="keyword">return</span> Convert.ToBase64String(Encoding.<span class="caps">UTF8</span>.GetBytes(String.Format(<span class="string">@"{0}{1}:{2}"</span>,domain,username,password)));      
+}
+</code></pre>
+<p>Then, you’ll need to create a new property with your&nbsp;credentials:</p>
+<pre><code class="lang-cs">HttpRequestMessageProperty request = <span class="keyword">new</span> HttpRequestMessageProperty();
+request.Headers[System.Net.HttpRequestHeader.Authorization] = <span class="string">"Basic "</span> + GetCredentials;
+</code></pre>
+<p>Finally, add the header to your outgoing&nbsp;request:</p>
+<pre><code class="lang-cs">OperationContextScope clientScope = <span class="keyword">new</span> OperationContextScope(client.InnerChannel);
+OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessageProperty.Name, request);
+</code></pre>
+<p>(in the above client is your service&nbsp;reference)</p>
+<p>And voila!  You should now have Basic authentication headers as part of your client requests, and you can access username/password protected Web services from your <span class="caps">WP7</span>&nbsp;device!</p>
+<p>One final tip - during all of this you will likely need to use a tool like Fiddler to trace your requests and responses from the device.  If you are having troubles getting Fiddler working with the <span class="caps">WP7</span> emulator, <a href="http://phone7.wordpress.com/2010/10/17/fiddler-and-wp7-emulator-working/">here</a> is a great post that outlines what to&nbsp;do.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
