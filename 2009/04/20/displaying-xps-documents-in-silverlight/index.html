@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Displaying XPS Documents in Silverlight - simonguest.com
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="The only person allowed to login as 'guest'">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Displaying XPS Documents in Silverlight</h1>
+        <p class="author">Written by <span class="author"></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>I’ve recently been involved on a project that has a requirement to create and view <span class="caps">XPS</span> documents in Silverlight.&amp;#160; The application needs to display the XPS file in a full screen window together with zoom and navigation&nbsp;features.</p>
+<p>After a little searching on how to do this, I was able to get a head start with <a href="http:&#x2F;&#x2F;blogs.msdn.com&#x2F;delay&#x2F;archive&#x2F;2007&#x2F;05&#x2F;22&#x2F;lighting-up-the-xml-paper-specification-proof-of-concept-xps-reader-for-silverlight.aspx">this great post</a> from David Anson, which includes sample code for viewing <span class="caps">XPS</span> files in Silverlight 2 beta 2.&amp;#160; As his <a href="http:&#x2F;&#x2F;blogs.msdn.com&#x2F;delay&#x2F;archive&#x2F;2008&#x2F;10&#x2F;18&#x2F;roadblock-in-the-way-of-migrating-the-proof-of-concept-silverlight-xps-reader-simplesilverlightxpsviewer-sample-does-not-work-on-silverlight-2-rtw.aspx">updated post</a> attests to however, there were a few issues with Silverlight 2 due to a breaking change with the ways that font resources could be referenced from within a Silverlight assembly.&amp;#160; Fortunately, <a href="http:&#x2F;&#x2F;www.dotneteer.com&#x2F;Weblog&#x2F;post&#x2F;2008&#x2F;11&#x2F;Fix-for-Simple-XPS-Silverlight-Viewer-for-Silverlight-2.aspx">this post</a> from Li Chen pointed me in the right direction, separating out the <span class="caps">ODTTF</span> fonts into separate XAP files which can be referenced at&nbsp;runtime.&amp;#160; </p>
+<p>The sample code provided by Li Chen works well with the sample <span class="caps">XPS</span> files provided, but I couldn’t get it working with an XPS file generated using Microsoft Word.&amp;#160; After a little debugging this weekend, I found a few subtleties with how the code dealt with XPS files geneated from Microsoft&nbsp;Word:</p>
+<p>Firstly, the root document of the <span class="caps">XPS</span> file is called FixedDoc.fdoc instead of FixedDocument.fdoc (which is the name when using the XPS Printer Driver).&amp;#160; This was fairly easy to correct using a simple check:
+  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
+<p>&#x2F;&#x2F; Added to support &amp;quot;Save as <span class="caps">XPS</span>&amp;quot; from Microsoft Word<br>if (resourceInfo == null)<br>{<br>&amp;#160;&amp;#160;&amp;#160; resourceInfo = Application.GetResourceStream(_streamResourceInfo, ConvertPartName(&amp;quot;&#x2F;Documents&#x2F;1&#x2F;FixedDoc.fdoc&amp;quot;));<br>}&nbsp;&lt;&#x2F;div&gt;  </p>
+<p>Secondly, the .fdoc file refers to pages using relative links.&amp;#160; Instead of the absolute link (e.g. &#x2F;Documents&#x2F;1&#x2F;Pages&#x2F;1.page), a relative link (e.g. &#x2F;Page&#x2F;1.page) was causing the sample to be unable to find the pages.&amp;#160; A small piece of code to append the full path quickly fixes this also.
+  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
+<p>&#x2F;&#x2F; Update the page names for &amp;quot;Save as <span class="caps">XPS</span>&amp;quot; from Microsoft Word<br>List&amp;lt;string&amp;gt; _newPageNames = new List&amp;lt;string&amp;gt;();<br>foreach (String pageName in _pageNames)<br>{<br>&amp;#160;&amp;#160;&amp;#160; if (pageName.StartsWith(&amp;quot;Page&amp;quot;))<br>&amp;#160;&amp;#160;&amp;#160; {<br>&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160; _newPageNames.Add(&amp;quot;&#x2F;Documents&#x2F;1&#x2F;&amp;quot; + pageName);<br>&amp;#160;&amp;#160;&amp;#160; }<br>}&nbsp;&lt;&#x2F;div&gt;  </p>
+<p>Finally, it looks like Word includes a page attribute called BidiLevel, which isn’t recognized by the Canvas element.&amp;#160; Adding an additional exclusion line into the sample code quickly fixed it.
+  &lt;div&nbsp;class=&quot;code&quot;&gt;   </p>
+<p>_elementAttributesToRemove.Add(&amp;quot;Glyphs&amp;quot;, new List&amp;lt;string&amp;gt; { &amp;quot;BidiLevel&amp;quot; });&nbsp;&lt;&#x2F;div&gt;  </p>
+<p>The result seems to work quite well, with an <span class="caps">XPS</span> file saved from Microsoft Word viewable within&nbsp;Silverlight.&amp;#160;&amp;#160; </p>
+<p><a href="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;DisplayingXPSDocumentsinSilverlight_9130&#x2F;image.png"><img src="http:&#x2F;&#x2F;simonguest.com&#x2F;images&#x2F;DisplayingXPSDocumentsinSilverlight_9130&#x2F;image_thumb.png &quot;image&quot;" alt="image"></a> </p>
+<p>If you are interested in trying this yourself, I’ve posted a version of the sample code <a href="http:&#x2F;&#x2F;simonguest.com&#x2F;downloads&#x2F;SimpleSilverlightXpsViewer.zip">here</a> which contains the above modifications.&amp;#160; To use the modified sample with your own <span class="caps">XPS</span> file, do the&nbsp;following:&amp;#160; </p>
+<p>1.&amp;#160; Go into Microsoft Word and “Save as &#x2F; <span class="caps">XPS</span>” to create a new XPS&nbsp;file.</p>
+<p>2.&amp;#160; Download and compile the sample (note: only works in Visual Studio&nbsp;2008).&amp;#160; </p>
+<p>3.&amp;#160; Copy the <span class="caps">XPS</span> into your Visual Studio project, in the <strong>SimpleSilverlightXpsViewer_Web </strong>project.&amp;#160; </p>
+<p>4.&amp;#160; In Windows Explorer, rename the original <span class="caps">XPS</span> file to a ZIP file.&amp;#160; Ignore the warning about changing the file&nbsp;extension.</p>
+<p>5.&amp;#160; Open the zip file and go into the &#x2F;Resources directory.&amp;#160; Look for font files ending in <span class="caps">ODTTF</span> - these are embedded font files for the XPS file and must be referenced separately in the Silverlight project.&amp;#160; Copy all of these ODTTF files to the <strong>SampleWordGenerated </strong>project in the solution.&amp;#160; Also note that the <span class="caps">ODTTF</span> files are dynamically named when the XPS file is generated.&amp;#160; This means that although you may have already imported the correct ODTTF files for previous XPS file that use the same fonts, you’ll still need to re-import the fonts again to handle a new XPS&nbsp;file.&amp;#160; </p>
+<p>6.&amp;#160; Edit <strong>default.html </strong>in <strong>SimpleSilverlightXpsViewer_Web </strong>and on line 70 change the <strong>xpsDocument=SampleWordGenerated.xps </strong>to the correct name of your <span class="caps">XPS</span>&nbsp;file.&amp;#160; </p>
+<p>7.&amp;#160; F5 to run and you should see your <span class="caps">XPS</span> document displayed within a Silverlight&nbsp;control!</p>
+<p>There is still a bit of work to do with the sample code, which I think would be worth taking into a CodePlex project.&amp;#160; For example, the code should initially read the <span class="caps">XPS</span> root file (FixedDocSeq.fdseq) instead of looking or FixedDoc.fdoc or FixedDocument.fdoc directly.&amp;#160; It would also be great to figure out a better way of extracting the fonts more dynamically at runtime.&amp;#160; Other than that though I found this to be a good solution to display XPS files in Silverlight applications, especially useful as Silverlight doesn’t support the FlowDocument element (which is commonly used in WPF applications for creating documents and report&nbsp;generation).</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about"><p>Simon Guest is the VP of Platform R&amp;D at Concur Technologies, passionate about software engineering, API design, and developer experience.</p>
+<p>Simon is a certified IT Architect (CITA-P), a member of the British Computer Society (MBCS), was named as one of “Microsoft’s Key Employee Losses of 2010″ by eWeek, and has been awarded a place on Sun Microsystems’ “Speaker Wall of Fame” on two occasions.</p>
+<p>In addition to speaking, Simon enjoys writing, is the author of numerous articles, patents, and books, and maintains an active blog at <a href="http://simonguest.com">http://simonguest.com</a>.</p>
+<p>You can get in touch with Simon through <a href="http://linkedin.com/pub/simonguest">LinkedIn</a></p>
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Simon Guest &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
