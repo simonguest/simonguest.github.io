@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>simonguest.com</title>
-    <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
-    <link>http://localhost:8080</link>
+    <atom:link href="//feed.xml" rel="self" type="application/rss+xml"></atom:link>
+    <link>/</link>
     <description>The only person allowed to login as 'guest'</description>
     <pubDate>Mon, 05 May 2014 12:17:59 -0700</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
     <item>
       <title>GIDS 2014</title>
-      <link>http://localhost:8080/2014/05/05/gids-2014/</link>
+      <link>//2014/05/05/gids-2014/</link>
       <pubDate>Mon, 05 May 2014 12:17:59 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2014/05/05/gids-2014/</guid>
+      <guid isPermaLink="true">//2014/05/05/gids-2014/</guid>
       <author></author>
       <description>&lt;p&gt;A couple of weeks ago, I had the privilege of speaking at &lt;a href=&quot;http://www.developermarch.com/developersummit/about.html&quot;&gt;GIDS&lt;/a&gt; (the Great Indian Developer Summit) 2014 in Bangalore. GIDS is a multi-day event, with each day dedicated to a particular theme or topic. I spoke on the Wednesday (the Web/Mobile day) and had three sessions covering mobile app development using iBeacons, tips and tricks using AngularJS, and automated Web testing using JavaScript.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -24,9 +24,9 @@
     </item>
     <item>
       <title>Bluetooth Issues on Mavericks</title>
-      <link>http://localhost:8080/2014/03/28/bluetooth-issues-on-mavericks/</link>
+      <link>//2014/03/28/bluetooth-issues-on-mavericks/</link>
       <pubDate>Fri, 28 Mar 2014 16:32:02 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2014/03/28/bluetooth-issues-on-mavericks/</guid>
+      <guid isPermaLink="true">//2014/03/28/bluetooth-issues-on-mavericks/</guid>
       <author></author>
       <description>&lt;p&gt;I’ve been having some issues recently with the Bluetooth stack on my Mac acting strangely - causing Bluetooth devices to drop at random times and on occasions, the default mouse and keyboard will stop working even though the machine is running fine. One of the symptoms of this has been the bluetooth preferences pane showing “do not localize” when things become corrupt.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -38,9 +38,9 @@
     </item>
     <item>
       <title>Automated Web Testing using JavaScript</title>
-      <link>http://localhost:8080/2014/03/27/automated-web-testing-using-javascript/</link>
+      <link>//2014/03/27/automated-web-testing-using-javascript/</link>
       <pubDate>Thu, 27 Mar 2014 13:22:01 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2014/03/27/automated-web-testing-using-javascript/</guid>
+      <guid isPermaLink="true">//2014/03/27/automated-web-testing-using-javascript/</guid>
       <author></author>
       <description>&lt;p&gt;The process of creating automated tests for Web applications has been around for many years. Vendors such as HP, Parasoft, QFS, and even Microsoft have test software that can be used to create and run automated tests. Over the past couple of years however, we’ve seen an industry-trend towards open source Web testing solutions based on JavaScript. Such solutions have the advantage of being easily modified, free to download, very modular, supported by a vibrant community, and (given the popularity of client-side JavaScript) tests can often be written using the same language as the Web application. &lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -106,9 +106,9 @@
     </item>
     <item>
       <title>File &gt; New &gt; Presentation</title>
-      <link>http://localhost:8080/2014/01/27/file-new-presentation/</link>
+      <link>//2014/01/27/file-new-presentation/</link>
       <pubDate>Mon, 27 Jan 2014 08:51:57 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2014/01/27/file-new-presentation/</guid>
+      <guid isPermaLink="true">//2014/01/27/file-new-presentation/</guid>
       <author></author>
       <description>&lt;p&gt;About a year ago, I set out on a journey to write a book on presentation skills, aimed primarily towards software developers and other technical professionals. My reasoning is that too many presentations in our industry still fail to connect with their audience, don’t tell a story, and end up as a set of mind-numbing slides of bullet points that put people to sleep.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -119,9 +119,9 @@
     </item>
     <item>
       <title>iBeacon Demo at Gartner AADI</title>
-      <link>http://localhost:8080/2013/12/12/ibeacon-demo-at-gartner-aadi/</link>
+      <link>//2013/12/12/ibeacon-demo-at-gartner-aadi/</link>
       <pubDate>Thu, 12 Dec 2013 08:06:56 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/12/12/ibeacon-demo-at-gartner-aadi/</guid>
+      <guid isPermaLink="true">//2013/12/12/ibeacon-demo-at-gartner-aadi/</guid>
       <author></author>
       <description>&lt;p&gt;Last week, I joined my colleagues from Neudesic at the Gartner AADI (Application Architecture Development &amp;amp; Integration) Summit in Las Vegas. One of the neat things that we were showing was a demo of iBeacon technology, in order to help locate and pinpoint individuals within indoor environments where GPS is not an option. &lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -139,9 +139,9 @@
     </item>
     <item>
       <title>Building a WebRTC Client for Android</title>
-      <link>http://localhost:8080/2013/08/06/building-a-webrtc-client-for-android/</link>
+      <link>//2013/08/06/building-a-webrtc-client-for-android/</link>
       <pubDate>Tue, 06  Aug 2013 10:43:16 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/08/06/building-a-webrtc-client-for-android/</guid>
+      <guid isPermaLink="true">//2013/08/06/building-a-webrtc-client-for-android/</guid>
       <author></author>
       <description>&lt;p&gt;If you’ve been following any of the recent developments with WebRTC, you’ll know that the majority of samples and example code available today target the Web browser (typically Chrome or Firefox).  While this is useful to get up to speed, IMO one of the most powerful applications of WebRTC will be for mobile devices.  Despite this, getting WebRTC running on mobile can be somewhat challenging.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -234,9 +234,9 @@ ln -s jdk1.6.0_45 java-6-sun
     </item>
     <item>
       <title>Designing a Web API for Mobile Apps</title>
-      <link>http://localhost:8080/2013/07/05/designing-a-web-api-for-mobile-apps/</link>
+      <link>//2013/07/05/designing-a-web-api-for-mobile-apps/</link>
       <pubDate>Fri, 05 Jul 2013 10:14:04 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/07/05/designing-a-web-api-for-mobile-apps/</guid>
+      <guid isPermaLink="true">//2013/07/05/designing-a-web-api-for-mobile-apps/</guid>
       <author></author>
       <description>&lt;p&gt;As you can imagine, over the past few years, we’ve seen a fair share of good and bad API design.  In this blog post, I wanted to share some of my observations, thoughts, and questions that I ask of a well designed Web API, especially one that will be called from a mobile app.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -352,9 +352,9 @@ ln -s jdk1.6.0_45 java-6-sun
     </item>
     <item>
       <title>Persistent Logging in Android</title>
-      <link>http://localhost:8080/2013/07/03/persistent-logging-in-android/</link>
+      <link>//2013/07/03/persistent-logging-in-android/</link>
       <pubDate>Wed, 03 Jul 2013 07:39:03 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/07/03/persistent-logging-in-android/</guid>
+      <guid isPermaLink="true">//2013/07/03/persistent-logging-in-android/</guid>
       <author></author>
       <description>&lt;p&gt;No code is perfect, but the nasty types of bugs are the ones that happen randomly and infrequently.  On a couple of recent Android projects we’ve been experiencing such bugs, and as you can guess they can be difficult to track them down.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -375,9 +375,9 @@ ln -s jdk1.6.0_45 java-6-sun
     </item>
     <item>
       <title>Transferring Data via Bluetooth on Android (android-btxfr)</title>
-      <link>http://localhost:8080/2013/04/19/transferring-data-via-bluetooth-on-android-android-btxfr/</link>
+      <link>//2013/04/19/transferring-data-via-bluetooth-on-android-android-btxfr/</link>
       <pubDate>Fri, 19 Apr 2013 15:51:18 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/04/19/transferring-data-via-bluetooth-on-android-android-btxfr/</guid>
+      <guid isPermaLink="true">//2013/04/19/transferring-data-via-bluetooth-on-android-android-btxfr/</guid>
       <author></author>
       <description>&lt;p&gt;Recently, I’ve been working on some code to transfer images and other data between Android devices using Bluetooth.  While I could have used the Basic Imaging Profile (BIP) of the Bluetooth 4.0 specification, this particular application has specific requirements that would have been difficult to implement using BIP.  To overcome this, I ended up building an application that instead relies on the Serial Port Profile (SPP), exchanging data using the RFCOMM protocol.  &lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -400,9 +400,9 @@ ln -s jdk1.6.0_45 java-6-sun
     </item>
     <item>
       <title>Enabling x86 Android Emulation</title>
-      <link>http://localhost:8080/2013/04/16/enabling-x86-android-emulation/</link>
+      <link>//2013/04/16/enabling-x86-android-emulation/</link>
       <pubDate>Tue, 16 Apr 2013 13:28:03 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/04/16/enabling-x86-android-emulation/</guid>
+      <guid isPermaLink="true">//2013/04/16/enabling-x86-android-emulation/</guid>
       <author></author>
       <description>&lt;p&gt;If you’ve undertaken any Android development, you’ll have likely found that the Android emulator can be painfully slow – to the point where the majority of developers I know use a physical device to do any development at all.  The primary reason behind this is that the default emulator is emulating an ARM based chipset on x86 hardware, and the translation between these two architectures is of course costly.  What many of these developers may not realize (and I didn’t until very recently) is that Intel have released a x86 Android emulator.  The x86 emulator has a few caveats (and of course cannot run any ARM-only libraries, such as the Google Play APIs), but overall can be used to speed up the performance of testing apps in the emulator by leaps and bounds.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -432,9 +432,9 @@ You can also increase the RAM up to the limit that you set during the HAXM insta
     </item>
     <item>
       <title>jQuery Mobile and AngularJS Working Together</title>
-      <link>http://localhost:8080/2013/04/08/jquery-mobile-and-angularjs-working-together/</link>
+      <link>//2013/04/08/jquery-mobile-and-angularjs-working-together/</link>
       <pubDate>Mon, 08 Apr 2013 12:56:58 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/04/08/jquery-mobile-and-angularjs-working-together/</guid>
+      <guid isPermaLink="true">//2013/04/08/jquery-mobile-and-angularjs-working-together/</guid>
       <author></author>
       <description>&lt;p&gt;Both jQuery Mobile (jQM) and AngularJS are awesome at what they do, but getting them to play nicely together can be tricky.  As you may have discovered, both want to manipulate the URL/routes and DOM such that it’s very easily to get them in conflict.  Having been through this recently, I wanted to share some recommendations to get them working together.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -456,9 +456,9 @@ You can also increase the RAM up to the limit that you set during the HAXM insta
     </item>
     <item>
       <title>On-Demand VPN using OpenVPN for iOS</title>
-      <link>http://localhost:8080/2013/03/22/on-demand-vpn-using-openvpn-for-ios/</link>
+      <link>//2013/03/22/on-demand-vpn-using-openvpn-for-ios/</link>
       <pubDate>Fri, 22 Mar 2013 12:03:30 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/03/22/on-demand-vpn-using-openvpn-for-ios/</guid>
+      <guid isPermaLink="true">//2013/03/22/on-demand-vpn-using-openvpn-for-ios/</guid>
       <author></author>
       <description>&lt;p&gt;Many large organizations have existing VPNs in place, and the rise in development of enterprise mobile applications often requires that apps running outside the firewall need to “VPN in” before they are allowed to access any corporate resources.&lt;/p&gt;
 &lt;p&gt;While enabling a VPN is fairly easy on most mobile devices, I’ve found that many IT organizations would like to automate this such that the device automatically connects to the VPN when the Enterprise App or an internal Website is launched. Having gone through this with a couple of customers, I’ve put this post together to highlight how this can be done.&lt;/p&gt;
@@ -555,9 +555,9 @@ key keys/server.key
     </item>
     <item>
       <title>QCamera</title>
-      <link>http://localhost:8080/2013/02/07/qcamera/</link>
+      <link>//2013/02/07/qcamera/</link>
       <pubDate>Thu, 07 Feb 2013 21:12:42 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2013/02/07/qcamera/</guid>
+      <guid isPermaLink="true">//2013/02/07/qcamera/</guid>
       <author></author>
       <description>&lt;p&gt;Doing mobile development on a Mac?  Need to show your mobile device using your USB camera during a presentation?&lt;/p&gt;
 &lt;p&gt;Here’s a quick utility that I hacked together over the weekend to do just that.  Supports mirroring/reversed images (which is why PhotoBooth won’t work for this) and borderless mode to keep it in the foreground over an IDE or presentation.  Hope you find it useful!&lt;/p&gt;
@@ -567,9 +567,9 @@ key keys/server.key
     </item>
     <item>
       <title>Uploading Photos from Mobile Web Applications</title>
-      <link>http://localhost:8080/2012/07/06/uploading-photos-from-mobile-web-applications/</link>
+      <link>//2012/07/06/uploading-photos-from-mobile-web-applications/</link>
       <pubDate>Fri, 06 Jul 2012 13:26:44 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2012/07/06/uploading-photos-from-mobile-web-applications/</guid>
+      <guid isPermaLink="true">//2012/07/06/uploading-photos-from-mobile-web-applications/</guid>
       <author></author>
       <description>&lt;p&gt;Here at Neudesic, we’re fortunate to be involved in many exciting HTML5/Mobile Web applications for different organizations. For many of these projects, one of the common requests, especially for field-facing mobile applications, is the ability to upload a photo from within a web page in a mobile browser.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -616,9 +616,9 @@ key keys/server.key
     </item>
     <item>
       <title>Announcing Neudesic Slingshot!</title>
-      <link>http://localhost:8080/2012/06/27/announcing-neudesic-slingshot/</link>
+      <link>//2012/06/27/announcing-neudesic-slingshot/</link>
       <pubDate>Wed, 27 Jun 2012 08:06:58 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2012/06/27/announcing-neudesic-slingshot/</guid>
+      <guid isPermaLink="true">//2012/06/27/announcing-neudesic-slingshot/</guid>
       <author></author>
       <description>&lt;p&gt;Getting SharePoint working on a mobile device can be hard. The “out of the box” experience, even with SharePoint 2010, is very basic and doesn’t take advantage of the device. Solutions on the AppStore are a step in the right direction, but many don’t do anything over providing the ability to browse a SharePoint site. At Neudesic, we are hoping to change all this through a project we call &lt;a href=&quot;http://neudesic.github.com/slingshot&quot;&gt;Slingshot&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -649,9 +649,9 @@ key keys/server.key
     </item>
     <item>
       <title>An Objective View of MEAPs</title>
-      <link>http://localhost:8080/2012/04/24/an-objective-view-of-meaps/</link>
+      <link>//2012/04/24/an-objective-view-of-meaps/</link>
       <pubDate>Tue, 24 Apr 2012 13:45:01 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2012/04/24/an-objective-view-of-meaps/</guid>
+      <guid isPermaLink="true">//2012/04/24/an-objective-view-of-meaps/</guid>
       <author></author>
       <description>&lt;p&gt;I recently had the opportunity to put together some research for a customer who has been interested in the MEAP (Mobile Enterprise Application Platform) space.  My premise is that the market has become flooded with MEAPs (Mobile Enterprise Application Platforms, as coined by Gartner), yet most of them are fundamentally taking organizations and developers down the wrong path when it comes to developing mobile applications.  The problem is that MEAPs demo really well in front of the CIO… “Wow!  You just hit F5, and your application is compiled and deployed to iOS, Android, Blackberry devices…  Where do I sign?” – yet the reality is very different.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -669,9 +669,9 @@ key keys/server.key
     </item>
     <item>
       <title>Tips, Tricks, and Recommendations for HTML5/Mobile Web Development</title>
-      <link>http://localhost:8080/2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/</link>
+      <link>//2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/</link>
       <pubDate>Thu, 12 Apr 2012 06:14:45 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/</guid>
+      <guid isPermaLink="true">//2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/</guid>
       <author></author>
       <description>&lt;p&gt;Over the past few months I’ve been fortunate to have worked with several customers creating Mobile Web applications for different devices.  These have included an iPad based Mobile Web app for a healthcare provider, a cross-platform Mobile Web app for a commercial real estate broker, and an Android tablet solution to allow scientists to research experiment details from the comfort of their lab.&lt;/p&gt;
 &lt;p&gt;From these projects, I’ve come up with a list of tips, tricks, and recommendations that I wanted to share if you are looking to develop your own Mobile Web applications.  Hope you find them useful…&lt;/p&gt;
@@ -693,7 +693,7 @@ key keys/server.key
 &lt;p&gt;Related to the previous point, you should also start thinking about how your application could run offline, even if you have no plans to do so.  This will put you on a good architectural path, and will also mean that your application will work if and when network connectivity is lost.  There are plenty of articles explaining how to enable offline access in HTML5 applications, so I won’t plan to cover here – other than to say you’ll be creating a cache manifest for your application, specifying the files to go into your cache, enabling the scripts for checking the cache when your application starts, and handling control logic accordingly (e.g. when you hit that submit button, you’ll want to know whether there is network connectivity before making the call to the server!).&lt;/p&gt;
 &lt;p&gt;If there’s one piece of advice that I can offer here however (and we learned this the hard way) it is to design for offline first, but implement last.  Do all of the right things to support offline in your application, but don’t enable it until you are close to the end of your development cycle.  If you enable it too early, it can cause mayhem with the development team – as your developers could end up debugging against a version of the application that could be slightly older – or the cache doesn’t get refreshed in the way it should.  This doesn’t application to local storage – this is fine to access during development – I would just recommend not enabling the cache manifest until you go into UAT.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Select the right UI framework for your needs&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Almost every other day there seems to be a new HTML UI framework released, and mobile frameworks are no exception.  At Neudesic we’ve had most experience and success using &lt;a href=&quot;http://localhost:8080/2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/www.jquerymobile.com&quot;&gt;jQuery Mobile&lt;/a&gt;, but have equally done work using &lt;a href=&quot;http://www.sencha.com/&quot;&gt;Sencha&lt;/a&gt;, &lt;a href=&quot;http://dojotoolkit.org/features/mobile&quot;&gt;Dojo&lt;/a&gt; and others.  As all the frameworks offer slightly different combinations of controls, I’ve found one of the tricks for selecting a suitable framework is to first build out a list of the controls that you are likely to need.  For example, in one project we developed a set of paper prototypes (side note – I really dig &lt;a href=&quot;http://www.uistencils.com/&quot;&gt;UI Stencils&lt;/a&gt; for this) and realized that we would be creating a multi-tabbed application, with many lists on each page.  Knowing what controls we were likely to use ahead of time made selecting the framework easier, and also put into perspective what controls we would have to build from scratch.&lt;/p&gt;
+&lt;p&gt;Almost every other day there seems to be a new HTML UI framework released, and mobile frameworks are no exception.  At Neudesic we’ve had most experience and success using &lt;a href=&quot;/2012/04/12/tips-tricks-and-recommendations-for-html5-mobile-web-development/www.jquerymobile.com&quot;&gt;jQuery Mobile&lt;/a&gt;, but have equally done work using &lt;a href=&quot;http://www.sencha.com/&quot;&gt;Sencha&lt;/a&gt;, &lt;a href=&quot;http://dojotoolkit.org/features/mobile&quot;&gt;Dojo&lt;/a&gt; and others.  As all the frameworks offer slightly different combinations of controls, I’ve found one of the tricks for selecting a suitable framework is to first build out a list of the controls that you are likely to need.  For example, in one project we developed a set of paper prototypes (side note – I really dig &lt;a href=&quot;http://www.uistencils.com/&quot;&gt;UI Stencils&lt;/a&gt; for this) and realized that we would be creating a multi-tabbed application, with many lists on each page.  Knowing what controls we were likely to use ahead of time made selecting the framework easier, and also put into perspective what controls we would have to build from scratch.&lt;/p&gt;
 &lt;p&gt;The good news is that most of the frameworks have demo pages/sites available, so that you can check them out beforehand without having to download anything.   This can be a great way of testing the controls across a different number of devices, as well as getting a feel for the performance.  My rough order of magnitude is that HTML based mobile UI will feel around 85% of a native control – it will look similar, react similar, but you just know that there’s this 10 – 15% gap that doesn’t quite feel native.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Understand the caveats with implementing maps in Mobile Web applications&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Related to the last point, many applications have a need to display maps and pinpoints, and this will likely remain true for many mobile web applications that you might be creating.  Based on experience, there are a couple of caveats that need to be understood before you head down this path.&lt;/p&gt;
@@ -724,9 +724,9 @@ key keys/server.key
     </item>
     <item>
       <title>Extracting and Using Facebook OAuth Token from ACS</title>
-      <link>http://localhost:8080/2011/11/11/extracting-and-using-facebook-oauth-token-from-acs/</link>
+      <link>//2011/11/11/extracting-and-using-facebook-oauth-token-from-acs/</link>
       <pubDate>Fri, 11 Nov 2011 05:23:39 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2011/11/11/extracting-and-using-facebook-oauth-token-from-acs/</guid>
+      <guid isPermaLink="true">//2011/11/11/extracting-and-using-facebook-oauth-token-from-acs/</guid>
       <author></author>
       <description>&lt;p&gt;A couple of my previous blog posts have shown how AppFabric ACS (Access Control Service) can be used as part of the Windows Azure Toolkit for iOS to enable federated authentication with Facebook, Google, Yahoo, and other providers. I was recently asked whether it’s possible to extract an OAuth token as part of the ACS sign in process that can then be presented to Facebook’s Graph API in order to access details such as friends lists, photos, etc. In this post, I’ll cover how this can be done.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -773,9 +773,9 @@ NSUInteger friendCount = [regex numberOfMatchesInString:friendsList options:&lt;
     </item>
     <item>
       <title>Working with the Windows Azure Toolkit for Android</title>
-      <link>http://localhost:8080/2011/10/21/working-with-the-windows-azure-toolkit-for-android/</link>
+      <link>//2011/10/21/working-with-the-windows-azure-toolkit-for-android/</link>
       <pubDate>Fri, 21 Oct 2011 08:16:18 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2011/10/21/working-with-the-windows-azure-toolkit-for-android/</guid>
+      <guid isPermaLink="true">//2011/10/21/working-with-the-windows-azure-toolkit-for-android/</guid>
       <author></author>
       <description>&lt;p&gt;At the end of August, Microsoft &lt;a href=&quot;http://www.zdnet.com/blog/microsoft/microsoft-rolls-out-windows-azure-toolkit-for-android/10503&quot;&gt;published&lt;/a&gt; the Windows Azure Toolkit for Android. At Neudesic, the partner behind developing the both toolkits for iOS and Android, we’ve been working with customers that use the toolkit to connect mobile applications to the cloud. One of the recent requests however has been to provide a walkthrough of getting started with the toolkit. The current build on &lt;a href=&quot;http://github.com/microsoft-dpe&quot;&gt;GitHub&lt;/a&gt; was released for a specific version of Eclipse and the Android tools, and as a result, can be a little challenging getting the library and sample code up and running. In this post, I’ll explain what it takes to download the toolkit, create a brand new environment in Eclipse, and get started quickly with the toolkit.&lt;/p&gt;
 &lt;p&gt; &lt;span class=&quot;more&quot;&gt;&lt;span&gt;&lt;/p&gt;
@@ -842,9 +842,9 @@ At the top of the file replace the &lt;strong&gt;ACCOUNT&lt;/strong&gt; and &lt;
     </item>
     <item>
       <title>Authenticating with Google, Facebook, and others from your jQueryMobile Application</title>
-      <link>http://localhost:8080/2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/</link>
+      <link>//2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/</link>
       <pubDate>Fri, 12  Aug 2011 22:13:20 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/</guid>
+      <guid isPermaLink="true">//2011/08/12/authenticating-with-google-facebook-and-others-from-your-jquerymobile-application/</guid>
       <author></author>
       <description>&lt;p&gt;In my last post, I showed how to implement authentication using Google, Facebook, etc. for your iOS application – using the &lt;a href=&quot;http://github.com/microsoft-dpe&quot;&gt;Windows Azure Toolkit for iOS&lt;/a&gt;.  This works well for iPhone applications written in Objective C, but what if you are developing a Web based mobile applications that span multiple platforms?  Given that everything is using Web pages, you would hope that it would be a little easier, but things can get tricky - especially if you are using jQueryMobile. &lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -912,9 +912,9 @@ At the top of the file replace the &lt;strong&gt;ACCOUNT&lt;/strong&gt; and &lt;
     </item>
     <item>
       <title>Using Federated Identity for iOS Applications</title>
-      <link>http://localhost:8080/2011/08/01/using-federated-identity-for-ios-applications/</link>
+      <link>//2011/08/01/using-federated-identity-for-ios-applications/</link>
       <pubDate>Mon, 01  Aug 2011 01:45:42 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2011/08/01/using-federated-identity-for-ios-applications/</guid>
+      <guid isPermaLink="true">//2011/08/01/using-federated-identity-for-ios-applications/</guid>
       <author></author>
       <description>&lt;p&gt;Last week, Microsoft released v1.2 of the Windows Azure Toolkit for iOS.  As development partner for the toolkit, &lt;a href=&quot;http://www.neudesic.com&quot;&gt;Neudesic&lt;/a&gt; has been working with several customers on implementing ACS for iPhone and iPad applications.  Due to popular demand, I wanted to share a short overview of how simple it is to get this up and working for your own iOS projects.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1013,9 +1013,9 @@ WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessContro
     </item>
     <item>
       <title>Running Visual Studio 2010 on the Mac</title>
-      <link>http://localhost:8080/2011/05/27/running-visual-studio-2010-on-the-mac/</link>
+      <link>//2011/05/27/running-visual-studio-2010-on-the-mac/</link>
       <pubDate>Fri, 27 May 2011 09:11:29 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2011/05/27/running-visual-studio-2010-on-the-mac/</guid>
+      <guid isPermaLink="true">//2011/05/27/running-visual-studio-2010-on-the-mac/</guid>
       <author></author>
       <description>&lt;p&gt;Following a few recent presentations, I’ve had a couple of people ask how I run Visual Studio on the Mac. &lt;/p&gt;
 &lt;p&gt;You’ll be sad to hear that I don’t have a special version of Visual Studio for Mac OSX - instead I am using VMWare Fusion 3.1 to run a copy of Windows 7 in a virtual machine.&lt;/p&gt;
@@ -1026,9 +1026,9 @@ WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessContro
     </item>
     <item>
       <title>Using Apple Push Notifications from Windows Azure</title>
-      <link>http://localhost:8080/2011/04/21/using-apple-push-notifications-from-windows-azure/</link>
+      <link>//2011/04/21/using-apple-push-notifications-from-windows-azure/</link>
       <pubDate>Thu, 21 Apr 2011 15:24:17 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2011/04/21/using-apple-push-notifications-from-windows-azure/</guid>
+      <guid isPermaLink="true">//2011/04/21/using-apple-push-notifications-from-windows-azure/</guid>
       <author></author>
       <description>&lt;p&gt;In my &lt;a href=&quot;http://channel9.msdn.com/events/MIX/MIX11/EXT18&quot;&gt;MIX11 session&lt;/a&gt; last week I demonstrated how to create push notifications to iPhone and iPad devices from Wndows Azure.  I’ve put together this blog post to share more detail and the source code for how this works.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1193,9 +1193,9 @@ CloudQueueClient cqc = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Cl
     </item>
     <item>
       <title>Getting Authentication Working with WCF and WP7</title>
-      <link>http://localhost:8080/2010/12/29/getting-authentication-working-with-wcf-and-wp7/</link>
+      <link>//2010/12/29/getting-authentication-working-with-wcf-and-wp7/</link>
       <pubDate>Wed, 29 Dec 2010 10:29:15 -0800</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2010/12/29/getting-authentication-working-with-wcf-and-wp7/</guid>
+      <guid isPermaLink="true">//2010/12/29/getting-authentication-working-with-wcf-and-wp7/</guid>
       <author></author>
       <description>&lt;p&gt;Although Windows Phone 7 (WP7) has support for a Windows Communication Foundation (WCF) client, connecting to Web services that require authentication can be a little quirky. &lt;/p&gt;
 &lt;p&gt;After working on a project over the holidays putting together a WP7 client to connect to a Web service requiring authentication, this is what I found…&lt;/p&gt;
@@ -1229,9 +1229,9 @@ OperationContext.Current.OutgoingMessageProperties.Add(HttpRequestMessagePropert
     </item>
     <item>
       <title>Test Driven Development (TDD) and Windows Phone 7</title>
-      <link>http://localhost:8080/2010/10/18/test-driven-development-tdd-and-windows-phone-7/</link>
+      <link>//2010/10/18/test-driven-development-tdd-and-windows-phone-7/</link>
       <pubDate>Mon, 18 Oct 2010 00:00:00 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2010/10/18/test-driven-development-tdd-and-windows-phone-7/</guid>
+      <guid isPermaLink="true">//2010/10/18/test-driven-development-tdd-and-windows-phone-7/</guid>
       <author></author>
       <description>&lt;p&gt;Kylen, my 6 year old son, is really into world flags. At home we have a sheet of around 200 flags from across the globe, and he’s pretty close at reciting all of them (and certainly much better than Mom and Dad!).&lt;/p&gt;
 &lt;p&gt;Spending a couple of hours over labor day last month, I set myself a task of building a “Flag Matching” application for Windows Phone 7 (WP7). My goal was twofold: Build a simple application that he can use (and that I can offer on the marketplace), and at the same time, look into some of the TDD best practices for developing a WP7 application.&lt;/p&gt;
@@ -1433,9 +1433,9 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
     </item>
     <item>
       <title>JavaOne Tutorial Apache Tomcat on Windows Azure</title>
-      <link>http://localhost:8080/2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/</link>
+      <link>//2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/</link>
       <pubDate>Sat, 18 Sep 2010 08:00:00 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/</guid>
+      <guid isPermaLink="true">//2010/09/18/javaone-tutorial-apache-tomcat-on-windows-azure/</guid>
       <author></author>
       <description>&lt;p&gt;As I mentioned in my previous post, I’ll be participating in a &lt;a href=&quot;http://www.eventreg.com/cc250/sessionDetail.jsp?SID=313962&quot;&gt;panel&lt;/a&gt; at JavaOne on Monday.  With a similar format to last year, each panelist is given 5 – 10 minutes before it opens up for general discussion. Rather than showing a bunch of marketing slides, I thought it would be more interesting to put together a short tutorial for running Apache Tomcat on Windows Azure.  When I speak with Java developers interested in Windows Azure, this is often the #1 request. Here is an overview of what I will be showing:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1472,9 +1472,9 @@ CommandEvents.NewGameButtonPressed += &lt;span class=&quot;keyword&quot;&gt;new&
     </item>
     <item>
       <title>Easy Event Logging on Windows Azure</title>
-      <link>http://localhost:8080/2010/08/04/easy-event-logging-on-windows-azure/</link>
+      <link>//2010/08/04/easy-event-logging-on-windows-azure/</link>
       <pubDate>Wed, 04  Aug 2010 16:42:45 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2010/08/04/easy-event-logging-on-windows-azure/</guid>
+      <guid isPermaLink="true">//2010/08/04/easy-event-logging-on-windows-azure/</guid>
       <author></author>
       <description>&lt;p&gt;I’ve been working on an application that has a need to log many events on a Web Role running on Windows Azure.   Effective logging can be difficult to setup.  Do a search, and you’ll find a handful of articles that cover logging to the blobstore, mounting drives to extract the logs, etc. Instead, I wanted an easy way to log custom events and exceptions in my application.  This is how to do it:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1512,9 +1512,9 @@ Trace.Listeners.Add(atl);
     </item>
     <item>
       <title>CITA-P – Certified IT Architect</title>
-      <link>http://localhost:8080/2010/08/02/cita-p-certified-it-architect/</link>
+      <link>//2010/08/02/cita-p-certified-it-architect/</link>
       <pubDate>Mon, 02  Aug 2010 15:41:30 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2010/08/02/cita-p-certified-it-architect/</guid>
+      <guid isPermaLink="true">//2010/08/02/cita-p-certified-it-architect/</guid>
       <author></author>
       <description>&lt;p&gt;Last week I took (and passed!) my &lt;a href=&quot;http://www.iasahome.org/web/home/certification/professional&quot;&gt;CITA-P&lt;/a&gt; examination.  CITA-P (Certified IT Architect) is a new certification, offered through &lt;a href=&quot;http://www.iasahome.org&quot;&gt;IASA&lt;/a&gt; (the International Association of Software Architects).  I wanted to share some thoughts on the certification, the process, and why you might want to consider applying yourself.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
@@ -1545,9 +1545,9 @@ Trace.Listeners.Add(atl);
     </item>
     <item>
       <title>Moving VHDs to the Cloud</title>
-      <link>http://localhost:8080/2010/04/22/moving-vhds-to-the-cloud/</link>
+      <link>//2010/04/22/moving-vhds-to-the-cloud/</link>
       <pubDate>Thu, 22 Apr 2010 15:25:49 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2010/04/22/moving-vhds-to-the-cloud/</guid>
+      <guid isPermaLink="true">//2010/04/22/moving-vhds-to-the-cloud/</guid>
       <author></author>
       <description>&lt;p&gt;When I speak with customers about cloud computing, a common question is often “how do I migrate an application to the cloud?”  While this is a multi-part answer, one of the hurdles for migration is often storage. &lt;/p&gt;
 &lt;p&gt;Many applications store data using the file system (e.g. read / write a file to d:dataconfig.xml).  Moving these types of applications to the cloud can be difficult as the storage mechanisms in the cloud are somewhat different. &lt;/p&gt;
@@ -1675,9 +1675,9 @@ c.Unmount();
     </item>
     <item>
       <title>Using Windows 7 to host PHP applications in 5 easy steps!</title>
-      <link>http://localhost:8080/2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/</link>
+      <link>//2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/</link>
       <pubDate>Sun, 08 Mar 2009 17:24:55 -0700</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/</guid>
+      <guid isPermaLink="true">//2009/03/08/using-windows-7-to-host-php-applications-in-5-easy-steps/</guid>
       <author></author>
       <description>&lt;p&gt;A few people have asked me recently whether it’s possible to setup Windows 7 as a PHP server (for development purposes).  The answer is absolutely yes, and it’s a breeze to setup.  Follow these five simple steps to get PHP up and running in minutes.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
